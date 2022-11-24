@@ -1,6 +1,11 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { Space_Grotesk } from "@next/font/google";
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+});
 
 import { trpc } from "../utils/trpc";
 
@@ -12,7 +17,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <main className={`${spaceGrotesk.variable} font-sans`}>
+        <Component {...pageProps} />
+      </main>
     </SessionProvider>
   );
 };

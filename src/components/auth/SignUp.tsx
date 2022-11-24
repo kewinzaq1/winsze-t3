@@ -9,15 +9,23 @@ import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import autoAnimate from "@formkit/auto-animate";
 
 export const SignUp = () => {
   const [mode, setMode] = useState<"login" | "register">("register");
   const [loginError, setLoginError] = useState<string | null>(null);
   const { mutate, isLoading, error } = trpc.auth.register.useMutation();
   const router = useRouter();
+  const parent = createRef<HTMLFormElement>();
+
+  useEffect(() => {
+    if (parent.current) {
+      autoAnimate(parent.current);
+    }
+  }, [parent]);
 
   const {
     register,
@@ -53,7 +61,9 @@ export const SignUp = () => {
         <div>
           <h2 className="text-2xl font-semibold">Sign up</h2>
           <p>
-            Already have an account?{" "}
+            <span className="mr-1">
+              {mode !== "login" ? "Already have an account?" : "First time?"}
+            </span>
             <a href="#" className="font-bold" onClick={handleModeChange}>
               {mode === "login" ? "Sign in" : "Sign up"}
             </a>
@@ -86,7 +96,7 @@ export const SignUp = () => {
             </AuthButton>
           </div>
         </div>
-        <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
+        <form className="mt-10" onSubmit={handleSubmit(onSubmit)} ref={parent}>
           {(error || loginError) && (
             <p className="m-0 p-0 text-sm text-red-500">
               {error?.message || loginError}
@@ -118,14 +128,16 @@ export const SignUp = () => {
               error={Boolean(errors.password)}
             />
           </AuthFormGroup>
-          <AuthFormGroup>
-            <AuthLabel htmlFor="role">Role</AuthLabel>
-            <AuthInput
-              id="role"
-              {...register("role")}
-              error={Boolean(errors.role)}
-            />
-          </AuthFormGroup>
+          {mode === "register" && (
+            <AuthFormGroup>
+              <AuthLabel htmlFor="role">Role</AuthLabel>
+              <AuthInput
+                id="role"
+                {...register("role")}
+                error={Boolean(errors.role)}
+              />
+            </AuthFormGroup>
+          )}
           <AuthButton
             className="mt-6"
             type="submit"

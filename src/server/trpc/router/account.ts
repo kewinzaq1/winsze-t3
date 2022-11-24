@@ -4,7 +4,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
 export const accountRouter = router({
-  changePassword: protectedProcedure
+  updatePassword: protectedProcedure
     .input(
       z.object({
         currentPassword: z.string(),

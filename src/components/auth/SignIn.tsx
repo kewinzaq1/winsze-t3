@@ -125,23 +125,9 @@ export const SignIn = () => {
             className="mt-6"
             type="submit"
             variant={isLoading ? "primary" : "secondary"}
+            isLoading={isLoading}
           >
-            {isLoading ? (
-              <>
-                <Image
-                  src="/svg/oval.svg"
-                  alt="loading oval"
-                  role="progressbar"
-                  width={20}
-                  height={10}
-                  color="red"
-                  className="mr-2"
-                />
-                <p className="text-violetSecondary">Loading</p>
-              </>
-            ) : (
-              "Sign in"
-            )}
+            Sign in
           </AuthButton>
         </form>
       </div>

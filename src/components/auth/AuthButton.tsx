@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import Image from "next/image";
 
 interface AuthButton
   extends DetailedHTMLProps<
@@ -6,12 +7,14 @@ interface AuthButton
     HTMLButtonElement
   > {
   variant?: "primary" | "secondary";
+  isLoading?: boolean;
 }
 
 export const AuthButton = ({
   className,
   children,
   variant,
+  isLoading,
   ...restProps
 }: AuthButton) => {
   const basicClasses = () => {
@@ -27,7 +30,22 @@ export const AuthButton = ({
 
   return (
     <button className={`${basicClasses()} ${className}`} {...restProps}>
-      {children}
+      {isLoading ? (
+        <>
+          <Image
+            src="/svg/oval.svg"
+            alt="loading oval"
+            role="progressbar"
+            width={20}
+            height={10}
+            color="red"
+            className="mr-2"
+          />
+          <p className="text-violetSecondary">Loading</p>
+        </>
+      ) : (
+        children
+      )}
     </button>
   );
 };

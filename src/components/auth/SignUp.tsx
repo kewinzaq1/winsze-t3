@@ -9,10 +9,9 @@ import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { createRef, useEffect, useState } from "react";
+import { createRef, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import autoAnimate from "@formkit/auto-animate";
 import Link from "next/link";
 
 export const SignUp = () => {
@@ -65,20 +64,14 @@ export const SignUp = () => {
           <div className="flex items-center gap-2">
             <AuthButton
               variant="secondary"
-              onClick={async () => {
-                const res = await signIn("google");
-                console.log(res);
-              }}
+              onClick={async () => await signIn("google")}
             >
               <BsGoogle className="mr-2 text-xl" />
               Google
             </AuthButton>
             <AuthButton
               variant="secondary"
-              onClick={async () => {
-                const res = await signIn("facebook");
-                console.log(res);
-              }}
+              onClick={async () => await signIn("facebook")}
             >
               <BsFacebook className="mr-2 text-xl" />
               Facebook

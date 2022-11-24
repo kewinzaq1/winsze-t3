@@ -28,9 +28,7 @@ export const authOptions: NextAuthOptions = {
     //   }
     //   return token;
     // },
-    async signIn({ user, account, profile, email, credentials }) {
-      console.log({ user, account, profile, email, credentials });
-
+    async signIn({ user, profile }) {
       const image = (profile as { picture: string | undefined })?.picture;
 
       if (image && user.image !== image) {

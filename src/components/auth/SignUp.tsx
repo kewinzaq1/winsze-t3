@@ -4,8 +4,26 @@ import { AuthLabel } from "./AuthLabel";
 import { AuthInput } from "./AuthInput";
 import { AuthButton } from "./AuthButton";
 import { AuthLeftPanel } from "./AuthLeftPanel";
+import { trpc } from "src/utils/trpc";
+import { registerSchema } from "src/zod/auth";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const SignUp = () => {
+  const queryRegister = trpc.auth.register.useQuery;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit = async (data: any) => {
+    console.log(data);
+  };
+
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-center p-4 lg:flex-row">
       <AuthLeftPanel />
@@ -34,20 +52,36 @@ export const SignUp = () => {
             </AuthButton>
           </div>
         </div>
-        <form className="mt-10">
+        <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
           <AuthFormGroup>
             <AuthLabel htmlFor="email">Email</AuthLabel>
-            <AuthInput id="email" placeholder="john@doe.com" />
+            <AuthInput
+              id="email"
+              placeholder="john@doe.com"
+              {...register("email")}
+              className={`${errors.email ? "border-red-500" : ""}`}
+            />
           </AuthFormGroup>
           <AuthFormGroup>
             <AuthLabel htmlFor="password">Password</AuthLabel>
-            <AuthInput id="password" type="password" />
+            <AuthInput
+              id="password"
+              type="password"
+              {...register("password")}
+              className={`${errors.password ? "border-red-500" : ""}`}
+            />
           </AuthFormGroup>
           <AuthFormGroup>
             <AuthLabel htmlFor="role">Role</AuthLabel>
-            <AuthInput id="role" />
+            <AuthInput
+              id="role"
+              {...register("role")}
+              className={`${errors.role ? "border-red-500" : ""}`}
+            />
           </AuthFormGroup>
-          <AuthButton className="mt-6">Create account</AuthButton>
+          <AuthButton className="mt-6" type="submit">
+            Create account
+          </AuthButton>
         </form>
       </div>
     </main>

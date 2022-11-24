@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { registerSchema } from "src/zod/auth";
+import { Prisma } from "@prisma/client";
 
 export const authRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
@@ -13,13 +14,22 @@ export const authRouter = router({
     .input(registerSchema)
     .mutation(async ({ ctx, input }) => {
       const password = await bcrypt.hash(input.password, 10);
-      const user = await ctx.prisma.user.create({
-        data: {
-          email: input.email,
-          password: password,
-          role: input.role,
-        },
-      });
-      return user;
+      try {
+        const user = await ctx.prisma.user.create({
+          data: {
+            email: input.email,
+            password: password,
+            role: input.role,
+          },
+        });
+        return user;
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          if (e.code === "P2002") {
+            throw new Error("Email already in use");
+          }
+        }
+        throw e;
+      }
     }),
 });

@@ -8,7 +8,6 @@ import { trpc } from "src/utils/trpc";
 import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import { createRef, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -120,23 +119,9 @@ export const SignUp = () => {
             className="mt-6"
             type="submit"
             variant={isLoading ? "primary" : "secondary"}
+            isLoading={isLoading}
           >
-            {isLoading ? (
-              <>
-                <Image
-                  src="/svg/oval.svg"
-                  alt="loading oval"
-                  role="progressbar"
-                  width={20}
-                  height={10}
-                  color="red"
-                  className="mr-2"
-                />
-                <p className="text-violetSecondary">Loading</p>
-              </>
-            ) : (
-              "Sign up"
-            )}
+            Sign up
           </AuthButton>
         </form>
       </div>

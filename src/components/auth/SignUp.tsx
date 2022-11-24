@@ -12,16 +12,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export const SignUp = () => {
   const [mode, setMode] = useState<"login" | "register">("register");
+  const [loginError, setLoginError] = useState<string | null>(null);
   const { mutate, isLoading, error } = trpc.auth.register.useMutation();
-
-  const session = useSession();
-
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
+  const router = useRouter();
 
   const {
     register,
@@ -31,8 +28,18 @@ export const SignUp = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: any) => {
-    return mode === "register" ? mutate(data) : signIn("credentials", data);
+  const onSubmit = async (data: any) => {
+    if (mode === "register") {
+      mutate(data);
+      return;
+    }
+    const response = await signIn("credentials", { ...data, redirect: false });
+    if (!response?.ok) {
+      setLoginError(response?.error as string);
+    } else {
+      router.push("/");
+      return;
+    }
   };
 
   const handleModeChange = () => {
@@ -68,8 +75,10 @@ export const SignUp = () => {
           </div>
         </div>
         <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
-          {error && (
-            <p className="m-0 p-0 text-xs text-red-500">{error.message}</p>
+          {(error || loginError) && (
+            <p className="m-0 p-0 text-sm text-red-500">
+              {error?.message || loginError}
+            </p>
           )}
           <AuthFormGroup>
             <AuthLabel htmlFor="email">Email</AuthLabel>
@@ -80,9 +89,7 @@ export const SignUp = () => {
               id="email"
               placeholder="john@doe.com"
               {...register("email")}
-              className={`${
-                errors.email ? "border-red-500 focus:border-red-500" : ""
-              }`}
+              error={Boolean(errors.email)}
             />
           </AuthFormGroup>
           <AuthFormGroup>
@@ -96,9 +103,7 @@ export const SignUp = () => {
               id="password"
               type="password"
               {...register("password")}
-              className={`${
-                errors.password ? "border-red-500 focus:border-red-500" : ""
-              }`}
+              error={Boolean(errors.password)}
             />
           </AuthFormGroup>
           <AuthFormGroup>
@@ -106,9 +111,7 @@ export const SignUp = () => {
             <AuthInput
               id="role"
               {...register("role")}
-              className={`${
-                errors.role ? "border-red-500 focus:border-red-500" : ""
-              }`}
+              error={Boolean(errors.role)}
             />
           </AuthFormGroup>
           <AuthButton

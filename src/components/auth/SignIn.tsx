@@ -4,21 +4,19 @@ import { AuthLabel } from "./AuthLabel";
 import { AuthInput } from "./AuthInput";
 import { AuthButton } from "./AuthButton";
 import { AuthLeftPanel } from "./AuthLeftPanel";
-import { trpc } from "src/utils/trpc";
 import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { createRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import autoAnimate from "@formkit/auto-animate";
 import Link from "next/link";
 
-export const SignUp = () => {
-  const { mutate, isLoading, error } = trpc.auth.register.useMutation();
+export const SignIn = () => {
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const parent = createRef<HTMLFormElement>();
 
   const session = useSession();
 
@@ -42,7 +40,15 @@ export const SignUp = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {
-    mutate(data);
+    setIsLoading(true);
+    const response = await signIn("credentials", { ...data, redirect: false });
+    setIsLoading(false);
+    if (!response?.ok) {
+      setLoginError(response?.error as string);
+    } else {
+      router.push("/");
+      return;
+    }
   };
 
   return (
@@ -53,7 +59,7 @@ export const SignUp = () => {
           <h2 className="text-2xl font-semibold">Sign up</h2>
           <p>
             <span className="mr-1">Already have an account?</span>
-            <Link href="/sign-in" className="font-bold">
+            <Link href="sign-up" className="font-bold">
               Sign in
             </Link>
           </p>
@@ -85,9 +91,9 @@ export const SignUp = () => {
             </AuthButton>
           </div>
         </div>
-        <form className="mt-10" onSubmit={handleSubmit(onSubmit)} ref={parent}>
-          {error && (
-            <p className="m-0 p-0 text-sm text-red-500">{error?.message}</p>
+        <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
+          {loginError && (
+            <p className="m-0 p-0 text-sm text-red-500">{loginError}</p>
           )}
           <AuthFormGroup>
             <AuthLabel htmlFor="email">Email</AuthLabel>
@@ -115,14 +121,6 @@ export const SignUp = () => {
               error={Boolean(errors.password)}
             />
           </AuthFormGroup>
-          <AuthFormGroup>
-            <AuthLabel htmlFor="role">Role</AuthLabel>
-            <AuthInput
-              id="role"
-              {...register("role")}
-              error={Boolean(errors.role)}
-            />
-          </AuthFormGroup>
           <AuthButton
             className="mt-6"
             type="submit"
@@ -142,7 +140,7 @@ export const SignUp = () => {
                 <p className="text-violetSecondary">Loading</p>
               </>
             ) : (
-              "Sign up"
+              "Sign in"
             )}
           </AuthButton>
         </form>

@@ -28,6 +28,35 @@ export const authOptions: NextAuthOptions = {
     //   }
     //   return token;
     // },
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log({ user, account, profile, email, credentials });
+
+      const image = (profile as { picture: string | undefined })?.picture;
+
+      if (image && user.image !== image) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            image,
+          },
+        });
+      }
+      const name = profile?.name;
+      if (name && user.name !== name) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            name,
+          },
+        });
+      }
+
+      return true;
+    },
+    session({ session, token, user }) {
+      console.log({ session, token, user });
+      return session;
+    },
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
@@ -37,12 +66,12 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      clientId: env.FACEBOOK_CLIENT_ID,
+      clientSecret: env.FACEBOOK_CLIENT_SECRET,
     }),
     CredentialsProvider({
       name: "Credentials",

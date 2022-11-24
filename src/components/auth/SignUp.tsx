@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { createRef, useEffect, useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import autoAnimate from "@formkit/auto-animate";
 
@@ -21,11 +21,19 @@ export const SignUp = () => {
   const router = useRouter();
   const parent = createRef<HTMLFormElement>();
 
+  const session = useSession();
+
   useEffect(() => {
     if (parent.current) {
       autoAnimate(parent.current);
     }
   }, [parent]);
+
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      router.push("/");
+    }
+  }, [router, session.status]);
 
   const {
     register,
@@ -34,6 +42,10 @@ export const SignUp = () => {
   } = useForm({
     resolver: zodResolver(registerSchema),
   });
+
+  if (session.status === "authenticated") {
+    return null;
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {

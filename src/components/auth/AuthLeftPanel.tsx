@@ -1,4 +1,4 @@
-import { TestimonialsSlider } from "./TestimonialsSilder";
+import { TestimonialsSlider } from "./AuthTestimonialsSilder";
 
 export function AuthLeftPanel() {
   return (

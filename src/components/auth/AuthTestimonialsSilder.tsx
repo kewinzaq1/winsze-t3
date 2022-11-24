@@ -1,8 +1,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper";
+import { Pagination, Autoplay } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
-import { TestimonialCard } from "./TestimonialCard";
+import { TestimonialCard } from "./AuthTestimonialCard";
 import type { CSSProperties } from "react";
 
 export const TestimonialsSlider = () => {
@@ -16,13 +16,14 @@ export const TestimonialsSlider = () => {
 
   return (
     <Swiper
+      autoplay={{ delay: 2000 }}
       style={style}
       spaceBetween={50}
       onSlideChange={() => console.log("slide change")}
       onSwiper={(swiper) => console.log(swiper)}
       className="w-[90%] !pb-12"
       pagination={{ clickable: true }}
-      modules={[Pagination]}
+      modules={[Pagination, Autoplay]}
     >
       <SwiperSlide>
         <TestimonialCard />

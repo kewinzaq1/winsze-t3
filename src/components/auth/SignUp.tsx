@@ -1,5 +1,9 @@
 import { TestimonialsSlider } from "./TestimonialsSilder";
 import { BsFacebook, BsGoogle } from "react-icons/bs";
+import { AuthFormGroup } from "./AuthFormGroup";
+import { AuthLabel } from "./AuthLabel";
+import { AuthInput } from "./AuthInput";
+import { AuthButton } from "./AuthButton";
 
 export const SignUp = () => {
   return (
@@ -30,56 +34,30 @@ export const SignUp = () => {
             Other methods?
           </p>
           <div className="flex items-center gap-2">
-            <button className="duration-250 col-start-1 flex w-max items-center gap-2 rounded-md border border-violetPrimary bg-slate-50 p-4 outline-none transition hover:bg-violetPrimary hover:text-slate-50 focus:bg-violetPrimary focus:text-slate-50 active:scale-95">
+            <AuthButton variant="secondary">
               <BsGoogle className="text-xl" />
               Google
-            </button>
-            <button className="duration-250 col-start-2 flex w-max items-center gap-2 rounded-md border border-violetPrimary bg-slate-50 p-4 outline-none transition hover:bg-violetPrimary hover:text-slate-50 focus:bg-violetPrimary focus:text-slate-50 active:scale-95">
+            </AuthButton>
+            <AuthButton>
               <BsFacebook className="text-xl" />
               Facebook
-            </button>
+            </AuthButton>
           </div>
         </div>
         <form className="mt-10">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="text-slate-600">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              className="rounded-md border border-slate-400 bg-white p-2 outline-none focus:border-violetPrimary"
-            />
-          </div>
-          <div className="mt-6 flex flex-col gap-1">
-            <label htmlFor="password" className="text-slate-600">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              className="rounded-md border border-slate-400 bg-white p-2 outline-none focus:border-violetPrimary"
-            />
-          </div>
-          <div className="mt-6 flex flex-col gap-1">
-            <label htmlFor="role" className="text-slate-600">
-              Role
-            </label>
-            <input
-              type="text"
-              name="role"
-              id="role"
-              className="rounded-md border border-slate-400 bg-white p-2 outline-none focus:border-violetPrimary"
-            />
-          </div>
-          <button
-            type="submit"
-            className="mt-6 rounded-md border bg-violetPrimary p-4 text-white outline-none transition hover:border-violetPrimary hover:bg-slate-50 hover:text-violetPrimary focus:border-violetPrimary focus:bg-slate-50 focus:text-violetPrimary active:scale-95"
-          >
-            Create account
-          </button>
+          <AuthFormGroup>
+            <AuthLabel htmlFor="email">Email</AuthLabel>
+            <AuthInput id="email" placeholder="john@doe.com" />
+          </AuthFormGroup>
+          <AuthFormGroup>
+            <AuthLabel htmlFor="password">Password</AuthLabel>
+            <AuthInput id="password" type="password" />
+          </AuthFormGroup>
+          <AuthFormGroup>
+            <AuthLabel htmlFor="role">Role</AuthLabel>
+            <AuthInput id="role" />
+          </AuthFormGroup>
+          <AuthButton>Create account</AuthButton>
         </form>
       </div>
     </main>

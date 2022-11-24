@@ -25,11 +25,11 @@ export const SignUp = () => {
           </p>
           <div className="flex items-center gap-2">
             <AuthButton variant="secondary">
-              <BsGoogle className="text-xl" />
+              <BsGoogle className="mr-2 text-xl" />
               Google
             </AuthButton>
-            <AuthButton>
-              <BsFacebook className="text-xl" />
+            <AuthButton variant="secondary">
+              <BsFacebook className="mr-2 text-xl" />
               Facebook
             </AuthButton>
           </div>
@@ -47,7 +47,7 @@ export const SignUp = () => {
             <AuthLabel htmlFor="role">Role</AuthLabel>
             <AuthInput id="role" />
           </AuthFormGroup>
-          <AuthButton>Create account</AuthButton>
+          <AuthButton className="mt-6">Create account</AuthButton>
         </form>
       </div>
     </main>

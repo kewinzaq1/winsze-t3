@@ -5,12 +5,23 @@ import { AuthInput } from "./AuthInput";
 import { AuthButton } from "./AuthButton";
 import { AuthLeftPanel } from "./AuthLeftPanel";
 import { trpc } from "src/utils/trpc";
+import type { RegisterSchema } from "src/zod/auth";
 import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 
 export const SignUp = () => {
-  const queryRegister = trpc.auth.register.useQuery;
+  const [mode, setMode] = useState<"login" | "register">("register");
+  const { mutate, isLoading, error } = trpc.auth.register.useMutation();
+
+  const session = useSession();
+
+  useEffect(() => {
+    console.log(session);
+  }, [session]);
 
   const {
     register,
@@ -20,8 +31,12 @@ export const SignUp = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: any) => {
-    console.log(data);
+  const onSubmit = (data: any) => {
+    return mode === "register" ? mutate(data) : signIn("credentials", data);
+  };
+
+  const handleModeChange = () => {
+    setMode((prev) => (prev === "login" ? "register" : "login"));
   };
 
   return (
@@ -32,8 +47,8 @@ export const SignUp = () => {
           <h2 className="text-2xl font-semibold">Sign up</h2>
           <p>
             Already have an account?{" "}
-            <a href="#" className="font-bold">
-              Log in
+            <a href="#" className="font-bold" onClick={handleModeChange}>
+              {mode === "login" ? "Sign in" : "Sign up"}
             </a>
           </p>
         </div>
@@ -53,22 +68,37 @@ export const SignUp = () => {
           </div>
         </div>
         <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
+          {error && (
+            <p className="m-0 p-0 text-xs text-red-500">{error.message}</p>
+          )}
           <AuthFormGroup>
             <AuthLabel htmlFor="email">Email</AuthLabel>
+            {errors.email && (
+              <p className="m-0 p-0 text-xs text-red-500">Invalid email!</p>
+            )}
             <AuthInput
               id="email"
               placeholder="john@doe.com"
               {...register("email")}
-              className={`${errors.email ? "border-red-500" : ""}`}
+              className={`${
+                errors.email ? "border-red-500 focus:border-red-500" : ""
+              }`}
             />
           </AuthFormGroup>
           <AuthFormGroup>
             <AuthLabel htmlFor="password">Password</AuthLabel>
+            {errors.password && (
+              <p className="m-0 p-0 text-xs text-red-500">
+                Invalid password! (min length 8 char.)
+              </p>
+            )}
             <AuthInput
               id="password"
               type="password"
               {...register("password")}
-              className={`${errors.password ? "border-red-500" : ""}`}
+              className={`${
+                errors.password ? "border-red-500 focus:border-red-500" : ""
+              }`}
             />
           </AuthFormGroup>
           <AuthFormGroup>
@@ -76,11 +106,34 @@ export const SignUp = () => {
             <AuthInput
               id="role"
               {...register("role")}
-              className={`${errors.role ? "border-red-500" : ""}`}
+              className={`${
+                errors.role ? "border-red-500 focus:border-red-500" : ""
+              }`}
             />
           </AuthFormGroup>
-          <AuthButton className="mt-6" type="submit">
-            Create account
+          <AuthButton
+            className="mt-6"
+            type="submit"
+            variant={isLoading ? "primary" : "secondary"}
+          >
+            {isLoading ? (
+              <>
+                <Image
+                  src="/svg/oval.svg"
+                  alt="loading oval"
+                  role="progressbar"
+                  width={20}
+                  height={10}
+                  color="red"
+                  className="mr-2"
+                />
+                <p className="text-violetSecondary">Loading</p>
+              </>
+            ) : mode === "login" ? (
+              "Sign in"
+            ) : (
+              "Sign up"
+            )}
           </AuthButton>
         </form>
       </div>

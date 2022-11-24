@@ -12,13 +12,20 @@ import { TRPCError } from "@trpc/server";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
+  session: {
+    strategy: "jwt",
+  },
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-      }
-      return session;
-    },
+    // jwt({ token, user }) {
+    //   console.log({ token, user });
+    //   if (user) {
+    //     token.id = user.id;
+    //   }
+    //   return token;
+    // },
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),

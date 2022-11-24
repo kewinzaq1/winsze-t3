@@ -11,7 +11,7 @@ export const authRouter = router({
   }),
   register: publicProcedure
     .input(registerSchema)
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const password = await bcrypt.hash(input.password, 10);
       const user = await ctx.prisma.user.create({
         data: {

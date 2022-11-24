@@ -6,3 +6,4 @@ export const registerSchema = z.object({
   role: z.string().optional(),
 });
 
+export type RegisterSchema = z.infer<typeof registerSchema>;

@@ -5,13 +5,12 @@ import { AuthInput } from "./AuthInput";
 import { AuthButton } from "./AuthButton";
 import { AuthLeftPanel } from "./AuthLeftPanel";
 import { trpc } from "src/utils/trpc";
-import type { RegisterSchema } from "src/zod/auth";
 import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 
 export const SignUp = () => {
@@ -28,6 +27,7 @@ export const SignUp = () => {
     resolver: zodResolver(registerSchema),
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {
     if (mode === "register") {
       mutate(data);
@@ -64,11 +64,23 @@ export const SignUp = () => {
             Other methods?
           </p>
           <div className="flex items-center gap-2">
-            <AuthButton variant="secondary">
+            <AuthButton
+              variant="secondary"
+              onClick={async () => {
+                const res = await signIn("google");
+                console.log(res);
+              }}
+            >
               <BsGoogle className="mr-2 text-xl" />
               Google
             </AuthButton>
-            <AuthButton variant="secondary">
+            <AuthButton
+              variant="secondary"
+              onClick={async () => {
+                const res = await signIn("facebook");
+                console.log(res);
+              }}
+            >
               <BsFacebook className="mr-2 text-xl" />
               Facebook
             </AuthButton>

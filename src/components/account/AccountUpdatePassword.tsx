@@ -24,6 +24,7 @@ export function AccountUpdatePassword() {
     ),
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = (value: any) => {
     console.log(value);
     mutate(value);
@@ -32,10 +33,10 @@ export function AccountUpdatePassword() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex w-full flex-col items-start"
+      className="mt-4 flex w-full flex-col items-start"
     >
-      {error && <p>{error.message}</p>}
-      {isLoading && <p>Loading...</p>}
+      <h2 className="text-2xl font-semibold">Update Password</h2>
+      {error && <p className="m-0 p-0 text-sm text-red-500">{error.message}</p>}
       <AuthFormGroup className="w-full">
         <AuthLabel>Current Password</AuthLabel>
         {errors.currentPassword && (

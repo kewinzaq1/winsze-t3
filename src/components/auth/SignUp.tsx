@@ -12,6 +12,7 @@ import { createRef, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { AuthOtherMethods } from "./AuthOtherMethods";
 
 export const SignUp = () => {
   const { mutate, isLoading, error } = trpc.auth.register.useMutation();
@@ -56,27 +57,7 @@ export const SignUp = () => {
             </Link>
           </p>
         </div>
-        <div className="mt-10 flex flex-col">
-          <p className="col-span-2 mb-2 text-sm text-slate-600">
-            Other methods?
-          </p>
-          <div className="flex items-center gap-2">
-            <AuthButton
-              variant="secondary"
-              onClick={async () => await signIn("google")}
-            >
-              <BsGoogle className="mr-2 text-xl" />
-              Google
-            </AuthButton>
-            <AuthButton
-              variant="secondary"
-              onClick={async () => await signIn("facebook")}
-            >
-              <BsFacebook className="mr-2 text-xl" />
-              Facebook
-            </AuthButton>
-          </div>
-        </div>
+        <AuthOtherMethods />
         <form className="mt-10" onSubmit={handleSubmit(onSubmit)} ref={parent}>
           {error && (
             <p className="m-0 p-0 text-sm text-red-500">{error?.message}</p>

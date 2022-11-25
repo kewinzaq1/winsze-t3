@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { AuthOtherMethods } from "./AuthOtherMethods";
 
 export const SignIn = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -63,32 +64,7 @@ export const SignIn = () => {
             </Link>
           </p>
         </div>
-        <div className="mt-10 flex flex-col">
-          <p className="col-span-2 mb-2 text-sm text-slate-600">
-            Other methods?
-          </p>
-          <div className="flex items-center gap-2">
-            <AuthButton
-              variant="secondary"
-              onClick={async () => {
-                const res = await signIn("google");
-                console.log(res);
-              }}
-            >
-              <BsGoogle className="mr-2 text-xl" />
-              Google
-            </AuthButton>
-            <AuthButton
-              variant="secondary"
-              onClick={async () => {
-                const res = await signIn("facebook");
-                console.log(res);
-              }}
-            >
-              <BsFacebook className="mr-2 text-xl" />
-              Facebook
-            </AuthButton>
-          </div>
+       <AuthOtherMethods/>
         </div>
         <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
           {loginError && (

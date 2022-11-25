@@ -1,4 +1,3 @@
-import { BsFacebook, BsGoogle } from "react-icons/bs";
 import { AuthFormGroup } from "./AuthFormGroup";
 import { AuthLabel } from "./AuthLabel";
 import { AuthInput } from "./AuthInput";
@@ -9,7 +8,7 @@ import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createRef, useEffect } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { AuthOtherMethods } from "./AuthOtherMethods";

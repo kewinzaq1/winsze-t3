@@ -105,4 +105,38 @@ export const accountRouter = router({
       });
       return updatedUser;
     }),
+  removeAccount: protectedProcedure
+    .input(
+      z.object({
+        password: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User not found",
+        });
+      }
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: ctx.session.user.email as string },
+      });
+      const isValid = await bcrypt.compare(
+        input.password,
+        user?.password as string
+      );
+      if (!isValid) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid password",
+        });
+      }
+
+      const deletedUser = await ctx.prisma.user.delete({
+        where: { email: ctx.session.user.email as string },
+      });
+
+      return deletedUser;
+    }),
 });

@@ -10,6 +10,7 @@ export const AuthOtherMethods = () => {
         <AuthButton
           variant="secondary"
           onClick={async () => await signIn("google")}
+          className="!text-slate-900"
         >
           <BsGoogle className="mr-2 text-xl" />
           Google
@@ -17,6 +18,7 @@ export const AuthOtherMethods = () => {
         <AuthButton
           variant="secondary"
           onClick={async () => await signIn("facebook")}
+          className="!text-slate-900"
         >
           <BsFacebook className="mr-2 text-xl" />
           Facebook

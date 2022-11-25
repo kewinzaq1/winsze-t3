@@ -8,14 +8,26 @@ import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createRef, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { AuthOtherMethods } from "./AuthOtherMethods";
 
 export const SignUp = () => {
-  const { mutate, isLoading, error } = trpc.auth.register.useMutation();
+  const {
+    mutate,
+    isLoading,
+    error,
+    data: user,
+  } = trpc.auth.register.useMutation();
   const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      signIn("email", { email: user.email, redirect: false });
+      router.push("/sign-in");
+    }
+  }, [user, router]);
 
   const session = useSession();
 

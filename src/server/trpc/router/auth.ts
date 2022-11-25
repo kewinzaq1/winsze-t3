@@ -22,6 +22,7 @@ export const authRouter = router({
             role: input.role,
           },
         });
+        console.log({ user });
         return user;
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {

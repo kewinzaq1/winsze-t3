@@ -16,7 +16,6 @@ import { AuthOtherMethods } from "./AuthOtherMethods";
 export const SignUp = () => {
   const { mutate, isLoading, error } = trpc.auth.register.useMutation();
   const router = useRouter();
-  const parent = createRef<HTMLFormElement>();
 
   const session = useSession();
 
@@ -57,7 +56,7 @@ export const SignUp = () => {
           </p>
         </div>
         <AuthOtherMethods />
-        <form className="mt-10" onSubmit={handleSubmit(onSubmit)} ref={parent}>
+        <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
           {error && (
             <p className="m-0 p-0 text-sm text-red-500">{error?.message}</p>
           )}

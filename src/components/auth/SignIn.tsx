@@ -64,46 +64,46 @@ export const SignIn = () => {
           </p>
         </div>
         <AuthOtherMethods />
+        <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
+          {loginError && (
+            <p className="m-0 p-0 text-sm text-red-500">{loginError}</p>
+          )}
+          <AuthFormGroup>
+            <AuthLabel htmlFor="email">Email</AuthLabel>
+            {errors.email && (
+              <p className="m-0 p-0 text-xs text-red-500">Invalid email!</p>
+            )}
+            <AuthInput
+              id="email"
+              placeholder="john@doe.com"
+              {...register("email")}
+              error={Boolean(errors.email)}
+            />
+          </AuthFormGroup>
+          <AuthFormGroup>
+            <AuthLabel htmlFor="password">Password</AuthLabel>
+            {errors.password && (
+              <p className="m-0 p-0 text-xs text-red-500">
+                Invalid password! (min length 8 char.)
+              </p>
+            )}
+            <AuthInput
+              id="password"
+              type="password"
+              {...register("password")}
+              error={Boolean(errors.password)}
+            />
+          </AuthFormGroup>
+          <AuthButton
+            className="mt-6"
+            type="submit"
+            variant={isLoading ? "primary" : "secondary"}
+            isLoading={isLoading}
+          >
+            Sign in
+          </AuthButton>
+        </form>
       </div>
-      <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
-        {loginError && (
-          <p className="m-0 p-0 text-sm text-red-500">{loginError}</p>
-        )}
-        <AuthFormGroup>
-          <AuthLabel htmlFor="email">Email</AuthLabel>
-          {errors.email && (
-            <p className="m-0 p-0 text-xs text-red-500">Invalid email!</p>
-          )}
-          <AuthInput
-            id="email"
-            placeholder="john@doe.com"
-            {...register("email")}
-            error={Boolean(errors.email)}
-          />
-        </AuthFormGroup>
-        <AuthFormGroup>
-          <AuthLabel htmlFor="password">Password</AuthLabel>
-          {errors.password && (
-            <p className="m-0 p-0 text-xs text-red-500">
-              Invalid password! (min length 8 char.)
-            </p>
-          )}
-          <AuthInput
-            id="password"
-            type="password"
-            {...register("password")}
-            error={Boolean(errors.password)}
-          />
-        </AuthFormGroup>
-        <AuthButton
-          className="mt-6"
-          type="submit"
-          variant={isLoading ? "primary" : "secondary"}
-          isLoading={isLoading}
-        >
-          Sign in
-        </AuthButton>
-      </form>
     </main>
   );
 };

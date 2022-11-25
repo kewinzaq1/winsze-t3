@@ -51,4 +51,58 @@ export const accountRouter = router({
 
       return updatedUser;
     }),
+  updateEmail: protectedProcedure
+    .input(
+      z.object({
+        password: z.string(),
+        email: z.string().email(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User not found",
+        });
+      }
+
+      if (ctx.session.user.email === input.email) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "New email is the same as the current email",
+        });
+      }
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: ctx.session.user.email as string },
+      });
+      const isValid = await bcrypt.compare(
+        input.password,
+        user?.password as string
+      );
+      if (!isValid) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid password",
+        });
+      }
+
+      const emailIsUsed = await ctx.prisma.user.findUnique({
+        where: { email: input.email },
+      });
+      if (emailIsUsed) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Email already in use",
+        });
+      }
+
+      const updatedUser = await ctx.prisma.user.update({
+        where: { email: ctx.session.user.email as string },
+        data: {
+          email: input.email,
+        },
+      });
+      return updatedUser;
+    }),
 });

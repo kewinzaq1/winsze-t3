@@ -7,7 +7,7 @@ import { trpc } from "src/utils/trpc";
 import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createRef, useEffect } from "react";
+import { useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";

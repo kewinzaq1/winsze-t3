@@ -62,7 +62,7 @@ export function AccountRemoveAccount() {
         type="submit"
         className="mt-5 w-full text-center"
         isLoading={isLoading}
-        variant={isLoading ? "primary" : "secondary"}
+        variant="error"
       >
         Remove account
       </AuthButton>

@@ -13,23 +13,26 @@ import { z } from "zod";
 export function AccountUpdateAvatar() {
   const { mutate, isLoading, error, data } =
     trpc.account.updateAvatar.useMutation();
-  const [avatar, setAvatar] = useState("");
   const session = useSession();
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
-    if (session.data?.user?.image) {
-      setAvatar(session.data.user.image);
+    if (!avatar.length && session.data?.user?.image) {
+      setAvatar(session.data.user?.image);
     }
-    if (data?.image && data.image !== avatar) {
-      setAvatar(data?.image);
+  }, [avatar.length, session]);
+
+  useEffect(() => {
+    if (data) {
+      setAvatar(data.image as string);
     }
-    console.log({ avatar, session, data });
-  }, [avatar, data, data?.image, session]);
+  }, [data]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm({
     resolver: zodResolver(
       z.object({
@@ -37,6 +40,18 @@ export function AccountUpdateAvatar() {
       })
     ),
   });
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      console.log(value);
+      if (!value.avatar[0]) {
+        return;
+      }
+      const url = URL.createObjectURL(value.avatar[0]);
+      setAvatar(url);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (value: any) => {
@@ -74,36 +89,35 @@ export function AccountUpdateAvatar() {
         </p>
       )}
       <AuthFormGroup className="w-full">
-        <AuthLabel>Avatar</AuthLabel>
-        {errors.avatar && (
-          <p className="m-0 p-0 text-xs text-red-500">
-            {errors.avatar.message as string}
-          </p>
-        )}
+        <label htmlFor="avatar">
+          {Boolean(avatar.length) && (
+            <div className="relative h-24 w-24 rounded-full">
+              <Image
+                src={avatar}
+                alt="123"
+                fill
+                className="cover rounded-full"
+              />
+            </div>
+          )}
+        </label>
         <AuthInput
-          className="w-full"
+          id="avatar"
+          className="hidden w-full"
           type="file"
           placeholder="Avatar"
+          accept="image/png, image/jpeg"
           {...register("avatar")}
           error={Boolean(errors.avatar)}
         />
       </AuthFormGroup>
-      {Boolean(avatar.length) && (
-        <Image
-          src={avatar}
-          alt="123"
-          className="h-24 w-24"
-          width={24}
-          height={24}
-        />
-      )}
+
       <AuthButton
         type="submit"
         className="mt-5 w-full text-center"
         isLoading={isLoading}
-        variant="error"
       >
-        Remove account
+        Update avatar
       </AuthButton>
     </form>
   );

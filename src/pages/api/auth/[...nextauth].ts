@@ -24,22 +24,10 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days\
   },
   callbacks: {
-    jwt({ token, user }) {
-      console.log({ token, user });
-      if (user) {
-        token.id = user.id;
-      }
-      return token;
-    },
-    session({ session, token, user }) {
-      session.user = { ...session.user, id: (token.id as string) || user.id };
-
-      return session;
-    },
     async signIn({ user, profile }) {
       const image = (profile as { picture: string | undefined })?.picture;
 
-      if (image && user.image !== image) {
+      if (image?.length && !user.image?.length) {
         await prisma.user.update({
           where: { id: user.id },
           data: {
@@ -58,6 +46,16 @@ export const authOptions: NextAuthOptions = {
       }
 
       return true;
+    },
+    async session({ session }) {
+      const user = await prisma.user.findUnique({
+        where: { email: session.user?.email as string },
+      });
+      if (!user) {
+        return session;
+      }
+      session.user = user;
+      return session;
     },
   },
   // Configure one or more authentication providers

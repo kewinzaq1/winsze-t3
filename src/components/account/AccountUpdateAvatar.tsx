@@ -1,3 +1,4 @@
+import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -6,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { AuthButton } from "src/components/auth/AuthButton";
 import { AuthFormGroup } from "src/components/auth/AuthFormGroup";
 import { AuthInput } from "src/components/auth/AuthInput";
-import { AuthLabel } from "src/components/auth/AuthLabel";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 
@@ -26,12 +26,16 @@ export function AccountUpdateAvatar() {
   const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
+    console.log(session);
     if (!avatar.length && session.data?.user?.image) {
+      console.log(true);
       setAvatar(session.data.user?.image);
     }
   }, [avatar, avatar.length, session]);
 
   useEffect(() => {
+    console.log({ data });
+
     if (data) {
       setAvatar(data.image as string);
     }
@@ -109,12 +113,22 @@ export function AccountUpdateAvatar() {
         <AuthFormGroup className="flex w-full items-center justify-center">
           <label htmlFor="avatar">
             <div className="relative h-24 w-24 rounded-full">
-              <Image
-                src={avatar.length ? avatar : "/images/avatar_placeholder.png"}
-                alt="123"
-                fill
-                className="cover rounded-full"
-              />
+              {avatar.length ? (
+                <Image
+                  src={avatar}
+                  alt="123"
+                  fill
+                  className="cover rounded-full"
+                />
+              ) : (
+                <Image
+                  src={avatarPlaceholder}
+                  placeholder="blur"
+                  alt="123"
+                  fill
+                  className="cover rounded-full"
+                />
+              )}
             </div>
           </label>
           <AuthInput

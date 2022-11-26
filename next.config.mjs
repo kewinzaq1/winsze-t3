@@ -18,6 +18,7 @@ const config = {
       "i.pravatar.cc",
       "images.unsplash.com",
       "kdltaabmkmznwqfacwfc.supabase.co",
+      "lh3.googleusercontent.com",
     ],
   },
 };

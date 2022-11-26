@@ -21,16 +21,21 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   jwt: {
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60, // 30 days\
   },
   callbacks: {
-    // jwt({ token, user }) {
-    //   console.log({ token, user });
-    //   if (user) {
-    //     token.id = user.id;
-    //   }
-    //   return token;
-    // },
+    jwt({ token, user }) {
+      console.log({ token, user });
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    session({ session, token, user }) {
+      session.user = { ...session.user, id: (token.id as string) || user.id };
+
+      return session;
+    },
     async signIn({ user, profile }) {
       const image = (profile as { picture: string | undefined })?.picture;
 

@@ -1,4 +1,5 @@
 import { AccountRemoveAccount } from "src/components/account/AccountRemoveAccount";
+import { AccountUpdateAvatar } from "src/components/account/AccountUpdateAvatar";
 import { AccountUpdateEmail } from "src/components/account/AccountUpdateEmail";
 import { AccountUpdatePassword } from "src/components/account/AccountUpdatePassword";
 
@@ -8,6 +9,7 @@ export default function AccountPage() {
       <AccountUpdatePassword />
       <AccountUpdateEmail />
       <AccountRemoveAccount />
+      <AccountUpdateAvatar />
     </div>
   );
 }

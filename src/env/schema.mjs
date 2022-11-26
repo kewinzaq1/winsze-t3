@@ -7,6 +7,9 @@ import { z } from "zod";
  */
 export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
+  STORAGE_URL: z.string().url(),
+  STORAGE_ANON_KEY: z.string(),
+  STORAGE_SERVICE_KEY: z.string(),
   SHADOW_DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(["development", "test", "production"]),
   NEXTAUTH_SECRET:

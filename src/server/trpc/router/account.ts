@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { Blob } from "buffer";
+import { storageClient } from "src/server/storage/supabase";
 
 export const accountRouter = router({
   updatePassword: protectedProcedure
@@ -139,5 +141,70 @@ export const accountRouter = router({
 
       return deletedUser;
     }),
-    
+  updateAvatar: protectedProcedure
+    .input(z.object({ avatar: z.any() }))
+    .mutation(async ({ ctx, input }) => {
+      console.log(ctx.session.user);
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: ctx.session.user.email as string },
+      });
+
+      const getTypeFromBase64 = (base64: string) => {
+        const base64Data = base64.split(",")[0];
+        const type = base64Data?.match(/:(.*?);/)?.[1];
+        return type;
+      };
+      console.log();
+
+      if (!input.avatar) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Avatar not found",
+        });
+      }
+
+      const base64ToBuffer = () => {
+        const base64 = input.avatar;
+        const base64Image = base64.split(";base64,").pop() as string;
+        const buffer = Buffer.from(base64Image, "base64");
+        return buffer;
+      };
+
+      const avatar = base64ToBuffer();
+
+      const getUUID = () => {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+          /[xy]/g,
+          function (c) {
+            const r = (Math.random() * 16) | 0,
+              v = c == "x" ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+          }
+        );
+      };
+
+      const fileName = `${user?.id}/${getUUID()}`;
+      const { error } = await storageClient
+        .from("avatars")
+        .upload(fileName, avatar, {
+          cacheControl: "3600",
+          contentType: getTypeFromBase64(input.avatar),
+        });
+      if (error) {
+        throw error;
+      }
+
+      const { data: url } = storageClient
+        .from("avatars")
+        .getPublicUrl(fileName);
+
+      const updatedUser = await ctx.prisma.user.update({
+        where: { email: ctx.session.user.email as string },
+        data: {
+          image: url.publicUrl,
+        },
+      });
+      return updatedUser;
+    }),
 });

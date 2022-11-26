@@ -8,7 +8,10 @@ export const AuthLabel = ({
   LabelHTMLAttributes<HTMLLabelElement>,
   HTMLLabelElement
 >) => (
-  <label className={`text-slate-600 ${className}`} {...restProps}>
+  <label
+    className={`flex items-center gap-2 whitespace-nowrap text-slate-600 ${className}`}
+    {...restProps}
+  >
     {children}
   </label>
 );

@@ -1,44 +1,17 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { trpc } from "src/utils/trpc";
-import { z } from "zod";
+import { AccountHeader } from "src/components/account/AccountHeader";
+import { AccountRemoveAccount } from "src/components/account/AccountRemoveAccount";
+import { AccountUpdateAvatar } from "src/components/account/AccountUpdateAvatar";
+import { AccountUpdateEmail } from "src/components/account/AccountUpdateEmail";
+import { AccountUpdatePassword } from "src/components/account/AccountUpdatePassword";
 
 export default function AccountPage() {
-  const { mutate, isLoading, error } =
-    trpc.account.changePassword.useMutation();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(
-      z.object({ currentPassword: z.string(), newPassword: z.string() })
-    ),
-  });
-
-  const onSubmit = (value: any) => {
-    console.log(value);
-    mutate(value);
-  };
-
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-        {error && <p>{error.message}</p>}
-        {isLoading && <p>Loading...</p>}
-        <input
-          type="password"
-          placeholder="Current password"
-          {...register("currentPassword")}
-        />
-        <input
-          type="password"
-          placeholder="New Password"
-          {...register("newPassword")}
-        />
-        <button type="submit">Submit</button>
-      </form>
+    <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <AccountHeader />
+      <AccountUpdatePassword />
+      <AccountUpdateEmail />
+      <AccountRemoveAccount />
+      <AccountUpdateAvatar />
     </div>
   );
 }

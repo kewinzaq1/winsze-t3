@@ -14,7 +14,12 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ["i.pravatar.cc", "images.unsplash.com"],
+    domains: [
+      "i.pravatar.cc",
+      "images.unsplash.com",
+      "kdltaabmkmznwqfacwfc.supabase.co",
+      "lh3.googleusercontent.com",
+    ],
   },
 };
 export default config;

@@ -1,4 +1,3 @@
-import { BsFacebook, BsGoogle } from "react-icons/bs";
 import { AuthFormGroup } from "./AuthFormGroup";
 import { AuthLabel } from "./AuthLabel";
 import { AuthInput } from "./AuthInput";
@@ -7,11 +6,11 @@ import { AuthLeftPanel } from "./AuthLeftPanel";
 import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { AuthOtherMethods } from "./AuthOtherMethods";
 
 export const SignIn = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -64,33 +63,7 @@ export const SignIn = () => {
             </Link>
           </p>
         </div>
-        <div className="mt-10 flex flex-col">
-          <p className="col-span-2 mb-2 text-sm text-slate-600">
-            Other methods?
-          </p>
-          <div className="flex items-center gap-2">
-            <AuthButton
-              variant="secondary"
-              onClick={async () => {
-                const res = await signIn("google");
-                console.log(res);
-              }}
-            >
-              <BsGoogle className="mr-2 text-xl" />
-              Google
-            </AuthButton>
-            <AuthButton
-              variant="secondary"
-              onClick={async () => {
-                const res = await signIn("facebook");
-                console.log(res);
-              }}
-            >
-              <BsFacebook className="mr-2 text-xl" />
-              Facebook
-            </AuthButton>
-          </div>
-        </div>
+        <AuthOtherMethods />
         <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
           {loginError && (
             <p className="m-0 p-0 text-sm text-red-500">{loginError}</p>
@@ -125,23 +98,9 @@ export const SignIn = () => {
             className="mt-6"
             type="submit"
             variant={isLoading ? "primary" : "secondary"}
+            isLoading={isLoading}
           >
-            {isLoading ? (
-              <>
-                <Image
-                  src="/svg/oval.svg"
-                  alt="loading oval"
-                  role="progressbar"
-                  width={20}
-                  height={10}
-                  color="red"
-                  className="mr-2"
-                />
-                <p className="text-violetSecondary">Loading</p>
-              </>
-            ) : (
-              "Sign in"
-            )}
+            Sign in
           </AuthButton>
         </form>
       </div>

@@ -117,7 +117,8 @@ export function AccountUpdateAvatar() {
                 <Image
                   src={avatar}
                   alt="123"
-                  fill
+                  width={96}
+                  height={96}
                   className="cover rounded-full"
                 />
               ) : (
@@ -125,7 +126,8 @@ export function AccountUpdateAvatar() {
                   src={avatarPlaceholder}
                   placeholder="blur"
                   alt="123"
-                  fill
+                  width={96}
+                  height={96}
                   className="cover rounded-full"
                 />
               )}

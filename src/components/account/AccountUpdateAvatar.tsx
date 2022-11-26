@@ -29,7 +29,7 @@ export function AccountUpdateAvatar() {
     if (!avatar.length && session.data?.user?.image) {
       setAvatar(session.data.user?.image);
     }
-  }, [avatar.length, session]);
+  }, [avatar, avatar.length, session]);
 
   useEffect(() => {
     if (data) {
@@ -45,7 +45,12 @@ export function AccountUpdateAvatar() {
   } = useForm({
     resolver: zodResolver(
       z.object({
-        avatar: z.any(),
+        avatar:
+          typeof window !== "undefined"
+            ? z
+                .instanceof(FileList)
+                .refine((val) => val.length > 0, "File is required")
+            : z.any(),
       })
     ),
   });
@@ -64,6 +69,10 @@ export function AccountUpdateAvatar() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (value: any) => {
+    if (!value.avatar[0]) {
+      throw new Error("No file selected");
+    }
+
     const { avatar } = value;
 
     const convertToBase64 = (file: File) => {
@@ -87,21 +96,26 @@ export function AccountUpdateAvatar() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="relative">
       <h2 className="text-2xl font-semibold">Update avatar</h2>
+      {error && <p className="absolute text-red-500">{error.message}</p>}
+      {removeAvatarError && (
+        <p className="absolute text-red-500">{removeAvatarError.message}</p>
+      )}
+      {errors.avatar && (
+        <p className="absolute text-red-500">{`${errors.avatar.message}`}</p>
+      )}
       <div className="flex w-full items-center justify-between">
         <AuthFormGroup className="flex w-full items-center justify-center">
           <label htmlFor="avatar">
-            {Boolean(avatar.length) && (
-              <div className="relative h-24 w-24 rounded-full">
-                <Image
-                  src={avatar}
-                  alt="123"
-                  fill
-                  className="cover rounded-full"
-                />
-              </div>
-            )}
+            <div className="relative h-24 w-24 rounded-full">
+              <Image
+                src={avatar.length ? avatar : "/images/avatar_placeholder.png"}
+                alt="123"
+                fill
+                className="cover rounded-full"
+              />
+            </div>
           </label>
           <AuthInput
             id="avatar"
@@ -116,12 +130,14 @@ export function AccountUpdateAvatar() {
         <div className="col-start-2 row-start-1 flex flex-col gap-2">
           <AuthButton
             type="submit"
-            className="mt-5 text-center"
+            className="mt-5 justify-center"
             isLoading={isLoading}
           >
             Update
           </AuthButton>
           <AuthButton
+            className="justify-center"
+            disabled={!avatar.length}
             type="button"
             onClick={() => removeAvatar()}
             isLoading={isRemovingAvatar}

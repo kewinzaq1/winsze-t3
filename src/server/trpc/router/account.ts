@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { Blob } from "buffer";
 import { storageClient } from "src/server/storage/supabase";
 
 export const accountRouter = router({
@@ -155,7 +154,6 @@ export const accountRouter = router({
         const type = base64Data?.match(/:(.*?);/)?.[1];
         return type;
       };
-      console.log();
 
       if (!input.avatar) {
         throw new TRPCError({

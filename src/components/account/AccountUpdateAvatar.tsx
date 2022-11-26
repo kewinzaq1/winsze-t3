@@ -17,11 +17,8 @@ export function AccountUpdateAvatar() {
     mutate: removeAvatar,
     isLoading: isRemovingAvatar,
     error: removeAvatarError,
-  } = trpc.account.removeAvatar.useMutation({
-    onSuccess: () => {
-      setAvatar("");
-    },
-  });
+    data: removeAvatarData,
+  } = trpc.account.removeAvatar.useMutation();
   const session = useSession();
   const [avatar, setAvatar] = useState("");
 
@@ -40,6 +37,12 @@ export function AccountUpdateAvatar() {
       setAvatar(data.image as string);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (removeAvatarData) {
+      setAvatar(""); // set avatar to empty string instead of removeAvatarData.image because it's null
+    }
+  }, [removeAvatarData]);
 
   const {
     register,

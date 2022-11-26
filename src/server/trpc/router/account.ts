@@ -207,4 +207,27 @@ export const accountRouter = router({
       });
       return updatedUser;
     }),
+  removeAvatar: protectedProcedure.mutation(async ({ ctx }) => {
+    if (!ctx.session.user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User not found",
+      });
+    }
+
+    const user = await ctx.prisma.user.findUnique({
+      where: { email: ctx.session.user.email as string },
+    });
+
+    await storageClient.from("avatars").remove([user?.image as string]);
+
+    const updatedUser = await ctx.prisma.user.update({
+      where: { email: ctx.session.user.email as string },
+      data: {
+        image: null,
+      },
+    });
+
+    return updatedUser;
+  }),
 });

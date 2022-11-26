@@ -5,6 +5,7 @@ import { Space_Grotesk } from "@next/font/google";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
+  subsets: ["latin"],
 });
 
 import { trpc } from "../utils/trpc";
@@ -17,7 +18,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <main className={`${spaceGrotesk.variable} !font-sans`}>
+      <main className={`${spaceGrotesk.variable} font-sans`}>
         <Component {...pageProps} />
       </main>
     </SessionProvider>

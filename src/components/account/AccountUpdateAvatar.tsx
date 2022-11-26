@@ -13,6 +13,15 @@ import { z } from "zod";
 export function AccountUpdateAvatar() {
   const { mutate, isLoading, error, data } =
     trpc.account.updateAvatar.useMutation();
+  const {
+    mutate: removeAvatar,
+    isLoading: isRemovingAvatar,
+    error: removeAvatarError,
+  } = trpc.account.removeAvatar.useMutation({
+    onSuccess: () => {
+      setAvatar("");
+    },
+  });
   const session = useSession();
   const [avatar, setAvatar] = useState("");
 
@@ -78,47 +87,50 @@ export function AccountUpdateAvatar() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="relative mt-4 flex h-full w-full flex-col items-start"
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <h2 className="text-2xl font-semibold">Update avatar</h2>
-      {error && (
-        <p className="absolute top-8 m-0 p-0 text-sm text-red-500">
-          {error.message}
-        </p>
-      )}
-      <AuthFormGroup className="w-full">
-        <label htmlFor="avatar">
-          {Boolean(avatar.length) && (
-            <div className="relative h-24 w-24 rounded-full">
-              <Image
-                src={avatar}
-                alt="123"
-                fill
-                className="cover rounded-full"
-              />
-            </div>
-          )}
-        </label>
-        <AuthInput
-          id="avatar"
-          className="hidden w-full"
-          type="file"
-          placeholder="Avatar"
-          accept="image/png, image/jpeg"
-          {...register("avatar")}
-          error={Boolean(errors.avatar)}
-        />
-      </AuthFormGroup>
-
-      <AuthButton
-        type="submit"
-        className="mt-5 w-full text-center"
-        isLoading={isLoading}
-      >
-        Update avatar
-      </AuthButton>
+      <div className="flex w-full items-center justify-between">
+        <AuthFormGroup className="flex w-full items-center justify-center">
+          <label htmlFor="avatar">
+            {Boolean(avatar.length) && (
+              <div className="relative h-24 w-24 rounded-full">
+                <Image
+                  src={avatar}
+                  alt="123"
+                  fill
+                  className="cover rounded-full"
+                />
+              </div>
+            )}
+          </label>
+          <AuthInput
+            id="avatar"
+            className="hidden w-full"
+            type="file"
+            placeholder="Avatar"
+            accept="image/png, image/jpeg"
+            {...register("avatar")}
+            error={Boolean(errors.avatar)}
+          />
+        </AuthFormGroup>
+        <div className="col-start-2 row-start-1 flex flex-col gap-2">
+          <AuthButton
+            type="submit"
+            className="mt-5 text-center"
+            isLoading={isLoading}
+          >
+            Update
+          </AuthButton>
+          <AuthButton
+            type="button"
+            onClick={() => removeAvatar()}
+            isLoading={isRemovingAvatar}
+            variant="secondary"
+          >
+            Remove
+          </AuthButton>
+        </div>
+      </div>
     </form>
   );
 }

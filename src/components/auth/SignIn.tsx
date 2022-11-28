@@ -93,6 +93,12 @@ export const SignIn = () => {
               {...register("password")}
               error={Boolean(errors.password)}
             />
+            <Link
+              href="forgot-password"
+              className="text-sm font-bold text-slate-700"
+            >
+              Forgot password?
+            </Link>
           </AuthFormGroup>
           <AuthButton
             className="mt-6"

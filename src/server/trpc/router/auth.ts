@@ -106,7 +106,6 @@ export const authRouter = router({
           message: "Passwords do not match",
         });
       }
-      console.log(input.token);
 
       const token = await ctx.prisma.resetToken.findUnique({
         where: { token: input.token },

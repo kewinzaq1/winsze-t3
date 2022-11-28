@@ -45,15 +45,24 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  role          String    @default("USER")
+  role          String       @default("USER")
   password      String? // some users may not have a password (email provider)
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  ResetToken    ResetToken[]
+}
+
+model ResetToken {
+  id      String   @id @default(cuid())
+  token   String   @unique
+  expires DateTime
+  userId  String
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

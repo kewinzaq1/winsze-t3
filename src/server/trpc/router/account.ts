@@ -3,6 +3,7 @@ import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { storageClient } from "src/server/storage/supabase";
+import { getUUID } from "src/utils/getUUID";
 
 export const accountRouter = router({
   updatePassword: protectedProcedure
@@ -170,17 +171,6 @@ export const accountRouter = router({
       };
 
       const avatar = base64ToBuffer();
-
-      const getUUID = () => {
-        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-          /[xy]/g,
-          function (c) {
-            const r = (Math.random() * 16) | 0,
-              v = c == "x" ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-          }
-        );
-      };
 
       const fileName = `${user?.id}/${getUUID()}`;
       const { error } = await storageClient

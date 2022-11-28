@@ -14,7 +14,7 @@ export const AuthInput = forwardRef<HTMLInputElement, AuthInputProps>(
     <input
       type="text"
       className={`rounded-md border border-slate-400 bg-white p-2 outline-none focus:border-violetPrimary ${className} ${
-        Boolean(error) ? "border-red-500 focus:border-red-500" : ""
+        error ? "!border-red-500 focus:!border-red-500" : ""
       }`}
       {...restProps}
       ref={ref}

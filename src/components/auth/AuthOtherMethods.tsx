@@ -1,6 +1,6 @@
 import { signIn } from "next-auth/react";
 import { BsGoogle, BsFacebook } from "react-icons/bs";
-import { AuthButton } from "./AuthButton";
+import { AuthButton } from "../common/Button";
 
 export const AuthOtherMethods = () => {
   return (

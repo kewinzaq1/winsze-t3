@@ -24,8 +24,10 @@ export default function ResetPasswordPage() {
   } = useForm({
     resolver: zodResolver(
       z.object({
-        password: z.string().min(8),
-        passwordConfirmation: z.string().min(8),
+        password: z.string().min(8, "Password must be at least 8 characters"),
+        passwordConfirmation: z
+          .string()
+          .min(8, "Password must be at least 8 characters"),
       })
     ),
     defaultValues: {

@@ -4,9 +4,9 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { AuthButton } from "src/components/auth/AuthButton";
-import { AuthFormGroup } from "src/components/auth/AuthFormGroup";
-import { AuthInput } from "src/components/auth/AuthInput";
+import { AuthButton } from "src/components/common/Button";
+import { AuthFormGroup } from "src/components/common/FormGroup";
+import { AuthInput } from "src/components/common/Input";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 

@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
-import { AuthButton } from "src/components/auth/AuthButton";
-import { AuthFormGroup } from "src/components/auth/AuthFormGroup";
-import { AuthInput } from "src/components/auth/AuthInput";
-import { AuthLabel } from "src/components/auth/AuthLabel";
+import { AuthButton } from "src/components/common/Button";
+import { AuthFormGroup } from "src/components/common/FormGroup";
+import { AuthInput } from "src/components/common/Input";
+import { AuthLabel } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 

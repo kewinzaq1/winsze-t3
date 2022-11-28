@@ -1,7 +1,7 @@
-import { AuthFormGroup } from "./AuthFormGroup";
-import { AuthLabel } from "./AuthLabel";
-import { AuthInput } from "./AuthInput";
-import { AuthButton } from "./AuthButton";
+import { AuthFormGroup } from "../common/FormGroup";
+import { AuthLabel } from "../common/Label";
+import { AuthInput } from "../common/Input";
+import { AuthButton } from "../common/Button";
 import { AuthLeftPanel } from "./AuthLeftPanel";
 import { trpc } from "src/utils/trpc";
 import { registerSchema } from "src/zod/auth";

@@ -11,6 +11,7 @@ const spaceGrotesk = Space_Grotesk({
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
+import { Layout } from "src/components/layout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -19,7 +20,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <main className={`${spaceGrotesk.variable} font-sans`}>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </main>
     </SessionProvider>
   );

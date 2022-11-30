@@ -7,7 +7,7 @@ interface InputProps
     HTMLInputElement
   > {
   error?: boolean;
-}
+} 
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, error, ...restProps }, ref) => (

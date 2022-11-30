@@ -1,9 +1,15 @@
 import { Navbar } from "./Navbar";
 
-export const Layout = ({ children }: { children: React.ReactNode }) => {
+export const Layout = ({
+  children,
+  withoutNavbar,
+}: {
+  children: React.ReactNode;
+  withoutNavbar: boolean;
+}) => {
   return (
     <>
-      <Navbar />
+      {!withoutNavbar && <Navbar />}
       {children}
     </>
   );

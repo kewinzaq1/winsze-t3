@@ -147,14 +147,14 @@ export function AccountUpdateAvatar() {
           />
         </FormGroup>
         <div className="col-start-2 row-start-1 flex flex-col gap-2">
-          <AuthButton
+          <Button
             type="submit"
             className="mt-5 justify-center"
             isLoading={isLoading}
           >
             Update
-          </AuthButton>
-          <AuthButton
+          </Button>
+          <Button
             className="justify-center"
             disabled={!avatar.length}
             type="button"
@@ -163,7 +163,7 @@ export function AccountUpdateAvatar() {
             variant="secondary"
           >
             Remove
-          </AuthButton>
+          </Button>
         </div>
       </div>
     </form>

@@ -64,13 +64,13 @@ export default function ForgotPasswordPage() {
             )}
             <Label className="w-full">Email</Label>
             <Input {...register("email")} className="w-full"></Input>
-            <AuthButton
+            <Button
               variant={buttonVariant}
               className="mt-2"
               isLoading={isLoading}
             >
               Send email
-            </AuthButton>
+            </Button>
           </FormGroup>
         </form>
       </div>

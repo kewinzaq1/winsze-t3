@@ -58,14 +58,14 @@ export function AccountRemoveAccount() {
           error={Boolean(errors.password)}
         />
       </FormGroup>
-      <AuthButton
+      <Button
         type="submit"
         className="mt-5 w-full text-center"
         isLoading={isLoading}
         variant="error"
       >
         Remove account
-      </AuthButton>
+      </Button>
     </form>
   );
 }

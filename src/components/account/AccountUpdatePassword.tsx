@@ -67,14 +67,14 @@ export function AccountUpdatePassword() {
           error={Boolean(errors.newPassword)}
         />
       </FormGroup>
-      <AuthButton
+      <Button
         type="submit"
         className="mt-5 w-full text-center"
         isLoading={isLoading}
         variant={isLoading ? "primary" : "secondary"}
       >
         Update
-      </AuthButton>
+      </Button>
     </form>
   );
 }

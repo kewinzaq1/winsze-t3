@@ -70,14 +70,14 @@ export function AccountUpdateEmail() {
           error={Boolean(errors.email)}
         />
       </FormGroup>
-      <AuthButton
+      <Button
         type="submit"
         className="mt-5 w-full text-center"
         isLoading={isLoading}
         variant={isLoading ? "primary" : "secondary"}
       >
         Update
-      </AuthButton>
+      </Button>
     </form>
   );
 }

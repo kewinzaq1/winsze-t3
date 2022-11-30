@@ -7,22 +7,22 @@ export const AuthOtherMethods = () => {
     <div className="mt-10 flex flex-col">
       <p className="col-span-2 mb-2 text-sm text-slate-600">Other methods?</p>
       <div className="flex items-center gap-2">
-        <AuthButton
+        <Button
           variant="secondary"
           onClick={async () => await signIn("google")}
           className="!text-slate-900"
         >
           <BsGoogle className="mr-2 text-xl" />
           Google
-        </AuthButton>
-        <AuthButton
+        </Button>
+        <Button
           variant="secondary"
           onClick={async () => await signIn("facebook")}
           className="!text-slate-900"
         >
           <BsFacebook className="mr-2 text-xl" />
           Facebook
-        </AuthButton>
+        </Button>
       </div>
     </div>
   );

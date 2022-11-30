@@ -10,7 +10,7 @@ interface Button
   isLoading?: boolean;
 }
 
-export const AuthButton = ({
+export const Button = ({
   className,
   children,
   variant,

@@ -22,4 +22,4 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   )
 );
 
-Input.displayName = "AuthInput";
+Input.displayName = "Input";

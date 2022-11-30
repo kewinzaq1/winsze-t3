@@ -93,9 +93,9 @@ export default function ResetPasswordPage() {
               error={Boolean(errors.passwordConfirmation)}
             ></Input>
           </FormGroup>
-          <AuthButton variant="secondary" className="mt-2">
+          <Button variant="secondary" className="mt-2">
             Reset password
-          </AuthButton>
+          </Button>
         </form>
       </div>
     </div>

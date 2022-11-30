@@ -1,6 +1,6 @@
 import type { DetailedHTMLProps, LabelHTMLAttributes } from "react";
 
-export const AuthLabel = ({
+export const Label = ({
   className,
   children,
   ...restProps

@@ -5,10 +5,10 @@ import resetPasswordBackground from "src/assets/background/reset-password.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { AuthButton } from "src/components/common/Button";
-import { AuthFormGroup } from "src/components/common/FormGroup";
-import { AuthInput } from "src/components/common/Input";
-import { AuthLabel } from "src/components/common/Label";
+import { Button } from "src/components/common/Button";
+import { FormGroup } from "src/components/common/FormGroup";
+import { Input } from "src/components/common/Input";
+import { Label } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 
@@ -67,32 +67,32 @@ export default function ResetPasswordPage() {
               <span className="block sm:inline">{error.message}</span>
             </div>
           )}
-          <AuthFormGroup>
-            <AuthLabel>New password</AuthLabel>
+          <FormGroup>
+            <Label>New password</Label>
             {errors.password && (
               <p className="m-0 p-0 text-xs text-red-500">
                 {errors.password.message as string}
               </p>
             )}
-            <AuthInput
+            <Input
               type="password"
               {...register("password")}
               error={Boolean(errors.password)}
-            ></AuthInput>
-          </AuthFormGroup>
-          <AuthFormGroup>
-            <AuthLabel>Confirm password</AuthLabel>
+            ></Input>
+          </FormGroup>
+          <FormGroup>
+            <Label>Confirm password</Label>
             {errors.passwordConfirmation && (
               <p className="m-0 p-0 text-xs text-red-500">
                 {errors.passwordConfirmation.message as string}
               </p>
             )}
-            <AuthInput
+            <Input
               type="password"
               {...register("passwordConfirmation")}
               error={Boolean(errors.passwordConfirmation)}
-            ></AuthInput>
-          </AuthFormGroup>
+            ></Input>
+          </FormGroup>
           <AuthButton variant="secondary" className="mt-2">
             Reset password
           </AuthButton>

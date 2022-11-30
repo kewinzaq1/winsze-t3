@@ -1,7 +1,7 @@
 import type { DetailedHTMLProps, InputHTMLAttributes } from "react";
 import { forwardRef } from "react";
 
-interface AuthInputProps
+interface InputProps
   extends DetailedHTMLProps<
     InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
@@ -9,7 +9,7 @@ interface AuthInputProps
   error?: boolean;
 }
 
-export const AuthInput = forwardRef<HTMLInputElement, AuthInputProps>(
+export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, error, ...restProps }, ref) => (
     <input
       type="text"
@@ -22,4 +22,4 @@ export const AuthInput = forwardRef<HTMLInputElement, AuthInputProps>(
   )
 );
 
-AuthInput.displayName = "AuthInput";
+Input.displayName = "AuthInput";

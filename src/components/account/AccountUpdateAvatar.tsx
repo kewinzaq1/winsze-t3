@@ -4,9 +4,9 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { AuthButton } from "src/components/common/Button";
-import { AuthFormGroup } from "src/components/common/FormGroup";
-import { AuthInput } from "src/components/common/Input";
+import { Button } from "src/components/common/Button";
+import { FormGroup } from "src/components/common/FormGroup";
+import { Input } from "src/components/common/Input";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 
@@ -113,7 +113,7 @@ export function AccountUpdateAvatar() {
         <p className="absolute text-red-500">{`${errors.avatar.message}`}</p>
       )}
       <div className="flex w-full items-center justify-between">
-        <AuthFormGroup className="flex w-full items-center justify-center">
+        <FormGroup className="flex w-full items-center justify-center">
           <label htmlFor="avatar">
             <div className="relative h-24 w-24 rounded-full">
               {avatar.length ? (
@@ -136,7 +136,7 @@ export function AccountUpdateAvatar() {
               )}
             </div>
           </label>
-          <AuthInput
+          <Input
             id="avatar"
             className="hidden w-full"
             type="file"
@@ -145,7 +145,7 @@ export function AccountUpdateAvatar() {
             {...register("avatar")}
             error={Boolean(errors.avatar)}
           />
-        </AuthFormGroup>
+        </FormGroup>
         <div className="col-start-2 row-start-1 flex flex-col gap-2">
           <AuthButton
             type="submit"

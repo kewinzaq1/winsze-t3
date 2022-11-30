@@ -1,6 +1,6 @@
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
 
-export const AuthFormGroup = ({
+export const FormGroup = ({
   children,
   className,
 }: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>) => (

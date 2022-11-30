@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-import { AuthFormGroup } from "../common/FormGroup";
-import { AuthLabel } from "../common/Label";
-import { AuthInput } from "../common/Input";
-import { AuthButton } from "../common/Button";
+import { FormGroup } from "../common/FormGroup";
+import { Label } from "../common/Label";
+import { Input } from "../common/Input";
+import { Button } from "../common/Button";
 import { AuthLeftPanel } from "./AuthLeftPanel";
 import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
@@ -69,26 +69,26 @@ export const SignIn = () => {
           {loginError && (
             <p className="m-0 p-0 text-sm text-red-500">{loginError}</p>
           )}
-          <AuthFormGroup>
-            <AuthLabel htmlFor="email">Email</AuthLabel>
+          <FormGroup>
+            <Label htmlFor="email">Email</Label>
             {errors.email && (
               <p className="m-0 p-0 text-xs text-red-500">Invalid email!</p>
             )}
-            <AuthInput
+            <Input
               id="email"
               placeholder="john@doe.com"
               {...register("email")}
               error={Boolean(errors.email)}
             />
-          </AuthFormGroup>
-          <AuthFormGroup>
-            <AuthLabel htmlFor="password">Password</AuthLabel>
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="password">Password</Label>
             {errors.password && (
               <p className="m-0 p-0 text-xs text-red-500">
                 Invalid password! (min length 8 char.)
               </p>
             )}
-            <AuthInput
+            <Input
               id="password"
               type="password"
               {...register("password")}
@@ -100,7 +100,7 @@ export const SignIn = () => {
             >
               Forgot password?
             </Link>
-          </AuthFormGroup>
+          </FormGroup>
           <AuthButton
             className="mt-6"
             type="submit"

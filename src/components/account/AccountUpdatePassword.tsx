@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { AuthButton } from "src/components/common/Button";
-import { AuthFormGroup } from "src/components/common/FormGroup";
-import { AuthInput } from "src/components/common/Input";
-import { AuthLabel } from "src/components/common/Label";
+import { Button } from "src/components/common/Button";
+import { FormGroup } from "src/components/common/FormGroup";
+import { Input } from "src/components/common/Input";
+import { Label } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 
@@ -37,36 +37,36 @@ export function AccountUpdatePassword() {
     >
       <h2 className="text-2xl font-semibold">Update Password</h2>
       {error && <p className="m-0 p-0 text-sm text-red-500">{error.message}</p>}
-      <AuthFormGroup className="w-full">
-        <AuthLabel>Current Password</AuthLabel>
+      <FormGroup className="w-full">
+        <Label>Current Password</Label>
         {errors.currentPassword && (
           <p className="m-0 p-0 text-xs text-red-500">
             {errors.currentPassword.message as string}
           </p>
         )}
-        <AuthInput
+        <Input
           className="w-full"
           type="password"
           placeholder="Current password"
           {...register("currentPassword")}
           error={Boolean(errors.currentPassword)}
         />
-      </AuthFormGroup>
-      <AuthFormGroup className="w-full">
-        <AuthLabel>New Password</AuthLabel>
+      </FormGroup>
+      <FormGroup className="w-full">
+        <Label>New Password</Label>
         {errors.newPassword && (
           <p className="m-0 p-0 text-xs text-red-500">
             {errors.newPassword.message as string}
           </p>
         )}
-        <AuthInput
+        <Input
           className="w-full"
           type="password"
           placeholder="New Password"
           {...register("newPassword")}
           error={Boolean(errors.newPassword)}
         />
-      </AuthFormGroup>
+      </FormGroup>
       <AuthButton
         type="submit"
         className="mt-5 w-full text-center"

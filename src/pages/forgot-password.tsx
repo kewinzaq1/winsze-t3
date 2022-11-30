@@ -3,10 +3,10 @@ import forgotPasswordImage from "src/assets/forgot-password.svg";
 import forgotPasswordBackground from "src/assets/background/forgot-password.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { AuthButton } from "src/components/common/Button";
-import { AuthFormGroup } from "src/components/common/FormGroup";
-import { AuthInput } from "src/components/common/Input";
-import { AuthLabel } from "src/components/common/Label";
+import { Button } from "src/components/common/Button";
+import { FormGroup } from "src/components/common/FormGroup";
+import { Input } from "src/components/common/Input";
+import { Label } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 import { useMemo } from "react";
@@ -56,14 +56,14 @@ export default function ForgotPasswordPage() {
         <h1 className="mb-4 text-3xl font-bold">Forgot password?</h1>
         <p>Enter your email, then we will send link to reset</p>
         <form onSubmit={onSubmit} className="w-full">
-          <AuthFormGroup className="w-full">
+          <FormGroup className="w-full">
             {errors.email && (
               <p className="m-0 p-0 text-sm text-red-500">
                 {errors.email.message}
               </p>
             )}
-            <AuthLabel className="w-full">Email</AuthLabel>
-            <AuthInput {...register("email")} className="w-full"></AuthInput>
+            <Label className="w-full">Email</Label>
+            <Input {...register("email")} className="w-full"></Input>
             <AuthButton
               variant={buttonVariant}
               className="mt-2"
@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
             >
               Send email
             </AuthButton>
-          </AuthFormGroup>
+          </FormGroup>
         </form>
       </div>
     </div>

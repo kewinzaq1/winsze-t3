@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
-import { AuthButton } from "src/components/common/Button";
-import { AuthFormGroup } from "src/components/common/FormGroup";
-import { AuthInput } from "src/components/common/Input";
-import { AuthLabel } from "src/components/common/Label";
+import { Button } from "src/components/common/Button";
+import { FormGroup } from "src/components/common/FormGroup";
+import { Input } from "src/components/common/Input";
+import { Label } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 
@@ -43,21 +43,21 @@ export function AccountRemoveAccount() {
           {error.message}
         </p>
       )}
-      <AuthFormGroup className="w-full">
-        <AuthLabel>Confirm password</AuthLabel>
+      <FormGroup className="w-full">
+        <Label>Confirm password</Label>
         {errors.password && (
           <p className="m-0 p-0 text-xs text-red-500">
             {errors.password.message as string}
           </p>
         )}
-        <AuthInput
+        <Input
           className="w-full"
           type="password"
           placeholder="Password"
           {...register("password")}
           error={Boolean(errors.password)}
         />
-      </AuthFormGroup>
+      </FormGroup>
       <AuthButton
         type="submit"
         className="mt-5 w-full text-center"

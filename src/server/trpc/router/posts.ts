@@ -33,7 +33,7 @@ export const postsRouter = router({
           });
         }
         const { data: url } = storageClient
-          .from("avatars")
+          .from("posts")
           .getPublicUrl(fileName);
         image = url.publicUrl;
       }
@@ -84,6 +84,9 @@ export const postsRouter = router({
       const posts = await ctx.prisma.post.findMany({
         where: {
           userId: input.userId,
+        },
+        include: {
+          user: true,
         },
       });
 

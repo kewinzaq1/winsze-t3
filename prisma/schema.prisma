@@ -34,6 +34,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -42,6 +43,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -55,6 +58,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   ResetToken    ResetToken[]
+  Post          Post[]
+  Like          Like[]
 }
 
 model ResetToken {
@@ -63,6 +68,8 @@ model ResetToken {
   expires DateTime
   userId  String
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -71,4 +78,28 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Post {
+  id        String  @id @default(cuid())
+  title     String
+  content   String
+  image     String?
+  published Boolean @default(false)
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @map("userId")
+  Like      Like[]
+
+  @@index([userId])
+}
+
+model Like {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+
+  @@unique([userId, postId])
+  @@index([postId])
 }

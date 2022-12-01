@@ -25,7 +25,7 @@ export const UnauthHero = () => (
         </h1>
         <Link href="/sign-up">
           <Button
-            className="mt-4 w-max rounded-full px-10 transition hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-500"
+            className="mt-4 w-max !rounded-full px-10 transition hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-500"
             variant="secondary"
           >
             Join us

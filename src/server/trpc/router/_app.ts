@@ -8,7 +8,7 @@ export const appRouter = router({
   example: exampleRouter,
   auth: authRouter,
   account: accountRouter,
-  post: postsRouter,
+  posts: postsRouter,
 });
 
 // export type definition of API

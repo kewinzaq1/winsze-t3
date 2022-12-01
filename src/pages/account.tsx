@@ -6,10 +6,7 @@ import { AccountUpdatePassword } from "src/components/account/AccountUpdatePassw
 
 export default function AccountPage() {
   return (
-    <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      <h1>
-        
-      </h1>
+    <div className="mx-auto grid max-w-7xl gap-4 pt-24 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <AccountHeader />
       <AccountUpdatePassword />
       <AccountUpdateEmail />

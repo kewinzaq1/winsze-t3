@@ -11,15 +11,18 @@ const spaceGrotesk = Space_Grotesk({
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
+import { Layout } from "src/components/layout";
 
-const MyApp: AppType<{ session: Session | null }> = ({
+const MyApp: AppType<{ session: Session | null; withoutNavbar: boolean }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
     <SessionProvider session={session}>
-      <main className={`${spaceGrotesk.variable} font-sans`}>
-        <Component {...pageProps} />
+      <main className={`${spaceGrotesk.variable} min-h-screen font-sans`}>
+        <Layout withoutNavbar={pageProps.withoutNavbar}>
+          <Component {...pageProps} />
+        </Layout>
       </main>
     </SessionProvider>
   );

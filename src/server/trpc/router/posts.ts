@@ -3,15 +3,10 @@ import { storageClient } from "src/server/storage/supabase";
 import { base64ToBuffer } from "src/utils/base64ToBuffer";
 import { getTypeFromBase64 } from "src/utils/getTypeFromBase64";
 import { getUUID } from "src/utils/getUUID";
+import { addPostSchema } from "src/zod/addPostSchema";
 import { z } from "zod";
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-
-export const addPostSchema = z.object({
-  title: z.string(),
-  content: z.string(),
-  image: z.string().url().optional(),
-});
 
 const getPostsSchema = z.object({
   userId: z.string().optional(),

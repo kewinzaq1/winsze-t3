@@ -7,6 +7,7 @@ import { Input } from "src/components/common/Input";
 import { Label } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 export function AccountRemoveAccount() {
   const { mutate, isLoading, error } = trpc.account.removeAccount.useMutation({
@@ -38,11 +39,7 @@ export function AccountRemoveAccount() {
       className="relative mt-4 flex h-full w-full flex-col items-start"
     >
       <h2 className="text-2xl font-semibold">Remove account</h2>
-      {error && (
-        <p className="absolute top-8 m-0 p-0 text-sm text-red-500">
-          {error.message}
-        </p>
-      )}
+      {error && <ErrorMessage>{error.message}</ErrorMessage>}
       <FormGroup className="w-full">
         <Label>Confirm password</Label>
         {errors.password && (

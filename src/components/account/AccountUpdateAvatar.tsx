@@ -9,6 +9,7 @@ import { FormGroup } from "src/components/common/FormGroup";
 import { Input } from "src/components/common/Input";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
+import { imgToBase64 } from "src/utils/imgToBase64";
 
 export function AccountUpdateAvatar() {
   const { mutate, isLoading, error, data } =
@@ -82,22 +83,7 @@ export function AccountUpdateAvatar() {
 
     const { avatar } = value;
 
-    const convertToBase64 = (file: File) => {
-      return new Promise((resolve, reject) => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-
-        fileReader.onload = () => {
-          resolve(fileReader.result);
-        };
-
-        fileReader.onerror = (error) => {
-          reject(error);
-        };
-      });
-    };
-
-    const base64 = await convertToBase64(avatar[0]);
+    const base64 = await imgToBase64(avatar[0]);
 
     mutate({ avatar: base64 });
   };

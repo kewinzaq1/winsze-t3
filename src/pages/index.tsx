@@ -3,6 +3,8 @@ import Head from "next/head";
 import { UnauthHero } from "src/components/UnauthHero";
 
 const Home: NextPage = () => {
+  const {}
+
   return (
     <>
       <Head>

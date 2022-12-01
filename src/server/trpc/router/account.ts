@@ -4,6 +4,8 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { storageClient } from "src/server/storage/supabase";
 import { getUUID } from "src/utils/getUUID";
+import { base64ToBuffer } from "src/utils/base64ToBuffer";
+import { getTypeFromBase64 } from "src/utils/getTypeFromBase64";
 
 export const accountRouter = router({
   updatePassword: protectedProcedure
@@ -150,12 +152,6 @@ export const accountRouter = router({
         where: { email: ctx.session.user.email as string },
       });
 
-      const getTypeFromBase64 = (base64: string) => {
-        const base64Data = base64.split(",")[0];
-        const type = base64Data?.match(/:(.*?);/)?.[1];
-        return type;
-      };
-
       if (!input.avatar) {
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -163,14 +159,7 @@ export const accountRouter = router({
         });
       }
 
-      const base64ToBuffer = () => {
-        const base64 = input.avatar;
-        const base64Image = base64.split(";base64,").pop() as string;
-        const buffer = Buffer.from(base64Image, "base64");
-        return buffer;
-      };
-
-      const avatar = base64ToBuffer();
+      const avatar = base64ToBuffer(input.avatar);
 
       const fileName = `${user?.id}/${getUUID()}`;
       const { error } = await storageClient

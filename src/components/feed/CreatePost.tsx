@@ -25,6 +25,10 @@ export const CreatePost = () => {
 
   const [image, setImage] = useState("");
 
+  useEffect(() => {
+    console.log("unnecesrary changes", image);
+  }, [image]);
+
   const {
     formState: { errors },
     register,
@@ -85,7 +89,7 @@ export const CreatePost = () => {
       <form
         ref={parentRef as LegacyRef<HTMLFormElement>}
         onSubmit={onSubmit}
-        className="min-h-64 relative mx-auto w-full max-w-3xl rounded-md border border-slate-600 p-4 shadow-sm outline-none backdrop-blur-sm focus:border-transparent focus:outline-none focus:ring-1 focus:ring-violetPrimary"
+        className="min-h-64 relative mx-auto w-full max-w-3xl rounded-md p-4 shadow-md outline-none backdrop-blur-sm focus:border-transparent focus:outline-none focus:ring-1 focus:ring-violetPrimary"
       >
         <label htmlFor="photo">
           <FcStackOfPhotos

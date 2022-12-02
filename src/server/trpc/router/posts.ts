@@ -54,6 +54,61 @@ export const postsRouter = router({
 
       return post;
     }),
+  editPost: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        content: z.string().optional(),
+        image: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const post = await ctx.prisma.post.findFirst({
+        where: {
+          id: input.id,
+          userId,
+        },
+      });
+      if (!post) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Post not found",
+        });
+      }
+      let image = post.image;
+      if (input.image?.length) {
+        const fileName = `posts/${getUUID()}.${getTypeFromBase64(input.image)}`;
+        const { error } = await storageClient
+          .from("posts")
+          .upload(fileName, base64ToBuffer(input.image), {
+            upsert: true,
+          });
+        if (error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: error.message,
+          });
+        }
+        const { data: url } = storageClient
+          .from("posts")
+          .getPublicUrl(fileName);
+        image = url.publicUrl;
+      }
+
+      const updatedPost = await ctx.prisma.post.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          content: input.content || post.content,
+          image: Boolean(image?.length) ? image : null,
+        },
+      });
+
+      return updatedPost;
+    }),
+
   removePost: protectedProcedure
     .input(deletePostSchema)
     .mutation(async ({ ctx, input }) => {

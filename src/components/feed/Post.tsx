@@ -240,10 +240,18 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       </div>
 
       {openConfirm && (
-        <div className="fixed inset-0 flex h-screen w-screen items-center justify-center bg-black bg-opacity-20">
-          <div className="flex flex-col gap-4 rounded-md bg-white p-4 shadow-md">
+        <div
+          className="fixed inset-0 flex h-screen w-screen items-center justify-center bg-black bg-opacity-20"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setOpenConfirm(false);
+              setOpenMenu(false);
+            }
+          }}
+        >
+          <div className="mx-4 flex h-max w-full max-w-xl flex-col gap-4 rounded-md bg-white p-4 shadow-md">
             <header>
-              <p className="text-3xl font-semibold">Are you sure?</p>
+              <p className="text-2xl font-semibold">Are you sure?</p>
               <p>To delete this post</p>
             </header>
             <footer className="flex w-full items-center justify-end gap-2">

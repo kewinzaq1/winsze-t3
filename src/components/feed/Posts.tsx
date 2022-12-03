@@ -201,7 +201,7 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       {openMenu && (
         <div
           className="absolute top-12 right-4 h-max w-24 rounded-md bg-white shadow-md"
-          ref={menuRef as LegacyRef<HTMLElement>}
+          ref={menuRef as LegacyRef<HTMLDivElement>}
         >
           <button
             className="w-full rounded-t-md p-2 text-left transition hover:bg-slate-100"

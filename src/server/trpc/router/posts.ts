@@ -60,6 +60,7 @@ export const postsRouter = router({
         id: z.string(),
         content: z.string().optional(),
         image: z.string().optional(),
+        removePhoto: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -97,13 +98,23 @@ export const postsRouter = router({
         image = url.publicUrl;
       }
 
+      const getImage = () => {
+        if (input.removePhoto) {
+          return null;
+        }
+        if (input.image?.length) {
+          return image;
+        }
+        return post.image;
+      };
+
       const updatedPost = await ctx.prisma.post.update({
         where: {
           id: input.id,
         },
         data: {
           content: input.content,
-          image: Boolean(image?.length) ? image : null,
+          image: getImage(),
         },
       });
 

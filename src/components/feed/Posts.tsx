@@ -2,7 +2,8 @@ import Image from "next/image";
 import type { RouterOutputs } from "src/utils/trpc";
 import { trpc } from "src/utils/trpc";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
-import { useEffect, useState } from "react";
+import type { LegacyRef } from "react";
+import { createRef, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -13,6 +14,7 @@ import { GiFlyingDagger } from "react-icons/gi";
 import { imgToBase64 } from "src/utils/imgToBase64";
 import { Textarea } from "../common/Textarea";
 import { useSession } from "next-auth/react";
+import { useClickAway } from "src/hooks/useClickAway";
 
 const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   const utils = trpc.useContext();
@@ -90,6 +92,9 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       image: image as string,
     });
   });
+
+  const menuRef = createRef<HTMLElement>();
+  useClickAway(menuRef, () => setOpenMenu(false));
 
   const Edit = (
     <form onSubmit={onSubmit}>
@@ -194,12 +199,17 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
         {isEdit && Edit}
       </div>
       {openMenu && (
-        <div className="absolute top-12 right-4 h-max w-24 rounded-md bg-white shadow-md">
+        <div
+          className="absolute top-12 right-4 h-max w-24 rounded-md bg-white shadow-md"
+          ref={menuRef as LegacyRef<HTMLElement>}
+        >
           <button
             className="w-full rounded-t-md p-2 text-left transition hover:bg-slate-100"
-            onClick={setEdit}
+            onClick={() => {
+              isPreview ? setEdit() : setMode("preview");
+            }}
           >
-            edit
+            {isPreview ? "Edit" : "Cancel edit"}
           </button>
           <button className="w-full p-2 text-left transition hover:bg-slate-100 ">
             remove

@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { RouterOutputs } from "src/utils/trpc";
 import { trpc } from "src/utils/trpc";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
-import type { LegacyRef } from "react";
+import type { RefObject, Ref } from "react";
 import { createRef, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,6 +15,8 @@ import { imgToBase64 } from "src/utils/imgToBase64";
 import { Textarea } from "../common/Textarea";
 import { useSession } from "next-auth/react";
 import { useClickAway } from "src/hooks/useClickAway";
+import { PostMenu } from "./PostMenu";
+import { PostMenuButton } from "./PostMenuButton";
 
 const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   const utils = trpc.useContext();
@@ -199,28 +201,21 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
         {isEdit && Edit}
       </div>
       {openMenu && (
-        <div
-          className="absolute top-12 right-4 h-max w-24 rounded-md bg-white shadow-md"
-          ref={menuRef as LegacyRef<HTMLDivElement>}
-        >
-          <button
-            className="w-full rounded-t-md p-2 text-left transition hover:bg-slate-100"
+        <PostMenu ref={menuRef as Ref<HTMLDivElement>}>
+          <PostMenuButton
             onClick={() => {
-              isPreview ? setEdit() : setMode("preview");
+              if (isPreview) {
+                return setEdit();
+              }
+              return setMode("preview");
             }}
           >
             {isPreview ? "Edit" : "Cancel edit"}
-          </button>
-          <button className="w-full p-2 text-left transition hover:bg-slate-100 ">
-            remove
-          </button>
-          <button className="w-full p-2 text-left transition hover:bg-slate-100 ">
-            report
-          </button>
-          <button className="w-full rounded-b-md p-2 text-left transition hover:bg-slate-100">
-            unpublish
-          </button>
-        </div>
+          </PostMenuButton>
+          <PostMenuButton>remove</PostMenuButton>
+          <PostMenuButton>report</PostMenuButton>
+          <PostMenuButton>unpublish</PostMenuButton>
+        </PostMenu>
       )}
     </div>
   );

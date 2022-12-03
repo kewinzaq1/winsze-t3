@@ -22,6 +22,7 @@
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
     "bcrypt": "^5.1.0",
+    "dayjs": "^1.11.6",
     "formidable": "v3",
     "next": "^13.0.5",
     "next-auth": "^4.15.1",

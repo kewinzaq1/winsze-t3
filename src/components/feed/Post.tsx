@@ -17,6 +17,29 @@ import { useSession } from "next-auth/react";
 import { useClickAway } from "src/hooks/useClickAway";
 import { PostMenu } from "./PostMenu";
 import { PostMenuButton } from "./PostMenuButton";
+import relativeRime from "dayjs/plugin/relativeTime";
+import updateLocale from "dayjs/plugin/updateLocale";
+import dayjs from "dayjs";
+
+dayjs.extend(relativeRime);
+dayjs.extend(updateLocale);
+dayjs.updateLocale("en", {
+  relativeTime: {
+    future: "in %s",
+    past: "%s ago",
+    s: "a few seconds",
+    m: "1m",
+    mm: "%dm",
+    h: "1h",
+    hh: "%dh",
+    d: "1d",
+    dd: "%dd",
+    M: "1M",
+    MM: "%dM",
+    y: "1y",
+    yy: "%dy",
+  },
+});
 
 export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   const utils = trpc.useContext();
@@ -182,6 +205,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             className="rounded-full object-cover"
           />
           <div className="ml-2 flex flex-col">
+            <p className="text-xs">{dayjs(post.createdAt).fromNow()}</p>
             <p className="text-sm  opacity-40">{post.user.email}</p>
             <p className="text-xl font-light">
               {post.user.name || post.user.email?.split("@")[0]}

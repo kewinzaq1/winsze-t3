@@ -1,4 +1,4 @@
-import { reduceImageSize } from "./compressBase64";
+import { reduceImageSize } from "./reduceImageSize";
 
 export const imgToBase64 = async (file: File) => {
   const reduced = await reduceImageSize({

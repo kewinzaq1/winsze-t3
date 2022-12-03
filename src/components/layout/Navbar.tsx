@@ -5,6 +5,7 @@ import type { DetailedHTMLProps, HTMLAttributes, LegacyRef } from "react";
 import { useState } from "react";
 import { Button } from "../common/Button";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import avatarPlaceholder from "src/images/avatar_placeholder.png";
 
 const NavbarMenu = ({
   onClick,
@@ -18,7 +19,7 @@ const NavbarMenu = ({
         {session?.user && (
           <Image
             className="cursor-pointer rounded-full object-cover transition active:scale-95"
-            src={`${session?.user?.image}`}
+            src={session.user.image || avatarPlaceholder}
             width={40}
             height={40}
             alt={`${session?.user?.name || session?.user?.email}`}
@@ -71,7 +72,7 @@ export const Navbar = () => {
         >
           <div className="flex h-full flex-col gap-1">
             <Link
-            href="/account"
+              href="/account"
               className="rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"
             >
               Account

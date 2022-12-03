@@ -12,6 +12,7 @@ import { Button } from "../common/Button";
 import { GiFlyingDagger } from "react-icons/gi";
 import { imgToBase64 } from "src/utils/imgToBase64";
 import { Textarea } from "../common/Textarea";
+import { useSession } from "next-auth/react";
 
 const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   const utils = trpc.useContext();
@@ -19,6 +20,7 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   const handleMenu = () => setOpenMenu((c) => !c);
   const [mode, setMode] = useState<"edit" | "preview">("preview");
   const [image, setImage] = useState(post.image ?? "");
+  const { data: session } = useSession();
 
   const {
     mutate: editPost,
@@ -47,6 +49,8 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       image: [] as unknown as FileList,
     },
   });
+
+  const isAuthor = post.userId === session?.user?.id;
 
   const isEdit = mode === "edit";
   const isPreview = mode === "preview";
@@ -158,14 +162,16 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             {post.user.name || post.user.email?.split("@")[0]}
           </p>
         </div>
-        <BiDotsHorizontalRounded
-          className="pointer absolute top-4 right-4 h-8 w-8"
-          role="button"
-          tabIndex={0}
-          aria-label="manage post"
-          title="manage post"
-          onClick={handleMenu}
-        />
+        {isAuthor && (
+          <BiDotsHorizontalRounded
+            className="pointer absolute top-4 right-4 h-8 w-8"
+            role="button"
+            tabIndex={0}
+            aria-label="manage post"
+            title="manage post"
+            onClick={handleMenu}
+          />
+        )}
       </div>
       <div className="mt-2 flex flex-col">
         {isPreview && <p className="text-2xl">{post.content}</p>}
@@ -188,9 +194,9 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
         {isEdit && Edit}
       </div>
       {openMenu && (
-        <div className="absolute top-12 right-4 h-max w-24 rounded-md shadow-md">
+        <div className="absolute top-12 right-4 h-max w-24 rounded-md bg-white shadow-md">
           <button
-            className="w-full p-2 text-left transition hover:bg-slate-100"
+            className="w-full rounded-t-md p-2 text-left transition hover:bg-slate-100"
             onClick={setEdit}
           >
             edit
@@ -201,7 +207,7 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
           <button className="w-full p-2 text-left transition hover:bg-slate-100 ">
             report
           </button>
-          <button className="w-full p-2 text-left transition hover:bg-slate-100 ">
+          <button className="w-full rounded-b-md p-2 text-left transition hover:bg-slate-100">
             unpublish
           </button>
         </div>

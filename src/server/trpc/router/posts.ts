@@ -63,6 +63,7 @@ export const postsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log({ input });
       const userId = ctx.session.user.id;
       const post = await ctx.prisma.post.findFirst({
         where: {
@@ -76,7 +77,7 @@ export const postsRouter = router({
           message: "Post not found",
         });
       }
-      let image = post.image;
+      let image = "";
       if (input.image?.length) {
         const fileName = `posts/${getUUID()}.${getTypeFromBase64(input.image)}`;
         const { error } = await storageClient
@@ -101,7 +102,7 @@ export const postsRouter = router({
           id: input.id,
         },
         data: {
-          content: input.content || post.content,
+          content: input.content,
           image: Boolean(image?.length) ? image : null,
         },
       });

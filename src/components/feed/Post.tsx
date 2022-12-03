@@ -21,6 +21,8 @@ import { PostMenuButton } from "./PostMenuButton";
 export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   const utils = trpc.useContext();
   const [openMenu, setOpenMenu] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+
   const handleMenu = () => setOpenMenu((c) => !c);
   const [mode, setMode] = useState<"edit" | "preview">("preview");
   const [image, setImage] = useState(post.image ?? "");
@@ -104,6 +106,15 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   const menuRef = createRef<HTMLElement>();
   useClickAway(menuRef, () => setOpenMenu(false));
 
+  const { mutate: deletePost, isLoading: isDeleting } =
+    trpc.posts.deletePost.useMutation({
+      onSuccess: () => {
+        utils.posts.getPosts.invalidate({});
+        setOpenConfirm(false);
+        setOpenMenu(false);
+      },
+    });
+
   const Edit = (
     <form onSubmit={onSubmit}>
       {isEdit && (
@@ -158,70 +169,106 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       </Button>
     </form>
   );
+
   return (
-    <div className="relative flex w-full select-none flex-col rounded-md p-4 shadow-md">
-      <div className="flex py-2">
-        <Image
-          src={`${post.user.image}`}
-          width={50}
-          height={50}
-          alt={`${post.user.name}`}
-          className="rounded-full object-cover"
-        />
-        <div className="ml-2 flex flex-col">
-          <p className="text-sm  opacity-40">{post.user.email}</p>
-          <p className="text-xl font-light">
-            {post.user.name || post.user.email?.split("@")[0]}
-          </p>
-        </div>
-        {isAuthor && (
-          <BiDotsHorizontalRounded
-            className="pointer absolute top-4 right-4 h-8 w-8"
-            role="button"
-            tabIndex={0}
-            aria-label="manage post"
-            title="manage post"
-            onClick={handleMenu}
-          />
-        )}
-      </div>
-      <div className="mt-2 flex flex-col">
-        {isPreview && <p className="text-2xl">{post.content}</p>}
-        {post.image && isPreview && (
+    <>
+      <div className="relative flex w-full select-none flex-col rounded-md p-4 shadow-md">
+        <div className="flex py-2">
           <Image
-            width={1920}
-            height={1080}
-            src={post.image}
-            alt={post.content}
-            className="mt-2 h-max w-full rounded-md object-cover"
+            src={`${post.user.image}`}
+            width={50}
+            height={50}
+            alt={`${post.user.name}`}
+            className="rounded-full object-cover"
           />
-        )}
-        {isPreview && (
-          <div className="flex items-center">
-            <button>like</button>
-            <button>comment</button>
-            <button>share</button>
+          <div className="ml-2 flex flex-col">
+            <p className="text-sm  opacity-40">{post.user.email}</p>
+            <p className="text-xl font-light">
+              {post.user.name || post.user.email?.split("@")[0]}
+            </p>
           </div>
+          {isAuthor && (
+            <BiDotsHorizontalRounded
+              className="pointer absolute top-4 right-4 h-8 w-8"
+              role="button"
+              tabIndex={0}
+              aria-label="manage post"
+              title="manage post"
+              onClick={handleMenu}
+            />
+          )}
+        </div>
+        <div className="mt-2 flex flex-col">
+          {isPreview && <p className="text-2xl">{post.content}</p>}
+          {post.image && isPreview && (
+            <Image
+              width={1920}
+              height={1080}
+              src={post.image}
+              alt={post.content}
+              className="mt-2 h-max w-full rounded-md object-cover"
+            />
+          )}
+          {isPreview && (
+            <div className="flex items-center">
+              <button>like</button>
+              <button>comment</button>
+              <button>share</button>
+            </div>
+          )}
+          {isEdit && Edit}
+        </div>
+        {openMenu && (
+          <PostMenu ref={menuRef as Ref<HTMLDivElement>}>
+            <PostMenuButton
+              onClick={() => {
+                if (isPreview) {
+                  return setEdit();
+                }
+                return setMode("preview");
+              }}
+            >
+              {isPreview ? "Edit" : "Cancel edit"}
+            </PostMenuButton>
+            <PostMenuButton onClick={() => setOpenConfirm(true)}>
+              Delete
+            </PostMenuButton>
+            <PostMenuButton>report</PostMenuButton>
+            <PostMenuButton>unpublish</PostMenuButton>
+          </PostMenu>
         )}
-        {isEdit && Edit}
       </div>
-      {openMenu && (
-        <PostMenu ref={menuRef as Ref<HTMLDivElement>}>
-          <PostMenuButton
-            onClick={() => {
-              if (isPreview) {
-                return setEdit();
-              }
-              return setMode("preview");
-            }}
-          >
-            {isPreview ? "Edit" : "Cancel edit"}
-          </PostMenuButton>
-          <PostMenuButton>remove</PostMenuButton>
-          <PostMenuButton>report</PostMenuButton>
-          <PostMenuButton>unpublish</PostMenuButton>
-        </PostMenu>
+
+      {openConfirm && (
+        <div className="fixed inset-0 flex h-screen w-screen items-center justify-center bg-black bg-opacity-20">
+          <div className="flex flex-col gap-4 rounded-md bg-white p-4 shadow-md">
+            <header>
+              <p className="text-3xl font-semibold">Are you sure?</p>
+              <p>To delete this post</p>
+            </header>
+            <footer className="flex w-full items-center justify-end gap-2">
+              <Button
+                variant="secondary"
+                className="p-2"
+                onClick={() => {
+                  setOpenConfirm(false);
+                  setOpenMenu(false);
+                }}
+              >
+                cancel
+              </Button>
+              <Button
+                variant="error"
+                className="p-2"
+                isLoading={isDeleting}
+                onClick={() => deletePost({ postId: post.id })}
+              >
+                delete
+              </Button>
+            </footer>
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 };

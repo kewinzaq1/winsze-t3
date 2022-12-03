@@ -121,7 +121,7 @@ export const postsRouter = router({
       return updatedPost;
     }),
 
-  removePost: protectedProcedure
+  deletePost: protectedProcedure
     .input(deletePostSchema)
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;

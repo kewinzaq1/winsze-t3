@@ -88,7 +88,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       editPost({
         id: post.id,
         content: values.content,
-        removePhoto: Boolean(image.length),
+        removePhoto: !Boolean(image.length),
       });
       return;
     }
@@ -97,7 +97,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       id: post.id,
       content: values.content,
       image: sendingImage as string,
-      removePhoto: Boolean(image.length),
+      removePhoto: !Boolean(image.length),
     });
   });
 

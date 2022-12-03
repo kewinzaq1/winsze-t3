@@ -11,8 +11,10 @@ import { FcStackOfPhotos } from "react-icons/fc";
 import { Button } from "../common/Button";
 import { GiFlyingDagger } from "react-icons/gi";
 import { imgToBase64 } from "src/utils/imgToBase64";
+import { Textarea } from "../common/Textarea";
 
 const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
+  const utils = trpc.useContext();
   const [openMenu, setOpenMenu] = useState(false);
   const handleMenu = () => setOpenMenu((c) => !c);
   const [mode, setMode] = useState<"edit" | "preview">("preview");
@@ -25,6 +27,7 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   } = trpc.posts.editPost.useMutation({
     onSuccess: () => {
       setMode("preview");
+      utils.posts.getPosts.invalidate({});
     },
   });
 
@@ -71,6 +74,7 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   }, [watch]);
 
   const onSubmit = handleSubmit(async (values) => {
+    console.log(values);
     if (!values.image.length) {
       editPost({ id: post.id, content: values.content });
       return;
@@ -83,9 +87,64 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
     });
   });
 
+  const Edit = (
+    <form onSubmit={onSubmit}>
+      {}
+      {isEdit && (
+        <Textarea
+          maxLength={255}
+          placeholder="What is on your mind?"
+          {...register("content")}
+        />
+      )}
+      {Boolean(image.length) && isEdit && (
+        <>
+          <Image
+            width={1920}
+            height={1080}
+            src={image}
+            alt={image}
+            className="mt-2 h-full w-full object-contain"
+          />
+          <IoMdRemoveCircle
+            onClick={clearImage}
+            role="button"
+            tabIndex={0}
+            aria-label="remove photo"
+            className="absolute right-20 bottom-4 h-12 w-12 text-red-500"
+          />
+        </>
+      )}
+      <input
+        id={`photo${post.id}`}
+        accept="image/*"
+        className="hidden"
+        {...register("image")}
+        type="file"
+      />
+      <label htmlFor={`photo${post.id}`}>
+        <FcStackOfPhotos
+          role="button"
+          tabIndex={0}
+          className="absolute right-4 bottom-4 h-12 w-12"
+          title="pick a photo"
+        />
+      </label>
+      <Button
+        type="submit"
+        variant="secondary"
+        isLoading={isEditLoading}
+        title="save post"
+        aria-label="save post"
+        className="mt-4 w-max"
+      >
+        <GiFlyingDagger />
+      </Button>
+    </form>
+  );
   return (
     <div className="relative flex w-full select-none flex-col rounded-md p-4 shadow-md">
-      <div className="flex">
+      <div className="flex py-2">
         <Image
           src={`${post.user.image}`}
           width={50}
@@ -109,14 +168,14 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
         />
       </div>
       <div className="mt-2 flex flex-col">
-        {isPreview && <p className="text-3xl">{post.content}</p>}
+        {isPreview && <p className="text-2xl">{post.content}</p>}
         {post.image && isPreview && (
           <Image
-            width={100}
-            height={100}
+            width={1920}
+            height={1080}
             src={post.image}
             alt={post.content}
-            className="mt-2 h-48 w-full object-contain"
+            className="mt-2 h-max w-full rounded-md object-cover"
           />
         )}
         {isPreview && (
@@ -126,61 +185,7 @@ const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             <button>share</button>
           </div>
         )}
-        {isEdit && (
-          <form onSubmit={onSubmit}>
-            {isEdit && (
-              <textarea
-                maxLength={255}
-                placeholder="What is on your mind?"
-                {...register("content")}
-                className="min-h-3/4 h-max w-full resize-none rounded-md p-4 text-xl outline-none focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violetPrimary"
-              />
-            )}
-            {Boolean(image.length) && isEdit && (
-              <>
-                <Image
-                  width={100}
-                  height={100}
-                  src={image}
-                  alt={image}
-                  className="mt-2 h-48 w-full object-contain"
-                />
-                <IoMdRemoveCircle
-                  onClick={clearImage}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="remove photo"
-                  className="absolute right-20 bottom-4 h-12 w-12 text-red-500"
-                />
-              </>
-            )}
-            <input
-              id={`photo${post.id}`}
-              accept="image/*"
-              className="hidden"
-              {...register("image")}
-              type="file"
-            />
-            <label htmlFor={`photo${post.id}`}>
-              <FcStackOfPhotos
-                role="button"
-                tabIndex={0}
-                className="absolute right-4 bottom-4 h-12 w-12"
-                title="pick a photo"
-              />
-            </label>
-            <Button
-              type="submit"
-              variant="secondary"
-              isLoading={isEditLoading}
-              title="save post"
-              aria-label="save post"
-              className="mt-4 w-max"
-            >
-              <GiFlyingDagger />
-            </Button>
-          </form>
-        )}
+        {isEdit && Edit}
       </div>
       {openMenu && (
         <div className="absolute top-12 right-4 h-max w-24 rounded-md shadow-md">

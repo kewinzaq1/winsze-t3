@@ -12,13 +12,16 @@ import type { LegacyRef } from "react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { Textarea } from "../common/Textarea";
 
 export const CreatePost = () => {
+  const utils = trpc.useContext();
   const { mutate, data, error, isLoading } = trpc.posts.addPost.useMutation({
     onSuccess: () => {
       resetField("content");
       resetField("image");
       setImage("");
+      utils.posts.getPosts.invalidate({});
     },
   });
   const [parentRef] = useAutoAnimate();
@@ -108,11 +111,10 @@ export const CreatePost = () => {
             className="absolute right-20 bottom-4 h-12 w-12 text-red-500"
           />
         )}
-        <textarea
+        <Textarea
           maxLength={255}
           placeholder="What is on your mind?"
           {...register("content")}
-          className="min-h-3/4 h-max w-full resize-none rounded-md p-4 text-xl outline-none focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violetPrimary"
         />
         <Input
           id="photo"

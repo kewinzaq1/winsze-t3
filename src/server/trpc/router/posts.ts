@@ -287,7 +287,13 @@ export const postsRouter = router({
           id: comment.id,
         },
         include: {
-          user: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
         },
       });
     }),

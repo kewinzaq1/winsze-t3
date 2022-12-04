@@ -29,6 +29,7 @@ import updateLocale from "dayjs/plugin/updateLocale";
 import dayjs from "dayjs";
 import { useNotifier } from "../../notifier";
 import { useQueryClient } from "@tanstack/react-query";
+import { Comment } from "../comment/Comment";
 
 dayjs.extend(relativeRime);
 dayjs.extend(updateLocale);
@@ -343,6 +344,19 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             </div>
           )}
           {isEdit && Edit}
+          <Comment
+            id={""}
+            content={""}
+            userId={""}
+            postId={""}
+            createdAt={new Date()}
+            updatedAt={new Date()}
+            user={{
+              name: "Adam Kowalski",
+              email: null,
+              image: null,
+            }}
+          />
         </div>
         {openMenu && (
           <PostMenu ref={menuRef as Ref<HTMLDivElement>}>

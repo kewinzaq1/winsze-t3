@@ -12,7 +12,7 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
   const userIsAuthor = comment?.user.id === useSession().data?.user?.id;
 
   return (
-    <div className="mt-4">
+    <div className="relative mt-4">
       <header className="flex items-center">
         <Image
           src={comment?.user.image ?? avatarPlaceholder}
@@ -39,6 +39,12 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
       </header>
       <div>
         <p>{comment?.content}</p>
+      </div>
+      <div className="absolute right-0 top-0">
+        <div>
+          <button>Edit</button>
+          <button>Delete</button>
+        </div>
       </div>
     </div>
   );

@@ -256,4 +256,39 @@ export const postsRouter = router({
         },
       });
     }),
+  addComment: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+        content: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const comment = await ctx.prisma.comment.create({
+        data: {
+          content: input.content,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          post: {
+            connect: {
+              id: input.postId,
+            },
+          },
+        },
+      });
+
+      return await ctx.prisma.comment.findFirst({
+        where: {
+          id: comment.id,
+        },
+        include: {
+          user: true,
+        },
+      });
+    }),
 });

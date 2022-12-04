@@ -17,7 +17,12 @@ import { useSession } from "next-auth/react";
 import { useClickAway } from "src/hooks/useClickAway";
 import { PostMenu } from "./PostMenu";
 import { PostMenuButton } from "./PostMenuButton";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import {
+  AiOutlineHeart,
+  AiFillHeart,
+  AiOutlineComment,
+  AiOutlineShareAlt,
+} from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import relativeRime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
@@ -307,16 +312,34 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             />
           )}
           {isPreview && (
-            <div className="flex items-center">
+            <div className="flex w-full items-center">
               <button
                 className="flex items-center gap-1"
                 onClick={() => toggleLike({ id: post.id })}
+                aria-label={`${userLike ? "unlike" : "like"} post`}
+                title={`${userLike ? "unlike" : "like"} post`}
               >
                 {post._count.Like}
-                {userLike ? <AiFillHeart color="red" /> : <AiOutlineHeart />}
+                {userLike ? (
+                  <AiFillHeart color="red" className="h-8 w-8" />
+                ) : (
+                  <AiOutlineHeart className="h-8 w-8" />
+                )}
               </button>
-              <button>comment</button>
-              <button>share</button>
+              <button
+                className="rounded-md p-2"
+                aria-label="show comments"
+                title="show comment"
+              >
+                <AiOutlineComment className="h-8 w-8" />
+              </button>
+              <button
+                className="ml-auto justify-self-end rounded-md p-2"
+                aria-label="share post"
+                title="share-post"
+              >
+                <AiOutlineShareAlt className="h-8 w-8" />
+              </button>
             </div>
           )}
           {isEdit && Edit}

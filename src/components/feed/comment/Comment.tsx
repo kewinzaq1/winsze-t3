@@ -36,6 +36,10 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
 
   console.log(useSession().data?.user?.id);
 
+  if (!comment) {
+    return <></>;
+  }
+
   return (
     <div className="relative mt-4">
       <header className="flex items-center">
@@ -65,7 +69,11 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
         {openMenu && (
           <CommentMenu setOpenMenu={setOpenMenu}>
             <CommentMenuButton>Edit</CommentMenuButton>
-            <CommentMenuButton>Delete</CommentMenuButton>
+            <CommentMenuButton
+              onClick={() => deleteComment({ id: comment?.id })}
+            >
+              Delete
+            </CommentMenuButton>
           </CommentMenu>
         )}
       </header>

@@ -301,16 +301,14 @@ export const postsRouter = router({
   deleteComment: protectedProcedure
     .input(
       z.object({
-        postId: z.string(),
-        commentId: z.string(),
+        id: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       const comment = await ctx.prisma.comment.findFirst({
         where: {
-          id: input.commentId,
-          postId: input.postId,
+          id: input.id,
         },
       });
 
@@ -330,7 +328,7 @@ export const postsRouter = router({
 
       return ctx.prisma.comment.delete({
         where: {
-          id: input.commentId,
+          id: input.id,
         },
       });
     }),

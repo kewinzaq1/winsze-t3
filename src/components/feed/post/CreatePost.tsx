@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { trpc } from "src/utils/trpc";
-import { Button } from "../common/Button";
-import { Input } from "../common/Input";
+import { Button } from "../../common/Button";
+import { Input } from "../../common/Input";
 import { z } from "zod";
 import { imgToBase64 } from "src/utils/imgToBase64";
 import { FcStackOfPhotos } from "react-icons/fc";
@@ -12,8 +12,8 @@ import type { LegacyRef } from "react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { Textarea } from "../common/Textarea";
-import { useNotifier } from "../notifier";
+import { Textarea } from "../../common/Textarea";
+import { useNotifier } from "../../notifier";
 
 export const CreatePost = () => {
   const { show } = useNotifier();

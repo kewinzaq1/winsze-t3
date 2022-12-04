@@ -1,8 +1,8 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { CreatePost } from "src/components/feed/CreatePost";
-import { Posts } from "src/components/feed/Posts";
+import { CreatePost } from "src/components/feed/post/CreatePost";
+import { Posts } from "src/components/feed/post/Posts";
 import { UnauthHero } from "src/components/UnauthHero";
 import { trpc } from "src/utils/trpc";
 

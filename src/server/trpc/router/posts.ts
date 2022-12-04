@@ -291,4 +291,40 @@ export const postsRouter = router({
         },
       });
     }),
+  deleteComment: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+        commentId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const comment = await ctx.prisma.comment.findFirst({
+        where: {
+          id: input.commentId,
+          postId: input.postId,
+        },
+      });
+
+      if (!comment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comment not found",
+        });
+      }
+
+      if (comment.userId !== userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to delete this comment",
+        });
+      }
+
+      return ctx.prisma.comment.delete({
+        where: {
+          id: input.commentId,
+        },
+      });
+    }),
 });

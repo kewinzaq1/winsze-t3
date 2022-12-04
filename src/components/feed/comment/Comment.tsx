@@ -1,4 +1,5 @@
 import type { RouterOutputs } from "src/utils/trpc";
+import { trpc } from "src/utils/trpc";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import Image from "next/image";
 import dayjs from "dayjs";
@@ -6,6 +7,8 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { useSession } from "next-auth/react";
 
 export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
+  const { mutate: deleteComment } = trpc.posts.deleteComment.useMutation();
+
   const userIsAuthor = comment?.user.id === useSession().data?.user?.id;
 
   return (

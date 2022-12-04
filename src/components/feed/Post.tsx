@@ -150,11 +150,11 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       {Boolean(image.length) && isEdit && (
         <>
           <Image
-            width={1920}
-            height={1080}
+            width={500}
+            height={500}
             src={image}
             alt={image}
-            className="mt-2 h-full w-full object-contain"
+            className="mt-2 h-[500px] w-full object-cover"
           />
           <IoMdRemoveCircle
             onClick={clearImage}
@@ -202,7 +202,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             width={50}
             height={50}
             alt={`${post.user.name}`}
-            className="rounded-full object-cover"
+            className="h-16 w-16 rounded-full object-cover"
           />
           <div className="ml-2 flex flex-col">
             <p className="text-xs">{dayjs(post.createdAt).fromNow()}</p>
@@ -226,11 +226,11 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
           {isPreview && <p className="text-2xl">{post.content}</p>}
           {post.image && isPreview && (
             <Image
-              width={1920}
-              height={1080}
+              width={500}
+              height={500}
               src={post.image}
               alt={post.content}
-              className="mt-2 h-max w-full rounded-md object-cover"
+              className="mt-2 h-full w-full rounded-md object-cover"
             />
           )}
           {isPreview && (

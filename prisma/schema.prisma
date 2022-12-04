@@ -60,6 +60,7 @@ model User {
   ResetToken    ResetToken[]
   Post          Post[]
   Like          Like[]
+  Report        Report[]
 }
 
 model ResetToken {
@@ -89,11 +90,24 @@ model Post {
   userId    String   @map("userId")
   Like      Like[]
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Report    Report[]
 
   @@index([userId])
 }
 
 model Like {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+
+  @@unique([userId, postId])
+  @@index([postId])
+}
+
+model Report {
   id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id])
   userId String

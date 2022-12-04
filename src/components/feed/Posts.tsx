@@ -6,7 +6,7 @@ export const Posts = () => {
 
   console.log(data);
   return (
-    <div className="mx-auto mt-10 w-full max-w-3xl px-4">
+    <div className="mx-auto mt-10 w-full max-w-3xl">
       {data?.map((post) => (
         <Post key={post.id} {...post} />
       ))}

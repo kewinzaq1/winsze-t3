@@ -83,7 +83,7 @@ export const CreatePost = () => {
   console.log(errors);
 
   return (
-    <div className="px-4 pt-24">
+    <div className="pt-24">
       {error && (
         <div className="border-2 border-red-500 bg-red-300 p-4 text-sm text-red-500">
           {error.message}
@@ -126,11 +126,11 @@ export const CreatePost = () => {
         />
         {Boolean(image.length) && (
           <Image
-            width={100}
-            height={100}
+            width={500}
+            height={500}
             src={image}
             alt={image}
-            className="h-48 w-full rounded-md object-contain"
+            className="h-[500px] w-full rounded-md object-cover"
           />
         )}
         <Button

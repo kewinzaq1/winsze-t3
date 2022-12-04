@@ -332,4 +332,29 @@ export const postsRouter = router({
         },
       });
     }),
+  getPostComments: publicProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const comments = await ctx.prisma.comment.findMany({
+        where: {
+          postId: input.postId,
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+              image: true,
+              id: true,
+            },
+          },
+        },
+      });
+
+      return comments;
+    }),
 });

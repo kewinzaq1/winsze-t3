@@ -156,6 +156,12 @@ export const postsRouter = router({
         },
         include: {
           user: true,
+          Like: true,
+          _count: {
+            select: {
+              Like: true,
+            },
+          },
         },
       });
 
@@ -198,5 +204,56 @@ export const postsRouter = router({
       });
 
       return reportedPost;
+    }),
+  toggleLike: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const post = await ctx.prisma.post.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!post) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Post not found",
+        });
+      }
+
+      const like = await ctx.prisma.like.findFirst({
+        where: {
+          userId,
+          postId: input.id,
+        },
+      });
+
+      if (like) {
+        return ctx.prisma.like.delete({
+          where: {
+            id: like.id,
+          },
+        });
+      }
+
+      return ctx.prisma.like.create({
+        data: {
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          post: {
+            connect: {
+              id: input.id,
+            },
+          },
+        },
+      });
     }),
 });

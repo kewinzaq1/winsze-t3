@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 import { useClickAway } from "src/hooks/useClickAway";
 import { PostMenu } from "./PostMenu";
 import { PostMenuButton } from "./PostMenuButton";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import relativeRime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import dayjs from "dayjs";
@@ -168,6 +169,15 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       },
     });
 
+  const userLike = post.Like.find((like) => like.userId === session?.user?.id);
+
+  const { mutate: toggleLike, isLoading: isToggling } =
+    trpc.posts.toggleLike.useMutation({
+      onSuccess: () => {
+        utils.posts.getPosts.invalidate({});
+      },
+    });
+
   const {
     mutate: reportPost,
     isLoading: isReporting,
@@ -275,7 +285,13 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
           )}
           {isPreview && (
             <div className="flex items-center">
-              <button>like</button>
+              <button
+                className="flex items-center gap-1"
+                onClick={() => toggleLike({ id: post.id })}
+              >
+                {post._count.Like}
+                {userLike ? <AiFillHeart color="red" /> : <AiOutlineHeart />}
+              </button>
               <button>comment</button>
               <button>share</button>
             </div>

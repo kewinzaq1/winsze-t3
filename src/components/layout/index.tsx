@@ -1,5 +1,6 @@
 import { Notifier } from "../notifier";
 import { Navbar } from "./Navbar";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const Layout = ({
   children,
@@ -10,6 +11,7 @@ export const Layout = ({
 }) => {
   return (
     <>
+      <ReactQueryDevtools />
       <Notifier />
       {!withoutNavbar && <Navbar />}
       {children}

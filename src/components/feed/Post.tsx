@@ -22,6 +22,7 @@ import relativeRime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import dayjs from "dayjs";
 import { useNotifier } from "../notifier";
+import { useQueryClient } from "@tanstack/react-query";
 
 dayjs.extend(relativeRime);
 dayjs.extend(updateLocale);
@@ -44,6 +45,7 @@ dayjs.updateLocale("en", {
 });
 
 export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
+  const queryClient = useQueryClient();
   const { show } = useNotifier();
   const utils = trpc.useContext();
   const [openMenu, setOpenMenu] = useState(false);
@@ -171,12 +173,38 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
 
   const userLike = post.Like.find((like) => like.userId === session?.user?.id);
 
-  const { mutate: toggleLike, isLoading: isToggling } =
-    trpc.posts.toggleLike.useMutation({
-      onSuccess: () => {
-        utils.posts.getPosts.invalidate({});
-      },
-    });
+  const { mutate: toggleLike } = trpc.posts.toggleLike.useMutation({
+    onMutate: async () => {
+      await queryClient.cancelQueries([
+        ["posts", "getPosts"],
+        { input: {}, type: "query" },
+      ]);
+      const previousValue = queryClient.getQueryData([
+        ["posts", "getPosts"],
+        { input: {}, type: "query" },
+      ]);
+      queryClient.setQueryData(
+        [["posts", "getPosts"], { input: {}, type: "query" }],
+        (old: any) => {
+          const postIndex = old.findIndex((p: any) => p.id === post.id);
+          const updatedPost = old[postIndex];
+          const likeIndex = updatedPost.Like.findIndex(
+            (like: any) => like.userId === session?.user?.id
+          );
+          if (likeIndex !== -1) {
+            updatedPost.Like.splice(likeIndex, 1);
+            updatedPost._count.Like--;
+          } else {
+            updatedPost.Like.push({ userId: session?.user?.id });
+            updatedPost._count.Like++;
+          }
+          old[postIndex] = updatedPost;
+          return old;
+        }
+      );
+      return previousValue;
+    },
+  });
 
   const {
     mutate: reportPost,

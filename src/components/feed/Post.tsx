@@ -206,11 +206,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
     },
   });
 
-  const {
-    mutate: reportPost,
-    isLoading: isReporting,
-    error: reportError,
-  } = trpc.posts.reportPost.useMutation({
+  const { mutate: reportPost } = trpc.posts.reportPost.useMutation({
     onSuccess: () => {
       setOpenMenu(false);
     },
@@ -348,7 +344,6 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             >
               report
             </PostMenuButton>
-            <PostMenuButton>unpublish</PostMenuButton>
           </PostMenu>
         )}
       </div>

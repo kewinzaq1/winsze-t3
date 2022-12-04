@@ -8,7 +8,7 @@ export const atomVisible = atom(false);
 export const atomMessage = atom("Fancy error");
 export const atomType = atom("info");
 export const atomDescription = atom("Some description, maybe a link to a page");
-export const atomDuration = atom(3000);
+export const atomDuration = atom(300);
 export const atomClosable = atom(false);
 export const atomStyle = atom<React.CSSProperties>({});
 export const atomClassName = atom("");
@@ -73,7 +73,7 @@ export const useNotifier = () => {
     setMessage(message);
     setType(type);
     setDescription(description);
-    duration && setDuration(duration);
+    setDuration(duration ?? 3000);
     closable && setClosable(closable);
     style && setStyle(style);
     className && setClassName(className);
@@ -173,7 +173,7 @@ const Toast = () => {
         <Icon />
       </div>
       <div className="flex flex-col whitespace-nowrap px-4 py-2">
-        <p>{message}</p>
+        <p className="text-xl font-semibold">{message}</p>
         <p>{description}</p>
       </div>
     </div>

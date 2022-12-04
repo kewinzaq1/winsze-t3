@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 export const CommentMenuButton = ({
   className,
@@ -7,9 +7,5 @@ export const CommentMenuButton = ({
   ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 >) => {
-  return (
-    <button {...props} className={`${className} w-full p-2 text-left`}>
-      Edit
-    </button>
-  );
+  return <button {...props} className={`${className} w-full p-2 text-left`} />;
 };

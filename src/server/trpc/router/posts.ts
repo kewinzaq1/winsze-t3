@@ -20,6 +20,8 @@ export const postsRouter = router({
   addPost: protectedProcedure
     .input(addPostSchema)
     .mutation(async ({ ctx, input }) => {
+      console.log({ input });
+
       let image = "";
       if (input.image?.length) {
         const fileName = `posts/${getUUID()}.${getTypeFromBase64(input.image)}`;

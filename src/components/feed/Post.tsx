@@ -138,6 +138,16 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       },
     });
 
+  const {
+    mutate: reportPost,
+    isLoading: isReporting,
+    error: reportError,
+  } = trpc.posts.reportPost.useMutation({
+    onSuccess: () => {
+      setOpenMenu(false);
+    },
+  });
+
   const Edit = (
     <form onSubmit={onSubmit}>
       {isEdit && (
@@ -257,7 +267,13 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             <PostMenuButton onClick={() => setOpenConfirm(true)}>
               Delete
             </PostMenuButton>
-            <PostMenuButton>report</PostMenuButton>
+            <PostMenuButton
+              onClick={() => {
+                reportPost({ postId: post.id });
+              }}
+            >
+              report
+            </PostMenuButton>
             <PostMenuButton>unpublish</PostMenuButton>
           </PostMenu>
         )}

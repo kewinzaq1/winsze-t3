@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, LegacyRef, HTMLAttributes } from "react";
+import type { DetailedHTMLProps, LegacyRef, HTMLAttributes } from "react";
 import { forwardRef } from "react";
 
 export const PostMenu = forwardRef(
@@ -12,7 +12,7 @@ export const PostMenu = forwardRef(
     <div
       ref={ref}
       {...props}
-      className={`${className} absolute top-12 right-4 h-max w-24 rounded-md bg-white shadow-md`}
+      className={`${className} absolute top-12 right-4 z-50 h-max w-24 rounded-md bg-white shadow-md`}
     />
   )
 );

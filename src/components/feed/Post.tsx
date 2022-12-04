@@ -253,7 +253,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
           </div>
           {isAuthor && (
             <BiDotsHorizontalRounded
-              className="pointer absolute top-4 right-4 h-8 w-8"
+              className="pointer z-1 absolute top-4 right-4 h-8 w-8"
               role="button"
               tabIndex={0}
               aria-label="manage post"

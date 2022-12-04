@@ -5,16 +5,14 @@ import Image from "next/image";
 import dayjs from "dayjs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { useSession } from "next-auth/react";
-import { createRef, useState } from "react";
-import { useClickAway } from "src/hooks/useClickAway";
+import { useState } from "react";
 import { useNotifier } from "src/components/notifier";
+import { CommentMenuButton } from "./CommentMenuButton";
+import { CommentMenu } from "./CommentMenu";
 
 export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
   const [openMenu, setOpenMenu] = useState(false);
-  const menuRef = createRef<HTMLDivElement>();
   const { show } = useNotifier();
-
-  useClickAway(menuRef, () => setOpenMenu(false));
 
   const { mutate: deleteComment } = trpc.posts.deleteComment.useMutation({
     onSuccess: () => {
@@ -65,15 +63,10 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
           />
         )}
         {openMenu && (
-          <div
-            className="absolute right-0 top-0 z-10 ml-auto h-max bg-white"
-            ref={menuRef}
-          >
-            <div className="flex flex-col rounded-md shadow-md">
-              <button className="w-full p-2 text-left">Edit</button>
-              <button className="w-full p-2 text-left">Delete</button>
-            </div>
-          </div>
+          <CommentMenu setOpenMenu={setOpenMenu}>
+            <CommentMenuButton>Edit</CommentMenuButton>
+            <CommentMenuButton>Delete</CommentMenuButton>
+          </CommentMenu>
         )}
       </header>
       <div>

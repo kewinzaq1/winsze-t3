@@ -58,7 +58,6 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   const [openMenu, setOpenMenu] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const handleMenu = () => setOpenMenu((c) => !c);
   const [mode, setMode] = useState<"edit" | "preview">("preview");
   const [image, setImage] = useState(post.image ?? "");
   const { data: session } = useSession();
@@ -293,7 +292,11 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
               tabIndex={0}
               aria-label="manage post"
               title="manage post"
-              onClick={handleMenu}
+              onClick={() => {
+                if (!openMenu) {
+                  setOpenMenu(true);
+                }
+              }}
             />
           )}
         </div>

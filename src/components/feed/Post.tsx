@@ -18,6 +18,7 @@ import { useClickAway } from "src/hooks/useClickAway";
 import { PostMenu } from "./PostMenu";
 import { PostMenuButton } from "./PostMenuButton";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { FaRegComment } from "react-icons/fa";
 import relativeRime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import dayjs from "dayjs";
@@ -126,8 +127,6 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   }, [watch]);
 
   const onSubmit = handleSubmit(async (values) => {
-    console.log(image);
-    console.log(values);
     if (!values.image.length) {
       editPost({
         id: post.id,
@@ -304,7 +303,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
               height={500}
               src={post.image}
               alt={post.content}
-              className="mt-2 h-full w-full rounded-md object-cover"
+              className="mt-2 h-full w-full rounded-md object-contain"
             />
           )}
           {isPreview && (

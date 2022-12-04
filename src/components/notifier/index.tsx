@@ -63,7 +63,7 @@ export const useNotifier = () => {
     message: string;
     type: "success" | "error" | "warning" | "info";
     description: string;
-    duration: number;
+    duration?: number;
     closable?: boolean;
     style?: React.CSSProperties;
     className?: string;
@@ -73,7 +73,7 @@ export const useNotifier = () => {
     setMessage(message);
     setType(type);
     setDescription(description);
-    setDuration(duration);
+    duration && setDuration(duration);
     closable && setClosable(closable);
     style && setStyle(style);
     className && setClassName(className);

@@ -20,6 +20,7 @@ import { PostMenuButton } from "./PostMenuButton";
 import relativeRime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import dayjs from "dayjs";
+import { useNotifier } from "../notifier";
 
 dayjs.extend(relativeRime);
 dayjs.extend(updateLocale);
@@ -42,6 +43,7 @@ dayjs.updateLocale("en", {
 });
 
 export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
+  const { show } = useNotifier();
   const utils = trpc.useContext();
   const [openMenu, setOpenMenu] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -59,6 +61,20 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
     onSuccess: () => {
       setMode("preview");
       utils.posts.getPosts.invalidate({});
+      show({
+        message: "Post edited",
+        description: "Your post has been edited successfully",
+        duration: 3000,
+        type: "success",
+      });
+    },
+    onError: (err) => {
+      show({
+        message: err.message,
+        description: err?.message,
+        duration: 3000,
+        type: "error",
+      });
     },
   });
 
@@ -135,6 +151,20 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
         utils.posts.getPosts.invalidate({});
         setOpenConfirm(false);
         setOpenMenu(false);
+        show({
+          message: "Post deleted",
+          description: "Your post has been deleted successfully",
+          duration: 3000,
+          type: "success",
+        });
+      },
+      onError: (err) => {
+        show({
+          message: err.message,
+          description: err?.message,
+          duration: 3000,
+          type: "error",
+        });
       },
     });
 
@@ -281,7 +311,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
 
       {openConfirm && (
         <div
-          className="fixed inset-0 flex h-screen w-screen items-center justify-center bg-black bg-opacity-20"
+          className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-20"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setOpenConfirm(false);
@@ -289,7 +319,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             }
           }}
         >
-          <div className="mx-4 flex h-max w-full max-w-xl flex-col gap-4 rounded-md bg-white p-4 shadow-md">
+          <div className="z-50 mx-4 flex h-max w-full max-w-xl flex-col gap-4 rounded-md bg-white p-4 shadow-md">
             <header>
               <p className="text-2xl font-semibold">Are you sure?</p>
               <p>To delete this post</p>

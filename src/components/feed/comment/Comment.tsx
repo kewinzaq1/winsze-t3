@@ -41,9 +41,9 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
         <p>{comment?.content}</p>
       </div>
       <div className="absolute right-0 top-0">
-        <div>
-          <button>Edit</button>
-          <button>Delete</button>
+        <div className="flex flex-col rounded-md shadow-md">
+          <button className="w-full p-2 text-left">Edit</button>
+          <button className="w-full p-2 text-left">Delete</button>
         </div>
       </div>
     </div>

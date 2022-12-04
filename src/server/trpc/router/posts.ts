@@ -159,4 +159,42 @@ export const postsRouter = router({
 
       return posts;
     }),
+  reportPost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const post = await ctx.prisma.post.findUnique({
+        where: {
+          id: input.postId,
+        },
+      });
+
+      if (post?.userId === userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You can't report your own post",
+        });
+      }
+
+      const reportedPost = await ctx.prisma.report.create({
+        data: {
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          post: {
+            connect: {
+              id: input.postId,
+            },
+          },
+        },
+      });
+
+      return reportedPost;
+    }),
 });

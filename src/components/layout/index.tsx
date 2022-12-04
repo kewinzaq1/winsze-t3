@@ -1,3 +1,4 @@
+import { Notifier } from "../notifier";
 import { Navbar } from "./Navbar";
 
 export const Layout = ({
@@ -9,6 +10,7 @@ export const Layout = ({
 }) => {
   return (
     <>
+      <Notifier />
       {!withoutNavbar && <Navbar />}
       {children}
     </>

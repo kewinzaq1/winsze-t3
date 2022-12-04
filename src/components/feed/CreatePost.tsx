@@ -13,8 +13,11 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Textarea } from "../common/Textarea";
+import { useNotifier } from "../notifier";
 
 export const CreatePost = () => {
+  const { show } = useNotifier();
+
   const utils = trpc.useContext();
   const { mutate, data, error, isLoading } = trpc.posts.addPost.useMutation({
     onSuccess: () => {
@@ -22,6 +25,20 @@ export const CreatePost = () => {
       resetField("image");
       setImage("");
       utils.posts.getPosts.invalidate({});
+      show({
+        message: "Post created",
+        description: "Your post has been created successfully",
+        type: "success",
+        duration: 3000,
+      });
+    },
+    onError: (err) => {
+      show({
+        message: err.message,
+        description: err?.message,
+        type: "error",
+        duration: 3000,
+      });
     },
   });
   const [parentRef] = useAutoAnimate();

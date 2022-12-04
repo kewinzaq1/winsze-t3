@@ -165,14 +165,14 @@ const Toast = () => {
   return (
     <div
       role="status"
-      className={`${getPosition()} ${getBaseStyle()} ${className} fixed z-[9999] flex h-max w-max items-center gap-2 rounded-md bg-white p-2 shadow-md`}
+      className={`${getPosition()} ${getBaseStyle()} ${className} fixed z-[9999] flex h-max w-max min-w-fit items-center gap-2 rounded-md bg-white p-2 shadow-md`}
       style={style}
       onClick={close}
     >
-      <div className="flex items-center justify-center rounded-full bg-white p-2">
+      <div className="flex items-center justify-center whitespace-nowrap rounded-full bg-white p-2">
         <Icon />
       </div>
-      <div className="flex flex-col px-4 py-2">
+      <div className="flex flex-col whitespace-nowrap px-4 py-2">
         <p>{message}</p>
         <p>{description}</p>
       </div>

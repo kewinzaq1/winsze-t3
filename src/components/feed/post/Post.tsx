@@ -30,6 +30,7 @@ import dayjs from "dayjs";
 import { useNotifier } from "../../notifier";
 import { useQueryClient } from "@tanstack/react-query";
 import { Comment } from "../comment/Comment";
+import { Comments } from "../comment/Comments";
 
 dayjs.extend(relativeRime);
 dayjs.extend(updateLocale);
@@ -57,6 +58,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
   const utils = trpc.useContext();
   const [openMenu, setOpenMenu] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [openComments, setOpenComments] = useState(false);
 
   const [mode, setMode] = useState<"edit" | "preview">("preview");
   const [image, setImage] = useState(post.image ?? "");
@@ -327,10 +329,12 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
                 )}
               </button>
               <button
-                className="rounded-md p-2"
+                className="flex items-center gap-1 rounded-md p-2"
                 aria-label="show comments"
                 title="show comment"
+                onClick={() => setOpenComments((prev) => !prev)}
               >
+                {post._count.Comment}
                 <AiOutlineComment className="h-8 w-8" />
               </button>
               <button
@@ -343,20 +347,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
             </div>
           )}
           {isEdit && Edit}
-          <Comment
-            id={""}
-            content={""}
-            userId={""}
-            postId={""}
-            createdAt={new Date()}
-            updatedAt={new Date()}
-            user={{
-              name: "Adam Kowalski",
-              email: null,
-              image: null,
-              id: "clay513z10000g7j1o3k6quxm",
-            }}
-          />
+          {openComments && <Comments postId={post.id} />}
         </div>
         {openMenu && (
           <PostMenu ref={menuRef as Ref<HTMLDivElement>}>

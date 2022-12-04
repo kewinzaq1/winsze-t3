@@ -9,12 +9,35 @@ import { useState } from "react";
 import { useNotifier } from "src/components/notifier";
 import { CommentMenuButton } from "./CommentMenuButton";
 import { CommentMenu } from "./CommentMenu";
+import type { Updater } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
+  const queryClient = useQueryClient();
   const [openMenu, setOpenMenu] = useState(false);
   const { show } = useNotifier();
 
   const { mutate: deleteComment } = trpc.posts.deleteComment.useMutation({
+    onMutate: async () => {
+      await queryClient.cancelQueries([
+        ["posts", "getPostComments"],
+        { input: { postId: comment?.postId }, type: "query" },
+      ]);
+      const previousComments = queryClient.getQueryData([
+        ["posts", "getPostComments"],
+        { input: { postId: comment?.postId }, type: "query" },
+      ]);
+      queryClient.setQueryData(
+        [
+          ["posts", "getPostComments"],
+          { input: { postId: comment?.postId }, type: "query" },
+        ],
+        (old: any) => {
+          return old.filter((c: any) => c.id !== comment?.id);
+        }
+      );
+      return { previousComments };
+    },
     onSuccess: () => {
       setOpenMenu(false);
       show({

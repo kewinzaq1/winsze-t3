@@ -160,6 +160,7 @@ export const postsRouter = router({
           _count: {
             select: {
               Like: true,
+              Comment: true,
             },
           },
         },

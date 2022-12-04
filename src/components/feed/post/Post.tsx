@@ -74,7 +74,6 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       show({
         message: "Post edited",
         description: "Your post has been edited successfully",
-        duration: 3000,
         type: "success",
       });
     },
@@ -82,7 +81,6 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
       show({
         message: err.message,
         description: err?.message,
-        duration: 3000,
         type: "error",
       });
     },
@@ -162,7 +160,6 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
         show({
           message: "Post deleted",
           description: "Your post has been deleted successfully",
-          duration: 3000,
           type: "success",
         });
       },
@@ -170,7 +167,6 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
         show({
           message: err.message,
           description: err?.message,
-          duration: 3000,
           type: "error",
         });
       },
@@ -355,6 +351,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
               name: "Adam Kowalski",
               email: null,
               image: null,
+              id: "clay513z10000g7j1o3k6quxm",
             }}
           />
         </div>

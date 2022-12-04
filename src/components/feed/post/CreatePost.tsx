@@ -29,7 +29,6 @@ export const CreatePost = () => {
         message: "Post created",
         description: "Your post has been created successfully",
         type: "success",
-        duration: 3000,
       });
     },
     onError: (err) => {
@@ -37,7 +36,6 @@ export const CreatePost = () => {
         message: err.message,
         description: err?.message,
         type: "error",
-        duration: 3000,
       });
     },
   });

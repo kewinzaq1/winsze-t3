@@ -32,14 +32,18 @@ export const SignIn = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      role: "",
+    },
   });
 
   if (session.status === "authenticated") {
     return null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = async (data: any) => {
+  const onSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
     const response = await signIn("credentials", { ...data, redirect: false });
     setIsLoading(false);
@@ -49,7 +53,7 @@ export const SignIn = () => {
       router.push("/");
       return;
     }
-  };
+  });
 
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-center p-4 lg:flex-row">
@@ -65,7 +69,7 @@ export const SignIn = () => {
           </p>
         </div>
         <AuthOtherMethods />
-        <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
+        <form className="mt-10" onSubmit={onSubmit}>
           {loginError && (
             <p className="m-0 p-0 text-sm text-red-500">{loginError}</p>
           )}

@@ -12,6 +12,8 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { AuthOtherMethods } from "./AuthOtherMethods";
+import background from "src/assets/background/auth-left.svg";
+import Image from "next/image";
 
 export const SignUp = () => {
   const {
@@ -61,6 +63,12 @@ export const SignUp = () => {
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-center p-4 lg:flex-row">
       <AuthLeftPanel />
+      <Image
+        src={background}
+        layout="fill"
+        alt=""
+        className="-z-10 object-cover opacity-30"
+      />
       <div className="flex h-3/4 w-full flex-col px-10 py-4 lg:w-3/4">
         <div>
           <h2 className="text-2xl font-semibold">Sign up</h2>

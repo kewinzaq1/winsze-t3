@@ -113,12 +113,7 @@ export const SignIn = () => {
               Forgot password?
             </Link>
           </FormGroup>
-          <Button
-            className="mt-6"
-            type="submit"
-            variant={isLoading ? "primary" : "secondary"}
-            isLoading={isLoading}
-          >
+          <Button className="mt-6" type="submit" isLoading={isLoading}>
             Sign in
           </Button>
         </form>

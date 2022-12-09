@@ -118,12 +118,7 @@ export const SignUp = () => {
               error={Boolean(errors.role)}
             />
           </FormGroup>
-          <Button
-            className="mt-6"
-            type="submit"
-            variant={isLoading ? "primary" : "secondary"}
-            isLoading={isLoading}
-          >
+          <Button className="mt-6" type="submit" isLoading={isLoading}>
             Sign up
           </Button>
         </form>

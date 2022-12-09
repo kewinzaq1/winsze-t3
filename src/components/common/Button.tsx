@@ -44,7 +44,6 @@ export const Button = ({
             role="progressbar"
             width={20}
             height={10}
-            color="red"
             className="mr-2"
           />
           <p className="text-[currentColor]">Loading</p>

@@ -2,10 +2,12 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import type { DetailedHTMLProps, HTMLAttributes, LegacyRef } from "react";
+import { useRef } from "react";
 import { useState } from "react";
 import { Button } from "../common/Button";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
+import { useClickAway } from "src/hooks/useClickAway";
 
 const NavbarMenu = ({
   onClick,
@@ -33,7 +35,7 @@ const NavbarMenu = ({
 };
 
 export const Navbar = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
 
   const [animationParent] = useAutoAnimate();
@@ -41,6 +43,9 @@ export const Navbar = () => {
   const toggleMenu = () => {
     setIsOpen((c) => !c);
   };
+
+  const ref = useRef<HTMLDivElement>(null);
+  useClickAway(ref, () => setIsOpen(false));
 
   return (
     <div ref={animationParent as LegacyRef<HTMLDivElement>}>
@@ -67,6 +72,7 @@ export const Navbar = () => {
       </nav>
       {isOpen && (
         <div
+          ref={ref}
           role="menu"
           className="fixed top-16 right-4 flex h-max flex-col gap-1 rounded-md bg-white bg-opacity-80 p-1 backdrop-blur"
         >

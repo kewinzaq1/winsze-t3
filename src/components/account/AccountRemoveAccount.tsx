@@ -23,19 +23,21 @@ export function AccountRemoveAccount() {
   } = useForm({
     resolver: zodResolver(
       z.object({
-        password: z.string().min(8),
+        password: z.string().min(8, "Password must be at least 8 characters"),
       })
     ),
+    defaultValues: {
+      password: "",
+    },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = (value: any) => {
+  const onSubmit = handleSubmit((value) => {
     mutate(value);
-  };
+  });
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={onSubmit}
       className="relative mt-4 flex h-full w-full flex-col items-start"
     >
       <h2 className="text-2xl font-semibold">Remove account</h2>

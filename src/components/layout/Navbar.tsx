@@ -9,7 +9,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { useClickAway } from "src/hooks/useClickAway";
 
-const NavbarMenu = ({
+const NavbarAvatar = ({
   onClick,
   ...rest
 }: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>) => {
@@ -66,7 +66,7 @@ export const Navbar = () => {
               </Link>
             </>
           ) : (
-            <NavbarMenu onClick={toggleMenu} />
+            <NavbarAvatar onClick={toggleMenu} />
           )}
         </div>
       </nav>

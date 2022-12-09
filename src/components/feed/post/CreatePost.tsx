@@ -5,7 +5,6 @@ import { Button } from "../../common/Button";
 import { Input } from "../../common/Input";
 import { z } from "zod";
 import { imgToBase64 } from "src/utils/imgToBase64";
-import { FcStackOfPhotos } from "react-icons/fc";
 import { GiFlyingDagger } from "react-icons/gi";
 import { IoMdRemoveCircle } from "react-icons/io";
 import type { LegacyRef } from "react";
@@ -14,6 +13,7 @@ import Image from "next/image";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Textarea } from "../../common/Textarea";
 import { useNotifier } from "../../notifier";
+import { HiOutlinePhotograph } from "react-icons/hi";
 
 export const CreatePost = () => {
   const { show } = useNotifier();
@@ -107,13 +107,13 @@ export const CreatePost = () => {
       <form
         ref={parentRef as LegacyRef<HTMLFormElement>}
         onSubmit={onSubmit}
-        className="min-h-64 relative mx-auto w-full max-w-3xl rounded-md p-4 shadow-md outline-none backdrop-blur-sm focus:border-transparent focus:outline-none focus:ring-1 focus:ring-violetPrimary"
+        className="min-h-64 focus:ring-violetPrimary relative mx-auto w-full max-w-3xl rounded-md p-4 shadow-md outline-none backdrop-blur-sm focus:border-transparent focus:outline-none focus:ring-1"
       >
         <label htmlFor="photo">
-          <FcStackOfPhotos
+          <HiOutlinePhotograph
             role="button"
             tabIndex={0}
-            className="absolute right-4 bottom-4 h-12 w-12"
+            className="absolute right-4 bottom-4 h-6 w-6"
             title="pick a photo"
           />
         </label>

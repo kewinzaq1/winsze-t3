@@ -6,6 +6,8 @@ import { Input } from "src/components/common/Input";
 import { Label } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
+import { ErrorMessage } from "../common/ErrorMessage";
+import { InputError } from "../common/InputError";
 
 export function AccountUpdatePassword() {
   const { mutate, isLoading, error } =
@@ -18,31 +20,32 @@ export function AccountUpdatePassword() {
   } = useForm({
     resolver: zodResolver(
       z.object({
-        currentPassword: z.string().min(8),
-        newPassword: z.string().min(8),
+        currentPassword: z
+          .string()
+          .min(8, "Password must be at least 8 characters long"),
+        newPassword: z
+          .string()
+          .min(8, "Password must be at least 8 characters long"),
       })
     ),
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+    },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = (value: any) => {
-    console.log(value);
+  const onSubmit = handleSubmit((value) => {
     mutate(value);
-  };
+  });
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mt-4 flex w-full flex-col items-start"
-    >
+    <form onSubmit={onSubmit} className="mt-4 flex w-full flex-col items-start">
       <h2 className="text-2xl font-semibold">Update Password</h2>
-      {error && <p className="m-0 p-0 text-sm text-red-500">{error.message}</p>}
+      {error && <ErrorMessage>{error.message}</ErrorMessage>}
       <FormGroup className="w-full">
         <Label>Current Password</Label>
         {errors.currentPassword && (
-          <p className="m-0 p-0 text-xs text-red-500">
-            {errors.currentPassword.message as string}
-          </p>
+          <InputError>{errors.currentPassword.message as string}</InputError>
         )}
         <Input
           className="w-full"
@@ -55,9 +58,7 @@ export function AccountUpdatePassword() {
       <FormGroup className="w-full">
         <Label>New Password</Label>
         {errors.newPassword && (
-          <p className="m-0 p-0 text-xs text-red-500">
-            {errors.newPassword.message as string}
-          </p>
+          <InputError>{errors.newPassword.message as string}</InputError>
         )}
         <Input
           className="w-full"

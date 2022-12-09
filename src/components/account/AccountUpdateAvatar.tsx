@@ -19,7 +19,12 @@ export function AccountUpdateAvatar() {
     isLoading: isRemovingAvatar,
     error: removeAvatarError,
     data: removeAvatarData,
-  } = trpc.account.removeAvatar.useMutation();
+  } = trpc.account.removeAvatar.useMutation({
+    onSuccess: () => {
+      setAvatar("");
+      resetField("image");
+    },
+  });
   const session = useSession();
   const [avatar, setAvatar] = useState("");
 
@@ -50,13 +55,14 @@ export function AccountUpdateAvatar() {
     handleSubmit,
     formState: { errors },
     watch,
+    resetField,
   } = useForm({
     resolver: zodResolver(
       z.object({
         avatar:
           typeof window !== "undefined"
             ? z
-                .instanceof(FileList)
+                .instanceof(FileList, "File is required")
                 .refine((val) => val.length > 0, "File is required")
             : z.any(),
       })
@@ -138,7 +144,7 @@ export function AccountUpdateAvatar() {
             className="mt-5 justify-center"
             isLoading={isLoading}
           >
-            Update
+            {isLoading ? "" : "Update"}
           </Button>
           <Button
             className="justify-center"
@@ -148,7 +154,7 @@ export function AccountUpdateAvatar() {
             isLoading={isRemovingAvatar}
             variant="secondary"
           >
-            Remove
+            {isRemovingAvatar ? "" : "Remove"}
           </Button>
         </div>
       </div>

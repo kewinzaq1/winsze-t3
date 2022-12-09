@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import Image from "next/image";
 
-interface Button
+interface ButtonProps
   extends DetailedHTMLProps<
     ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
@@ -16,7 +16,7 @@ export const Button = ({
   variant,
   isLoading,
   ...restProps
-}: Button) => {
+}: ButtonProps) => {
   const basicClasses = () => {
     switch (variant) {
       case "primary":

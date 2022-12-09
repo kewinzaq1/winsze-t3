@@ -11,6 +11,7 @@ export function AuthLeftPanel() {
         layout="fill"
         objectFit="cover"
         className="z-1 rounded-md"
+        placeholder="blur"
       />
       <div className="glass relative z-50 flex flex-col">
         <p className="text-xl font-normal">Winsze - T3</p>

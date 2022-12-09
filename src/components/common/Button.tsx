@@ -20,9 +20,9 @@ export const Button = ({
   const basicClasses = () => {
     switch (variant) {
       case "primary":
-        return "flex items-center rounded-md border bg-slate-700 p-3 text-white outline-none transition hover:bg-slate-800 font-semibold focus:border-slate-700 focus:bg-slate-50 focus:text-bg-slate-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed";
+        return "flex items-center rounded-md border bg-slate-700 p-3 text-white outline-none transition hover:bg-slate-800 font-semibold focus:border-slate-700 focus:text-bg-slate-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed";
       case "secondary":
-        return "flex items-center rounded-md border bg-slate-300 p-3 outline-none transition hover:bg-slate-200 font-semibold focus:border-slate-200 focus:bg-slate-50 focus:text-bg-slate-200 active:scale-95 active:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed";
+        return "flex items-center rounded-md border bg-slate-300 p-3 outline-none transition hover:bg-slate-200 font-semibold focus:border-slate-200 focus:text-bg-slate-200 active:scale-95 active:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed";
       case "error":
         return "flex items-center duration-250 col-start-1 flex items-center rounded-md border border-red-500 bg-red-50 p-3 outline-none transition hover:bg-red-500 hover:text-slate-50 focus:bg-red-500 focus:text-slate-50 active:scale-95 text-red-500 disabled:bg-opacity-50 disabled:cursor-not-allowed";
       case "warning":
@@ -30,7 +30,7 @@ export const Button = ({
       case "success":
         return "flex items-center duration-250 col-start-1 flex items-center rounded-md border border-green-500 bg-green-50 p-3 outline-none transition hover:bg-green-500 hover:text-slate-50 focus:bg-green-500 focus:text-slate-50 active:scale-95 text-green-500 disabled:bg-opacity-50 disabled:cursor-not-allowed";
       default:
-        return "flex items-center rounded-md border bg-slate-700 p-3 text-white outline-none transition hover:bg-slate-800 font-semibold focus:border-slate-700 focus:bg-slate-50 focus:text-bg-slate-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed";
+        return "flex items-center rounded-md border bg-slate-700 p-3 text-white outline-none transition hover:bg-slate-800 font-semibold focus:border-slate-700 focus:text-bg-slate-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed";
     }
   };
 
@@ -43,10 +43,10 @@ export const Button = ({
             alt="loading oval"
             role="progressbar"
             width={20}
-            height={10}
-            className="mr-2"
+            height={20}
+            className="h-full w-6"
           />
-          <p className="text-[currentColor]">Loading</p>
+          <p className="text-[currentColor]"></p>
         </>
       ) : (
         children

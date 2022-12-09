@@ -1,4 +1,3 @@
-import { errors } from "formidable";
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
 
 export const InputError = ({

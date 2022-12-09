@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export const TestimonialCard = () => {
   return (
-    <div className="flex w-full flex-col gap-4 rounded-md bg-violetSecondary p-4  text-white shadow-sm backdrop-blur">
+    <div className="flex w-full flex-col gap-4 rounded-md glass">
       <header>
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam
         excepturi repellat,

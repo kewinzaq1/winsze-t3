@@ -37,26 +37,26 @@ export const CreateComment = ({ postId }: { postId: string }) => {
   return (
     <form onSubmit={onSubmit}>
       <FormGroup>
+        <Label>Add comment:</Label>
         <div className="flex items-center gap-2">
           <Image
             src={session?.user?.image ?? avatarPlaceholder}
             width={50}
             height={50}
-            className="h-8 w-8 rounded-full"
+            className="h-12 w-12 rounded-full"
             alt={`avatar ${
               session?.user?.name || session?.user?.email?.split("@")[0]
             }`}
           />
-          <Label>Add comment:</Label>
+          <Input
+            placeholder="You comment here!"
+            {...register("content")}
+            className="h-max max-h-48 w-full "
+          ></Input>
+          <Button className="w-max">
+            <GiFlyingDagger />
+          </Button>
         </div>
-        <Input
-          placeholder="You comment here!"
-          {...register("content")}
-          className="h-max max-h-48 "
-        ></Input>
-        <Button className="w-max">
-          <GiFlyingDagger />
-        </Button>
       </FormGroup>
     </form>
   );

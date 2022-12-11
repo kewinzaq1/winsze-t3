@@ -19,7 +19,7 @@ export const CreatePost = () => {
   const { show } = useNotifier();
 
   const utils = trpc.useContext();
-  const { mutate, data, error, isLoading } = trpc.posts.addPost.useMutation({
+  const { mutate, error, isLoading } = trpc.posts.addPost.useMutation({
     onSuccess: () => {
       resetField("content");
       resetField("image");
@@ -42,10 +42,6 @@ export const CreatePost = () => {
   const [parentRef] = useAutoAnimate();
 
   const [image, setImage] = useState("");
-
-  useEffect(() => {
-    console.log("unnecesrary changes", image);
-  }, [image]);
 
   const {
     formState: { errors },

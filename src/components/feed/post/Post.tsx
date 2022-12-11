@@ -214,6 +214,15 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
     },
   });
 
+  const saveLink = () => {
+    navigator.clipboard.writeText(`${window.origin}/post/${post.id}`);
+    show({
+      message: "Link copied",
+      description: "The link has been copied to your clipboard",
+      type: "success",
+    });
+  };
+
   const Edit = (
     <form onSubmit={onSubmit}>
       {isEdit && (
@@ -341,6 +350,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
                 className="ml-auto justify-self-end rounded-md p-2"
                 aria-label="share post"
                 title="share-post"
+                onClick={saveLink}
               >
                 <AiOutlineShareAlt className="h-8 w-8" />
               </button>

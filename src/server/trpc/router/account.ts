@@ -207,4 +207,14 @@ export const accountRouter = router({
 
     return updatedUser;
   }),
+  updateName: protectedProcedure
+    .input(z.object({ name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.user.update({
+        where: { email: ctx.session.user.email as string },
+        data: {
+          name: input.name,
+        },
+      });
+    }),
 });

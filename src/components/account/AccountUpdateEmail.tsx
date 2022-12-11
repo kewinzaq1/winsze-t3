@@ -44,32 +44,24 @@ export function AccountUpdateEmail() {
       )}
       <FormGroup className="w-full">
         <Label>Confirm password</Label>
-        {errors.password && (
-          <p className="m-0 p-0 text-xs text-red-500">
-            {errors.password.message as string}
-          </p>
-        )}
+
         <Input
           className="w-full"
           type="password"
           placeholder="Password"
           {...register("password")}
-          error={Boolean(errors.password)}
+          error={errors.password}
         />
       </FormGroup>
       <FormGroup className="w-full">
         <Label>New Email</Label>
-        {errors.email && (
-          <p className="m-0 p-0 text-xs text-red-500">
-            {errors.email.message as string}
-          </p>
-        )}
+
         <Input
           className="w-full"
           type="email"
           placeholder="New Email"
           {...register("email")}
-          error={Boolean(errors.email)}
+          error={errors.email}
         />
       </FormGroup>
       <Button

@@ -23,7 +23,6 @@ import {
   AiOutlineComment,
   AiOutlineShareAlt,
 } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
 import relativeRime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import dayjs from "dayjs";
@@ -177,33 +176,37 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
 
   const { mutate: toggleLike } = trpc.posts.toggleLike.useMutation({
     onMutate: async () => {
-      await queryClient.cancelQueries([
-        ["posts", "getPosts"],
-        { input: {}, type: "query" },
-      ]);
+      const QUERY = [["posts", "getPosts"], { input: {}, type: "query" }];
+
+      await queryClient.cancelQueries(QUERY);
       const previousValue = queryClient.getQueryData([
         ["posts", "getPosts"],
         { input: {}, type: "query" },
       ]);
-      queryClient.setQueryData(
-        [["posts", "getPosts"], { input: {}, type: "query" }],
-        (old: any) => {
-          const postIndex = old.findIndex((p: any) => p.id === post.id);
-          const updatedPost = old[postIndex];
-          const likeIndex = updatedPost.Like.findIndex(
-            (like: any) => like.userId === session?.user?.id
-          );
-          if (likeIndex !== -1) {
-            updatedPost.Like.splice(likeIndex, 1);
-            updatedPost._count.Like--;
-          } else {
-            updatedPost.Like.push({ userId: session?.user?.id });
-            updatedPost._count.Like++;
-          }
-          old[postIndex] = updatedPost;
-          return old;
+      queryClient.setQueryData(QUERY, (old) => {
+        type GetPosts = RouterOutputs["posts"]["getPosts"];
+        const postIndex = (old as GetPosts).findIndex((p) => p.id === post.id);
+        const updatedPost = (old as GetPosts)[postIndex];
+        const likeIndex = updatedPost?.Like.findIndex(
+          (like) => like.userId === session?.user?.id
+        );
+        if (!likeIndex || !updatedPost) {
+          return;
         }
-      );
+        if (likeIndex !== -1) {
+          updatedPost?.Like.splice(likeIndex, 1);
+          updatedPost._count.Like--;
+        } else {
+          updatedPost.Like.push({
+            userId: session?.user?.id ?? "",
+            id: "",
+            postId: post.id,
+          });
+          updatedPost._count.Like++;
+        }
+        (old as GetPosts)[postIndex] = updatedPost;
+        return old;
+      });
       return previousValue;
     },
   });

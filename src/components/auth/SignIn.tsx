@@ -83,28 +83,20 @@ export const SignIn = () => {
           )}
           <FormGroup>
             <Label htmlFor="email">Email</Label>
-            {errors.email && (
-              <p className="m-0 p-0 text-xs text-red-500">Invalid email!</p>
-            )}
             <Input
               id="email"
               placeholder="john@doe.com"
               {...register("email")}
-              error={Boolean(errors.email)}
+              error={errors.email}
             />
           </FormGroup>
           <FormGroup>
             <Label htmlFor="password">Password</Label>
-            {errors.password && (
-              <p className="m-0 p-0 text-xs text-red-500">
-                Invalid password! (min length 8 char.)
-              </p>
-            )}
             <Input
               id="password"
               type="password"
               {...register("password")}
-              error={Boolean(errors.password)}
+              error={errors.password}
             />
             <Link
               href="forgot-password"

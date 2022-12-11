@@ -7,7 +7,8 @@ import { Label } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 import { ErrorMessage } from "../common/ErrorMessage";
-import { InputError } from "../common/InputError";
+import svg from "src/assets/undraw_secure_server_re_8wsq.svg";
+import Image from "next/image";
 
 export function AccountUpdatePassword() {
   const { mutate, isLoading, error } =
@@ -39,43 +40,47 @@ export function AccountUpdatePassword() {
   });
 
   return (
-    <form onSubmit={onSubmit} className="mt-4 flex w-full flex-col items-start">
-      <h2 className="text-2xl font-semibold">Update Password</h2>
-      {error && <ErrorMessage>{error.message}</ErrorMessage>}
-      <FormGroup className="w-full">
-        <Label>Current Password</Label>
-        {errors.currentPassword && (
-          <InputError>{errors.currentPassword.message as string}</InputError>
-        )}
-        <Input
-          className="w-full"
-          type="password"
-          placeholder="Current password"
-          {...register("currentPassword")}
-          error={Boolean(errors.currentPassword)}
+    <form onSubmit={onSubmit} className="grid grid-cols-2">
+      <div className="p-4">
+        <h2 className="text-2xl font-semibold">Update Password</h2>
+        {error && <ErrorMessage>{error.message}</ErrorMessage>}
+        <Image
+          src={svg}
+          alt="secure server"
+          width={400}
+          height={400}
+          className="p-4"
         />
-      </FormGroup>
-      <FormGroup className="w-full">
-        <Label>New Password</Label>
-        {errors.newPassword && (
-          <InputError>{errors.newPassword.message as string}</InputError>
-        )}
-        <Input
-          className="w-full"
-          type="password"
-          placeholder="New Password"
-          {...register("newPassword")}
-          error={Boolean(errors.newPassword)}
-        />
-      </FormGroup>
-      <Button
-        type="submit"
-        className="mt-5 w-full text-center"
-        isLoading={isLoading}
-        variant={isLoading ? "primary" : "secondary"}
-      >
-        Update
-      </Button>
+      </div>
+      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+        <FormGroup className="mt-0 w-full">
+          <Label>Current Password</Label>
+          <Input
+            className="w-full"
+            type="password"
+            placeholder="Current password"
+            {...register("currentPassword")}
+            error={errors.currentPassword}
+          />
+        </FormGroup>
+        <FormGroup className="mt-0 w-full">
+          <Label>New Password</Label>
+          <Input
+            className="w-full"
+            type="password"
+            placeholder="New Password"
+            {...register("newPassword")}
+            error={errors.newPassword}
+          />
+        </FormGroup>
+        <Button
+          type="submit"
+          className="mt-2 w-full text-center"
+          isLoading={isLoading}
+        >
+          Update
+        </Button>
+      </div>
     </form>
   );
 }

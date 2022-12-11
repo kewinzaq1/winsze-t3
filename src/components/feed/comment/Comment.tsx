@@ -185,7 +185,7 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
             <Input
               className="w-full"
               {...register("content")}
-              error={Boolean(errors.content)}
+              error={errors.content}
             />
             <Button
               className="w-max"

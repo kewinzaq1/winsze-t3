@@ -7,12 +7,16 @@ export default function SinglePost() {
   const router = useRouter();
   const id = router.query.id as string;
 
-  const { data: post } = trpc.posts.getPost.useQuery({
-    id,
+  const { data: post, isLoading } = trpc.posts.getPost.useQuery({
+    id: id ?? "",
   });
 
-  if (!post) {
+  if (isLoading) {
     return <LoadingWithQuote />;
+  }
+
+  if (!post) {
+    return <h1 className="mx-auto text-3xl">Post not found</h1>;
   }
 
   return (

@@ -44,17 +44,12 @@ export function AccountRemoveAccount() {
       {error && <ErrorMessage>{error.message}</ErrorMessage>}
       <FormGroup className="w-full">
         <Label>Confirm password</Label>
-        {errors.password && (
-          <p className="m-0 p-0 text-xs text-red-500">
-            {errors.password.message as string}
-          </p>
-        )}
         <Input
           className="w-full"
           type="password"
           placeholder="Password"
           {...register("password")}
-          error={Boolean(errors.password)}
+          error={errors.password}
         />
       </FormGroup>
       <Button

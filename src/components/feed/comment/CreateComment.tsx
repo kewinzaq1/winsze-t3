@@ -35,7 +35,7 @@ export const CreateComment = ({ postId }: { postId: string }) => {
       const image = session?.user?.image;
       const id = session?.user?.id;
 
-      const comment = { ...newComment, user: { name, email, image, id }, };
+      const comment = { ...newComment, user: { name, email, image, id } };
 
       await queryClient.cancelQueries(QUERY);
 
@@ -72,9 +72,6 @@ export const CreateComment = ({ postId }: { postId: string }) => {
     <form onSubmit={onSubmit}>
       <FormGroup>
         <Label>Add comment:</Label>
-        {errors.content && (
-          <ErrorMessage>{errors.content.message}</ErrorMessage>
-        )}
         <div className="flex items-center gap-2">
           <Image
             src={session?.user?.image ?? avatarPlaceholder}
@@ -89,7 +86,7 @@ export const CreateComment = ({ postId }: { postId: string }) => {
             placeholder="You comment here!"
             {...register("content")}
             className="h-max max-h-48 w-full"
-            error={Boolean(errors.content)}
+            error={errors.content}
           ></Input>
           <Button
             className="w-max"

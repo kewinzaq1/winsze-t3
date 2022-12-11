@@ -95,8 +95,6 @@ export const CreatePost = () => {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  console.log(errors);
-
   return (
     <div className="mx-auto max-w-xl pt-24">
       {error && (

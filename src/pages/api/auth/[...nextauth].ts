@@ -127,7 +127,6 @@ export const authOptions: NextAuthOptions = {
         return user;
       },
     }),
-    // ...add more providers here
   ],
 };
 

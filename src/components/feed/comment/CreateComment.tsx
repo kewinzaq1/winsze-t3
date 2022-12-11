@@ -51,6 +51,14 @@ export const CreateComment = ({ postId }: { postId: string }) => {
         message: "Comment added",
         description: "Your comment has been added",
       });
+      resetField("content");
+    },
+    onError: (error) => {
+      show({
+        type: "error",
+        message: "Error adding comment",
+        description: error.message,
+      });
     },
   });
 

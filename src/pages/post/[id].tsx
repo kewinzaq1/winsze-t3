@@ -14,5 +14,9 @@ export default function SinglePost() {
     return <div>Loading...</div>;
   }
 
-  return <Post {...post}></Post>;
+  return (
+    <div className="mx-auto flex h-screen w-screen max-w-xl items-center justify-center">
+      <Post {...post}></Post>
+    </div>
+  );
 }

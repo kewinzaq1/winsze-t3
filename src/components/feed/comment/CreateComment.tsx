@@ -35,7 +35,7 @@ export const CreateComment = ({ postId }: { postId: string }) => {
       const image = session?.user?.image;
       const id = session?.user?.id;
 
-      const comment = { ...newComment, user: { name, email, image, id } };
+      const comment = { ...newComment, user: { name, email, image, id }, };
 
       await queryClient.cancelQueries(QUERY);
 

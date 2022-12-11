@@ -88,10 +88,14 @@ export const CreateComment = ({ postId }: { postId: string }) => {
           <Input
             placeholder="You comment here!"
             {...register("content")}
-            className="h-max max-h-48 w-full "
+            className="h-max max-h-48 w-full"
             error={Boolean(errors.content)}
           ></Input>
-          <Button className="w-max">
+          <Button
+            className="w-max"
+            title="add comment"
+            aria-label="add comment"
+          >
             <GiFlyingDagger />
           </Button>
         </div>

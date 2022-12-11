@@ -150,6 +150,8 @@ export const postsRouter = router({
   getPosts: publicProcedure
     .input(getPostsSchema)
     .query(async ({ ctx, input }) => {
+      console.log({ input });
+
       const posts = await ctx.prisma.post.findMany({
         where: {
           userId: input.userId,
@@ -354,6 +356,9 @@ export const postsRouter = router({
             },
           },
         },
+      });
+      comments.sort((a, b) => {
+        return a.createdAt < b.createdAt ? 1 : -1;
       });
 
       return comments;

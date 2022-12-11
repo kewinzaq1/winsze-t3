@@ -162,11 +162,11 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
           <CommentMenu setOpenMenu={setOpenMenu}>
             <CommentMenuButton
               onClick={() => {
-                setEditMode(true);
+                setEditMode((c) => !c);
                 setOpenMenu(false);
               }}
             >
-              Edit
+              {editMode ? "Cancel" : "Edit"}
             </CommentMenuButton>
             <CommentMenuButton
               onClick={() => deleteComment({ id: comment?.id })}

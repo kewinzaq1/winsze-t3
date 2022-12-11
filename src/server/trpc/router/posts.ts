@@ -170,6 +170,31 @@ export const postsRouter = router({
 
       return posts;
     }),
+  getPost: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          user: true,
+          Like: true,
+          _count: {
+            select: {
+              Like: true,
+              Comment: true,
+            },
+          },
+        },
+      });
+
+      return post;
+    }),
   reportPost: protectedProcedure
     .input(
       z.object({

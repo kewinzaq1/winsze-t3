@@ -8,10 +8,8 @@ import { Label } from "src/components/common/Label";
 import { GiFlyingDagger } from "react-icons/gi";
 import { Button } from "src/components/common/Button";
 import Image from "next/image";
-import { comment } from "postcss";
 import { useSession } from "next-auth/react";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
-import { ErrorMessage } from "src/components/common/ErrorMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNotifier } from "src/components/notifier";
 

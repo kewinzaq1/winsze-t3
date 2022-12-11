@@ -3,7 +3,6 @@ import type { DetailedHTMLProps, InputHTMLAttributes, LegacyRef } from "react";
 import { forwardRef } from "react";
 import type { FieldError } from "react-hook-form";
 import { RiErrorWarningFill } from "react-icons/ri";
-import errorMap from "zod/lib/locales/en";
 
 interface InputProps
   extends DetailedHTMLProps<

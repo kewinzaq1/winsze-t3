@@ -9,12 +9,18 @@ import { useState } from "react";
 import { useNotifier } from "src/components/notifier";
 import { CommentMenuButton } from "./CommentMenuButton";
 import { CommentMenu } from "./CommentMenu";
-import type { Updater } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { Input } from "src/components/common/Input";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "src/components/common/Button";
+import { AiOutlineSave } from "react-icons/ai";
 
 export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
   const queryClient = useQueryClient();
   const [openMenu, setOpenMenu] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const { show } = useNotifier();
 
   const { mutate: deleteComment } = trpc.posts.deleteComment.useMutation({
@@ -55,9 +61,72 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
     },
   });
 
+  const { mutate: editComment } = trpc.posts.editComment.useMutation({
+    onMutate: async ({ content }) => {
+      const QUERY = [
+        ["posts", "getPostComments"],
+        {
+          input: {
+            postId: comment?.postId,
+          },
+          type: "query",
+        },
+      ];
+
+      queryClient.cancelQueries(QUERY);
+      const previousComments = queryClient.getQueryData(QUERY);
+      queryClient.setQueryData(QUERY, (old) => {
+        return (old as RouterOutputs["posts"]["getPostComments"]).map((c) => {
+          if (c.id === comment?.id) {
+            return {
+              ...c,
+              content,
+            };
+          }
+          return c;
+        });
+      });
+
+      return previousComments;
+    },
+    onSuccess: () => {
+      show({
+        type: "success",
+        message: "Comment updated",
+        description: "Your comment has been updated",
+      });
+    },
+  });
+
   const userIsAuthor = comment?.user.id === useSession().data?.user?.id;
 
-  console.log(useSession().data?.user?.id);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(z.object({ content: z.string().min(1) })),
+    defaultValues: {
+      content: comment?.content ?? "",
+    },
+  });
+
+  const handleEdit = handleSubmit((data) => {
+    const { content } = data;
+    if (!comment?.id) {
+      show({
+        type: "error",
+        message: "Error updating comment",
+        description: "Comment id is missing",
+      });
+      return;
+    }
+    editComment({
+      id: comment?.id,
+      content,
+    });
+    setEditMode(false);
+  });
 
   if (!comment) {
     return <></>;
@@ -91,7 +160,14 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
         )}
         {openMenu && (
           <CommentMenu setOpenMenu={setOpenMenu}>
-            <CommentMenuButton>Edit</CommentMenuButton>
+            <CommentMenuButton
+              onClick={() => {
+                setEditMode(true);
+                setOpenMenu(false);
+              }}
+            >
+              Edit
+            </CommentMenuButton>
             <CommentMenuButton
               onClick={() => deleteComment({ id: comment?.id })}
             >
@@ -101,7 +177,28 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
         )}
       </header>
       <div>
-        <p>{comment?.content}</p>
+        {editMode ? (
+          <form
+            className="mt-4 flex w-full items-center gap-2"
+            onSubmit={handleEdit}
+          >
+            <Input
+              className="w-full"
+              {...register("content")}
+              error={Boolean(errors.content)}
+            />
+            <Button
+              className="w-max"
+              type="submit"
+              aria-label="save post"
+              title="save post"
+            >
+              <AiOutlineSave />
+            </Button>
+          </form>
+        ) : (
+          <p>{comment?.content}</p>
+        )}
       </div>
     </div>
   );

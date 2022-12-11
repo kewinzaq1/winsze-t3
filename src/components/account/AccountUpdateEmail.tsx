@@ -43,6 +43,16 @@ export function AccountUpdateEmail() {
         </p>
       )}
       <FormGroup className="w-full">
+        <FormGroup className="w-full">
+          <Label>New Email</Label>
+          <Input
+            className="w-full"
+            type="email"
+            placeholder="New Email"
+            {...register("email")}
+            error={errors.email}
+          />
+        </FormGroup>
         <Label>Confirm password</Label>
 
         <Input
@@ -51,17 +61,6 @@ export function AccountUpdateEmail() {
           placeholder="Password"
           {...register("password")}
           error={errors.password}
-        />
-      </FormGroup>
-      <FormGroup className="w-full">
-        <Label>New Email</Label>
-
-        <Input
-          className="w-full"
-          type="email"
-          placeholder="New Email"
-          {...register("email")}
-          error={errors.email}
         />
       </FormGroup>
       <Button

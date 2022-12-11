@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { Button } from "src/components/common/Button";
 import { FormGroup } from "src/components/common/FormGroup";
@@ -6,9 +7,28 @@ import { Input } from "src/components/common/Input";
 import { Label } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
+import { useNotifier } from "../notifier";
 
 export function AccountUpdateName() {
-  const { mutate, isLoading, error } = trpc.account.updateEmail.useMutation();
+  const { data: session } = useSession();
+  const { show } = useNotifier();
+
+  const { mutate, isLoading } = trpc.account.updateName.useMutation({
+    onSuccess: () => {
+      show({
+        message: "Name updated",
+        description: "Your name has been updated",
+        type: "success",
+      });
+    },
+    onError: (err) => {
+      show({
+        message: "Error updating name",
+        description: err.message,
+        type: "error",
+      });
+    },
+  });
 
   const {
     register,
@@ -17,13 +37,11 @@ export function AccountUpdateName() {
   } = useForm({
     resolver: zodResolver(
       z.object({
-        password: z.string().min(8, "Password must be at least 8 characters"),
-        email: z.string().email("Email must be a valid email address"),
+        name: z.string(),
       })
     ),
     defaultValues: {
-      password: "",
-      email: "",
+      name: session?.user?.name ?? "",
     },
   });
 
@@ -36,32 +54,20 @@ export function AccountUpdateName() {
       onSubmit={onSubmit}
       className="relative mt-4 flex h-full w-full flex-col items-start"
     >
-      <h2 className="text-2xl font-semibold">Update Email</h2>
+      <h2 className="text-2xl font-semibold">Update Name</h2>
       <FormGroup className="w-full">
         <Label>Name</Label>
         <Input
           className="w-full"
-          type="password"
-          placeholder="Password"
-          {...register("password")}
-          error={errors.password}
-        />
-      </FormGroup>
-      <FormGroup className="w-full">
-        <Label>Password</Label>
-        <Input
-          className="w-full"
-          type="email"
-          placeholder="New Email"
-          {...register("email")}
-          error={errors.email}
+          placeholder="Name"
+          {...register("name")}
+          error={errors.name}
         />
       </FormGroup>
       <Button
         type="submit"
         className="mt-5 w-full text-center"
         isLoading={isLoading}
-        variant={isLoading ? "primary" : "secondary"}
       >
         Update
       </Button>

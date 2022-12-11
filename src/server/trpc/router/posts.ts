@@ -358,4 +358,42 @@ export const postsRouter = router({
 
       return comments;
     }),
+  editComment: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        content: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const comment = await ctx.prisma.comment.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!comment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comment not found",
+        });
+      }
+
+      if (comment.userId !== userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to edit this comment",
+        });
+      }
+
+      return ctx.prisma.comment.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          content: input.content,
+        },
+      });
+    }),
 });

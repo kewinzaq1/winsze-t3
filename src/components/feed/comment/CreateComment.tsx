@@ -13,10 +13,12 @@ import { useSession } from "next-auth/react";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { ErrorMessage } from "src/components/common/ErrorMessage";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNotifier } from "src/components/notifier";
 
 export const CreateComment = ({ postId }: { postId: string }) => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+  const { show } = useNotifier();
 
   const { mutate: addComment } = trpc.posts.addComment.useMutation({
     onMutate: async (newComment) => {
@@ -41,6 +43,13 @@ export const CreateComment = ({ postId }: { postId: string }) => {
 
       queryClient.setQueryData(QUERY, (oldData) => {
         return [...(oldData as []), comment];
+      });
+    },
+    onSuccess: () => {
+      show({
+        type: "success",
+        message: "Comment added",
+        description: "Your comment has been added",
       });
     },
   });

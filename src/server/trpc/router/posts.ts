@@ -20,8 +20,6 @@ export const postsRouter = router({
   addPost: protectedProcedure
     .input(addPostSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log({ input });
-
       let image = "";
       if (input.image?.length) {
         const fileName = `posts/${getUUID()}.${getTypeFromBase64(input.image)}`;
@@ -66,7 +64,6 @@ export const postsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log({ input });
       const userId = ctx.session.user.id;
       const post = await ctx.prisma.post.findFirst({
         where: {
@@ -150,8 +147,6 @@ export const postsRouter = router({
   getPosts: publicProcedure
     .input(getPostsSchema)
     .query(async ({ ctx, input }) => {
-      console.log({ input });
-
       const posts = await ctx.prisma.post.findMany({
         where: {
           userId: input.userId,

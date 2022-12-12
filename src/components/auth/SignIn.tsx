@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { AuthOtherMethods } from "./AuthOtherMethods";
 import background from "src/assets/background/auth-left.svg";
 import Image from "next/image";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 export const SignIn = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export const SignIn = () => {
 
   useEffect(() => {
     if (session.status === "authenticated") {
-      router.push("/");
+      // router.push("/");
     }
   }, [router, session.status]);
 
@@ -48,11 +49,10 @@ export const SignIn = () => {
   const onSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
     const response = await signIn("credentials", { ...data, redirect: false });
+    console.log(response);
     setIsLoading(false);
-    if (!response?.ok) {
+    if (response?.error) {
       setLoginError(response?.error as string);
-    } else {
-      router.push("/");
     }
   });
 
@@ -76,10 +76,8 @@ export const SignIn = () => {
           </p>
         </div>
         <AuthOtherMethods />
+        <ErrorMessage className="relative">{loginError}</ErrorMessage>
         <form className="mt-10" onSubmit={onSubmit}>
-          {loginError && (
-            <p className="m-0 p-0 text-sm text-red-500">{loginError}</p>
-          )}
           <FormGroup>
             <Label htmlFor="email">Email</Label>
             <Input

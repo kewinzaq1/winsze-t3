@@ -53,7 +53,6 @@ export const SignIn = () => {
       setLoginError(response?.error as string);
     } else {
       router.push("/");
-      return;
     }
   });
 

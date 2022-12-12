@@ -17,10 +17,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const [mainRef] = useAutoAnimate();
 
     return (
-      <div className="relative" ref={mainRef as LegacyRef<HTMLDivElement>}>
+      <div
+        className="relative w-full"
+        ref={mainRef as LegacyRef<HTMLDivElement>}
+      >
         <input
           type="text"
-          className={`rounded-md border border-slate-400 bg-white p-2 outline-none focus:border-slate-700 ${className} ${
+          className={`w-full rounded-md border border-slate-400 bg-white p-2 outline-none focus:border-slate-700  ${className} ${
             error ? "!border-red-500 focus:!border-red-500" : ""
           }`}
           {...restProps}

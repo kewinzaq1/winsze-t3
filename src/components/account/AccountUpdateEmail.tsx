@@ -53,7 +53,7 @@ export function AccountUpdateEmail() {
       onSubmit={onSubmit}
       className="relative mt-4 flex h-full w-full flex-col items-start"
     >
-      <h2 className="text-2xl font-semibold">Update Email</h2>
+      <p className="text-2xl font-semibold">Email</p>
       <FormGroup className="w-full">
         <FormGroup className="w-full">
           <Label>New Email</Label>

@@ -64,23 +64,25 @@ export function AccountUpdateName() {
       onSubmit={onSubmit}
       className="relative mt-4 flex h-full w-full flex-col items-start"
     >
-      <h2 className="text-2xl font-semibold">Update Name</h2>
+      <p className="text-2xl font-semibold">Name</p>
       <FormGroup className="w-full">
         <Label>Name</Label>
-        <Input
-          className="w-full"
-          placeholder="Name"
-          {...register("name")}
-          error={errors.name}
-        />
+        <div className="place-content=center grid grid-cols-[80%,20%] items-center justify-items-center">
+          <Input
+            className="h-full w-full !p-3"
+            placeholder="Name"
+            {...register("name")}
+            error={errors.name}
+          />
+          <Button
+            type="submit"
+            className="flex w-full items-center justify-center text-center"
+            isLoading={isLoading}
+          >
+            Update
+          </Button>
+        </div>
       </FormGroup>
-      <Button
-        type="submit"
-        className="mt-5 w-full text-center"
-        isLoading={isLoading}
-      >
-        Update
-      </Button>
     </form>
   );
 }

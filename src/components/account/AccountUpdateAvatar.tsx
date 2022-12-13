@@ -91,7 +91,7 @@ export function AccountUpdateAvatar() {
 
   return (
     <form onSubmit={onSubmit} className="relative">
-      <h2 className="text-2xl font-semibold">Update avatar</h2>
+      <p className="text-2xl font-semibold">Avatar</p>
       {(errors.avatar || removeAvatarError || error) && (
         <ErrorMessage>{`${
           errors.avatar?.message || removeAvatarError?.message || error?.message

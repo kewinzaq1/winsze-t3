@@ -7,8 +7,6 @@ import { Label } from "src/components/common/Label";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 import { ErrorMessage } from "../common/ErrorMessage";
-import svg from "src/assets/undraw_secure_server_re_8wsq.svg";
-import Image from "next/image";
 
 export function AccountUpdatePassword() {
   const { mutate, isLoading, error } =
@@ -41,7 +39,7 @@ export function AccountUpdatePassword() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col">
-      <h2 className="text-2xl font-semibold">Update Password</h2>
+      <p className="text-2xl font-semibold">Password</p>
       {error && <ErrorMessage>{error.message}</ErrorMessage>}
       <div className="flex h-full w-full flex-col items-center justify-center gap-4">
         <FormGroup className="mt-0 w-full">

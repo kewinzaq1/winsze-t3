@@ -29,7 +29,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...restProps}
           ref={ref}
         />
-        {error && (
+        {(error as FieldError)?.message?.length && (
           <div className="group absolute right-4 top-2.5 z-20">
             <RiErrorWarningFill color="red" size={24} className="relative" />
             {(error as FieldError).message && (

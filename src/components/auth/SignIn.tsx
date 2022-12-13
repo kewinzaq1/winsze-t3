@@ -25,7 +25,7 @@ export const SignIn = () => {
 
   useEffect(() => {
     if (session.status === "authenticated") {
-      // router.push("/");
+      router.push("/");
     }
   }, [router, session.status]);
 
@@ -52,7 +52,7 @@ export const SignIn = () => {
     console.log(response);
     setIsLoading(false);
     if (response?.error) {
-      setLoginError(response?.error as string);
+      setLoginError(response?.error);
     }
   });
 

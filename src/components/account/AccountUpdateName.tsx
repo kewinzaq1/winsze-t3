@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "src/components/common/Button";
 import { FormGroup } from "src/components/common/FormGroup";
@@ -30,10 +31,13 @@ export function AccountUpdateName() {
     },
   });
 
+  const defaultName = useMemo(() => session?.user?.name ?? "", [session]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm({
     resolver: zodResolver(
       z.object({
@@ -41,13 +45,19 @@ export function AccountUpdateName() {
       })
     ),
     defaultValues: {
-      name: session?.user?.name ?? "",
+      name: defaultName,
     },
   });
 
   const onSubmit = handleSubmit((value) => {
     mutate(value);
   });
+
+  useEffect(() => {
+    if (defaultName.length) {
+      setValue("name", defaultName);
+    }
+  }, [defaultName, setValue]);
 
   return (
     <form

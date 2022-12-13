@@ -50,7 +50,7 @@ export const Navbar = () => {
   return (
     <div ref={animationParent as LegacyRef<HTMLDivElement>}>
       <nav className="absolute flex w-full items-center justify-between overflow-x-hidden rounded-b-md bg-white bg-opacity-80 p-4 text-slate-700 shadow-md backdrop-blur">
-        <div className="flex-1 font-bold uppercase text-violetPrimary">
+        <div className="text-violetPrimary flex-1 font-bold uppercase">
           winsze t3
         </div>
         <div className="flex items-center justify-end gap-2 px-2">
@@ -74,9 +74,9 @@ export const Navbar = () => {
         <div
           ref={ref}
           role="menu"
-          className="fixed top-16 right-4 flex h-max flex-col gap-1 rounded-md bg-white bg-opacity-80 p-1 backdrop-blur"
+          className="fixed top-16 right-4 z-50 flex h-max flex-col gap-1 rounded-md bg-white bg-opacity-80 p-1 backdrop-blur"
         >
-          <div className="flex h-full flex-col gap-1">
+          <div className="z-50 flex h-full flex-col gap-1">
             <Link
               href="/account"
               className="rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"

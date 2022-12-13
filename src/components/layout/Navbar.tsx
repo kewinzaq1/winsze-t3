@@ -2,8 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import type { DetailedHTMLProps, HTMLAttributes, LegacyRef } from "react";
-import { useRef } from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "../common/Button";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
@@ -40,15 +39,18 @@ export const Navbar = () => {
 
   const [animationParent] = useAutoAnimate();
 
-  const toggleMenu = () => {
-    setIsOpen((c) => !c);
-  };
-
   const ref = useRef<HTMLDivElement>(null);
-  useClickAway(ref, () => setIsOpen(false));
+  useClickAway(ref, () => {
+    const timeout = setTimeout(() => {
+      setIsOpen(false);
+    }, 100);
+    if (!isOpen) {
+      clearTimeout(timeout);
+    }
+  });
 
   return (
-    <div ref={animationParent as LegacyRef<HTMLDivElement>}>
+    <div>
       <nav className="fixed z-50 flex w-full items-center justify-between overflow-x-hidden rounded-b-md bg-white bg-opacity-80 p-4 text-slate-700 shadow-md backdrop-blur">
         <div className="text-violetPrimary flex-1 font-bold uppercase">
           winsze t3
@@ -66,32 +68,40 @@ export const Navbar = () => {
               </Link>
             </>
           ) : (
-            <NavbarAvatar onClick={toggleMenu} />
+            <NavbarAvatar
+              onClick={() => {
+                if (isOpen) {
+                  return;
+                }
+                setIsOpen(true);
+              }}
+            />
           )}
         </div>
       </nav>
-      {isOpen && (
-        <div
-          ref={ref}
-          role="menu"
-          className="fixed top-16 right-4 z-50 flex h-max flex-col gap-1 rounded-md bg-white bg-opacity-80 p-1 backdrop-blur"
-        >
-          <div className="z-50 flex h-full flex-col gap-1">
-            <Link
-              href="/account"
-              className="rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"
-            >
-              Account
-            </Link>
-            <p
-              onClick={() => signOut()}
-              className="rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"
-            >
-              Logout
-            </p>
+      <div ref={animationParent as LegacyRef<HTMLDivElement>}>
+        {isOpen && (
+          <div
+            role="menu"
+            className="fixed top-16 right-4 z-50 flex h-max flex-col gap-1 rounded-md bg-white bg-opacity-80 p-1 backdrop-blur"
+          >
+            <div className="z-50 flex h-full flex-col gap-1" ref={ref}>
+              <Link
+                href="/account"
+                className="rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"
+              >
+                Account
+              </Link>
+              <p
+                onClick={() => signOut()}
+                className="rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"
+              >
+                Logout
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

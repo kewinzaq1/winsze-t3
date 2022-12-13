@@ -40,18 +40,9 @@ export function AccountUpdatePassword() {
   });
 
   return (
-    <form onSubmit={onSubmit} className="grid grid-cols-2">
-      <div className="p-4">
-        <h2 className="text-2xl font-semibold">Update Password</h2>
-        {error && <ErrorMessage>{error.message}</ErrorMessage>}
-        <Image
-          src={svg}
-          alt="secure server"
-          width={400}
-          height={400}
-          className="p-4"
-        />
-      </div>
+    <form onSubmit={onSubmit} className="flex flex-col">
+      <h2 className="text-2xl font-semibold">Update Password</h2>
+      {error && <ErrorMessage>{error.message}</ErrorMessage>}
       <div className="flex h-full w-full flex-col items-center justify-center gap-4">
         <FormGroup className="mt-0 w-full">
           <Label>Current Password</Label>

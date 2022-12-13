@@ -10,6 +10,7 @@ import { Input } from "src/components/common/Input";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 import { imgToBase64 } from "src/utils/imgToBase64";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 export function AccountUpdateAvatar() {
   const { mutate, isLoading, error, data } =
@@ -29,16 +30,12 @@ export function AccountUpdateAvatar() {
   const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
-    console.log(session);
     if (!avatar.length && session.data?.user?.image) {
-      console.log(true);
       setAvatar(session.data.user?.image);
     }
   }, [avatar, avatar.length, session]);
 
   useEffect(() => {
-    console.log({ data });
-
     if (data) {
       setAvatar(data.image as string);
     }
@@ -71,7 +68,6 @@ export function AccountUpdateAvatar() {
 
   useEffect(() => {
     const subscription = watch((value) => {
-      console.log(value);
       if (!value.avatar[0]) {
         return;
       }
@@ -81,8 +77,7 @@ export function AccountUpdateAvatar() {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = async (value: any) => {
+  const onSubmit = handleSubmit(async (value) => {
     if (!value.avatar[0]) {
       throw new Error("No file selected");
     }
@@ -92,19 +87,17 @@ export function AccountUpdateAvatar() {
     const base64 = await imgToBase64(avatar[0]);
 
     mutate({ avatar: base64 });
-  };
+  });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="relative">
+    <form onSubmit={onSubmit} className="relative">
       <h2 className="text-2xl font-semibold">Update avatar</h2>
-      {error && <p className="absolute text-red-500">{error.message}</p>}
-      {removeAvatarError && (
-        <p className="absolute text-red-500">{removeAvatarError.message}</p>
+      {(errors.avatar || removeAvatarError || error) && (
+        <ErrorMessage>{`${
+          errors.avatar?.message || removeAvatarError?.message || error?.message
+        }`}</ErrorMessage>
       )}
-      {errors.avatar && (
-        <p className="absolute text-red-500">{`${errors.avatar.message}`}</p>
-      )}
-      <div className="flex w-full items-center justify-between">
+      <div className="w-full items-center justify-between">
         <FormGroup className="flex w-full items-center justify-center">
           <label htmlFor="avatar">
             <div className="relative h-24 w-24 rounded-full">
@@ -138,7 +131,7 @@ export function AccountUpdateAvatar() {
             error={Boolean(errors.avatar)}
           />
         </FormGroup>
-        <div className="col-start-2 row-start-1 flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <Button
             type="submit"
             className="mt-5 justify-center"
@@ -152,7 +145,7 @@ export function AccountUpdateAvatar() {
             type="button"
             onClick={() => removeAvatar()}
             isLoading={isRemovingAvatar}
-            variant="secondary"
+            variant="error"
           >
             {isRemovingAvatar ? "" : "Remove"}
           </Button>

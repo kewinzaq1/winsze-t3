@@ -1,11 +1,14 @@
 import bcrypt from "bcrypt";
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { storageClient } from "src/server/storage/supabase";
 import { getUUID } from "src/utils/getUUID";
 import { getTypeFromBase64 } from "src/utils/getTypeFromBase64";
 import { base64ToBuffer } from "src/utils/base64ToBuffer";
+import jwt from "jsonwebtoken";
+import { env } from "src/env/server.mjs";
+import { sendEmail } from "src/utils/sendEmail";
 
 export const accountRouter = router({
   updatePassword: protectedProcedure
@@ -216,5 +219,75 @@ export const accountRouter = router({
           name: input.name,
         },
       });
+    }),
+  sendVerifyEmail: protectedProcedure.mutation(async ({ ctx }) => {
+    if (!ctx.session.user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User not found",
+      });
+    }
+
+    const user = await ctx.prisma.user.findUnique({
+      where: { email: ctx.session.user.email as string },
+    });
+
+    if (user?.emailVerified) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Email already verified",
+      });
+    }
+
+    const token = jwt.sign({ email: user?.email }, env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
+    const url = `${env.NEXTAUTH_URL}/account/verify-email/${token}`;
+
+    const html = `
+      <h1>Confirm your email</h1>
+      <p>Click the link below to confirm your email</p>
+      <a href="${url}">${url}</a>
+      `;
+
+    const text = `
+      Confirm your email`;
+
+    await sendEmail({
+      to: user?.email as string,
+      subject: "Confirm your email",
+      html,
+      text,
+    });
+
+    return true;
+  }),
+  verifyEmail: publicProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const { email } = jwt.verify(input, env.JWT_SECRET) as {
+        email: string;
+      };
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: email },
+      });
+
+      if (user?.emailVerified) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Email already verified",
+        });
+      }
+
+      await ctx.prisma.user.update({
+        where: { email: email },
+        data: {
+          emailVerified: new Date(),
+        },
+      });
+
+      return true;
     }),
 });

@@ -5,9 +5,7 @@
 
 > typesafe fullstack social media app for geeks
 
-### 🏠 [Homepage](/)
-
-### ✨ [Demo](winsze-t3.vercel.app)
+### ✨ [Demo](https://www.winsze-t3.vercel.app)
 
 ## Install
 
@@ -26,11 +24,10 @@ yarn dev
 👤 **Kewin Szlezingier**
 
 * Github: [@kewinzaq1](https://github.com/kewinzaq1)
-* LinkedIn: [@Kewin Szlezingier](https://linkedin.com/in/Kewin Szlezingier)
+* LinkedIn: [@Kewin Szlezingier](https://www.linkedin.com/in/kewin-szlezingier)
 
 ## Show your support
 
 Give a ⭐️ if this project helped you!
 
 ***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

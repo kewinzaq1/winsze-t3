@@ -13,14 +13,19 @@ import { trpc } from "../utils/trpc";
 import "../styles/globals.css";
 import { Layout } from "src/components/layout";
 
-const MyApp: AppType<{ session: Session | null }> = ({
+const MyApp: AppType<{ session: Session | null; withoutNavbar: boolean }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
     <SessionProvider session={session}>
+<<<<<<< HEAD
       <main className={`${spaceGrotesk.variable} font-sans`}>
         <Layout>
+=======
+      <main className={`${spaceGrotesk.variable} min-h-screen font-sans`}>
+        <Layout withoutNavbar={pageProps.withoutNavbar}>
+>>>>>>> origin/master
           <Component {...pageProps} />
         </Layout>
       </main>

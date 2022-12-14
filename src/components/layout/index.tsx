@@ -1,4 +1,6 @@
+import { Notifier } from "../notifier";
 import { Navbar } from "./Navbar";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 <<<<<<< HEAD
 export const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -15,6 +17,8 @@ export const Layout = ({
 }) => {
   return (
     <>
+      <ReactQueryDevtools />
+      <Notifier />
       {!withoutNavbar && <Navbar />}
 >>>>>>> origin/master
       {children}

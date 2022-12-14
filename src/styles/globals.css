@@ -7,3 +7,9 @@ html {
   overflow-x: hidden;
   width: 100vw;
 }
+
+@layer utilities {
+  .glass {
+    @apply rounded-md bg-white bg-opacity-25 p-2 shadow-sm backdrop-blur-md;
+  }
+}

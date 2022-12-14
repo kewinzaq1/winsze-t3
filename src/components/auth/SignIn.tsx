@@ -12,6 +12,9 @@ import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { AuthOtherMethods } from "./AuthOtherMethods";
+import background from "src/assets/background/auth-left.svg";
+import Image from "next/image";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 export const SignIn = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -32,28 +35,36 @@ export const SignIn = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      role: "",
+    },
   });
 
   if (session.status === "authenticated") {
     return null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = async (data: any) => {
+  const onSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
     const response = await signIn("credentials", { ...data, redirect: false });
+    console.log(response);
     setIsLoading(false);
-    if (!response?.ok) {
-      setLoginError(response?.error as string);
-    } else {
-      router.push("/");
-      return;
+    if (response?.error) {
+      setLoginError(response?.error);
     }
-  };
+  });
 
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-center p-4 lg:flex-row">
       <AuthLeftPanel />
+      <Image
+        src={background}
+        layout="fill"
+        alt=""
+        className="-z-10 object-cover opacity-30"
+      />
       <div className="relative z-10 flex h-3/4 w-full flex-col px-10 py-4 lg:w-3/4">
         <div>
           <h2 className="text-2xl font-semibold">Sign up</h2>
@@ -65,34 +76,24 @@ export const SignIn = () => {
           </p>
         </div>
         <AuthOtherMethods />
-        <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
-          {loginError && (
-            <p className="m-0 p-0 text-sm text-red-500">{loginError}</p>
-          )}
+        <ErrorMessage className="relative">{loginError}</ErrorMessage>
+        <form className="mt-10" onSubmit={onSubmit}>
           <FormGroup>
             <Label htmlFor="email">Email</Label>
-            {errors.email && (
-              <p className="m-0 p-0 text-xs text-red-500">Invalid email!</p>
-            )}
             <Input
               id="email"
               placeholder="john@doe.com"
               {...register("email")}
-              error={Boolean(errors.email)}
+              error={errors.email}
             />
           </FormGroup>
           <FormGroup>
             <Label htmlFor="password">Password</Label>
-            {errors.password && (
-              <p className="m-0 p-0 text-xs text-red-500">
-                Invalid password! (min length 8 char.)
-              </p>
-            )}
             <Input
               id="password"
               type="password"
               {...register("password")}
-              error={Boolean(errors.password)}
+              error={errors.password}
             />
             <Link
               href="forgot-password"
@@ -101,12 +102,7 @@ export const SignIn = () => {
               Forgot password?
             </Link>
           </FormGroup>
-          <Button
-            className="mt-6"
-            type="submit"
-            variant={isLoading ? "primary" : "secondary"}
-            isLoading={isLoading}
-          >
+          <Button className="mt-6" type="submit" isLoading={isLoading}>
             Sign in
           </Button>
         </form>

@@ -3,7 +3,7 @@
   <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
 </p>
 
-> typesafe fullstack social media app for geeks
+> typesafe fullstack social media app for geeks built on top of <https://create.t3.gg/>
 
 ### ✨ [Demo](https://www.winsze-t3.vercel.app)
 

@@ -25,7 +25,7 @@ export const reduceImageSize = ({
         ctx?.drawImage(img, 0, 0, maxWidth, maxHeight);
         ctx?.canvas.toBlob(
           (blob) => {
-            const file = new File([blob as Blob], image.name, {
+            const file = new File([blob as BlobPart], image.name, {
               type: "image/jpeg",
               lastModified: Date.now(),
             });

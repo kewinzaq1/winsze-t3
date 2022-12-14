@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/planetscale/cli/releases/tag/v0.125.0
+HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/317614271/d4ec2f14-2154-42ea-aa0e-0a6944bde19e?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20221214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221214T173141Z&X-Amz-Expires=300&X-Amz-Signature=5fdf7e0f3f30e4eeaa6ac42a46f86c161b092a9272114fc6aae6b95d9a3f3843&X-Amz-SignedHeaders=host&actor_id=77052270&key_id=0&repo_id=317614271&response-content-disposition=attachment%3B%20filename%3Dpscale_0.125.0_linux_386.deb&response-content-type=application%2Foctet-stream

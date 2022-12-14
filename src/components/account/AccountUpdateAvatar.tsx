@@ -1,4 +1,3 @@
-import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -7,9 +6,10 @@ import { useForm } from "react-hook-form";
 import { Button } from "src/components/common/Button";
 import { FormGroup } from "src/components/common/FormGroup";
 import { Input } from "src/components/common/Input";
+import avatarPlaceholder from "src/images/avatar_placeholder.png";
+import { imgToBase64 } from "src/utils/imgToBase64";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
-import { imgToBase64 } from "src/utils/imgToBase64";
 import { ErrorMessage } from "../common/ErrorMessage";
 
 export function AccountUpdateAvatar() {
@@ -91,7 +91,6 @@ export function AccountUpdateAvatar() {
 
   return (
     <form onSubmit={onSubmit} className="relative">
-      <p className="text-2xl font-semibold">Avatar</p>
       {(errors.avatar || removeAvatarError || error) && (
         <ErrorMessage>{`${
           errors.avatar?.message || removeAvatarError?.message || error?.message

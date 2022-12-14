@@ -11,107 +11,6 @@ import { env } from "src/env/server.mjs";
 import { sendEmail } from "src/utils/sendEmail";
 
 export const accountRouter = router({
-  updatePassword: protectedProcedure
-    .input(
-      z.object({
-        currentPassword: z.string(),
-        newPassword: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.session.user.email) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "User email not found",
-        });
-      }
-
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: ctx.session.user.email },
-      });
-
-      if (!user) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "User not found",
-        });
-      }
-
-      const isValid = await bcrypt.compare(
-        input.currentPassword,
-        user?.password as string
-      );
-      if (!isValid) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Invalid password",
-        });
-      }
-
-      const password = await bcrypt.hash(input.newPassword, 10);
-      const updatedUser = await ctx.prisma.user.update({
-        where: { email: ctx.session.user.email },
-        data: {
-          password: password,
-        },
-      });
-
-      return updatedUser;
-    }),
-  updateEmail: protectedProcedure
-    .input(
-      z.object({
-        password: z.string(),
-        email: z.string().email(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.session.user) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "User not found",
-        });
-      }
-
-      if (ctx.session.user.email === input.email) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "New email is the same as the current email",
-        });
-      }
-
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: ctx.session.user.email as string },
-      });
-      const isValid = await bcrypt.compare(
-        input.password,
-        user?.password as string
-      );
-      if (!isValid) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Invalid password",
-        });
-      }
-
-      const emailIsUsed = await ctx.prisma.user.findUnique({
-        where: { email: input.email },
-      });
-      if (emailIsUsed) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Email already in use",
-        });
-      }
-
-      const updatedUser = await ctx.prisma.user.update({
-        where: { email: ctx.session.user.email as string },
-        data: {
-          email: input.email,
-        },
-      });
-      return updatedUser;
-    }),
   removeAccount: protectedProcedure
     .input(
       z.object({
@@ -210,16 +109,7 @@ export const accountRouter = router({
 
     return updatedUser;
   }),
-  updateName: protectedProcedure
-    .input(z.object({ name: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.user.update({
-        where: { email: ctx.session.user.email as string },
-        data: {
-          name: input.name,
-        },
-      });
-    }),
+
   sendVerifyEmail: protectedProcedure.mutation(async ({ ctx }) => {
     if (!ctx.session.user) {
       throw new TRPCError({
@@ -289,5 +179,61 @@ export const accountRouter = router({
       });
 
       return true;
+    }),
+  updateAccount: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().optional(),
+        email: z.string().optional(),
+        newPassword: z.string().optional(),
+        passwordConfirmation: z.string().optional(),
+        password: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User not found",
+        });
+      }
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: ctx.session.user.email as string },
+      });
+
+      const isValid = await bcrypt.compare(
+        input.password,
+        user?.password as string
+      );
+      if (!isValid) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid password",
+        });
+      }
+
+      if (
+        input.newPassword &&
+        input.newPassword !== input.passwordConfirmation
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Passwords do not match",
+        });
+      }
+
+      const updatedUser = await ctx.prisma.user.update({
+        where: { email: ctx.session.user.email as string },
+        data: {
+          name: input?.name ? input.name : user?.name,
+          email: input?.email ? input.email : user?.email,
+          password: input.newPassword
+            ? await bcrypt.hash(input.newPassword, 10)
+            : user?.password,
+        },
+      });
+
+      return updatedUser;
     }),
 });

@@ -15,9 +15,10 @@ import { AuthOtherMethods } from "./AuthOtherMethods";
 import background from "src/assets/background/auth-left.svg";
 import Image from "next/image";
 import { ErrorMessage } from "../common/ErrorMessage";
+import { useNotifier } from "../notifier";
 
 export const SignIn = () => {
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const {show} = useNotifier()
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -52,7 +53,12 @@ export const SignIn = () => {
     console.log(response);
     setIsLoading(false);
     if (response?.error) {
-      setLoginError(response?.error);
+      show({
+        message: "Error",   
+        description: response.error,
+        type: "error",
+        placement: 'bottomRight'
+      })
     }
   });
 
@@ -76,7 +82,6 @@ export const SignIn = () => {
           </p>
         </div>
         <AuthOtherMethods />
-        <ErrorMessage className="relative">{loginError}</ErrorMessage>
         <form className="mt-10" onSubmit={onSubmit}>
           <FormGroup>
             <Label htmlFor="email">Email</Label>

@@ -6,16 +6,15 @@ import { Button } from "./common/Button";
 
 export const UnauthHero = () => (
   <section id="hero" className="flex w-screen flex-col overflow-hidden">
-    <div className="absolute  -z-30 h-[50vh] w-full">
       <Image
         src={welcomeimage}
         alt="fancy gradient background overflow-hidden"
-        fill
-        className="skew-y-[-20deg]"
+        width={1920}
+        height={1280}
+        className="w-[50vw] hidden md:block md:absolute h-screen object-cover -z-30"
         loading="eager"
       />
-    </div>
-    <div className="mx-auto flex h-screen w-full max-w-[1400px] flex-col-reverse items-center justify-center gap-10 px-10 pt-24 md:flex-row md:justify-between">
+    <div className="mx-auto flex h-screen w-full flex-col-reverse items-center justify-center gap-10 px-10 pt-24 md:flex-row md:justify-between">
       <div className="flex flex-col">
         <h1 className="text-4xl font-bold md:text-7xl">
           <p>Winsze is more than app</p>
@@ -33,7 +32,9 @@ export const UnauthHero = () => (
           </Button>
         </Link>
       </div>
+      <div className="flex items-center justify-center w-full md:w-1/2">
       <Image src={moreThanTeam} alt="team" width={500} height={500} />
+      </div>
     </div>
   </section>
 );

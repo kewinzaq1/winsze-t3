@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 import { AuthOtherMethods } from "./AuthOtherMethods";
 import background from "src/assets/background/auth-left.svg";
 import Image from "next/image";
-import { ErrorMessage } from "../common/ErrorMessage";
 import { useNotifier } from "../notifier";
 import { LoadingWithQuote } from "../common/LoadingWithQuote";
 
@@ -68,9 +67,8 @@ export const SignIn = () => {
       <AuthLeftPanel />
       <Image
         src={background}
-        layout="fill"
-        alt=""
-        className="-z-10 object-cover opacity-30"
+        alt="group of people who are working together"
+        className="-z-10 object-cover opacity-30 absolute w-screen h-screen"
       />
       <div className="relative z-10 flex h-3/4 w-full flex-col px-10 py-4 lg:w-3/4">
         <div>

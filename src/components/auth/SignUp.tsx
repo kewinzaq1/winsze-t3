@@ -83,9 +83,8 @@ export const SignUp = () => {
       <AuthLeftPanel />
       <Image
         src={background}
-        layout="fill"
-        alt=""
-        className="-z-10 object-cover opacity-30"
+        alt="group of people who are working together"
+        className="-z-10 object-cover opacity-30 absolute w-screen h-screen"
       />
       <div className="flex h-3/4 w-full flex-col px-10 py-4 lg:w-3/4">
         <div>

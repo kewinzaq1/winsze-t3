@@ -7,8 +7,7 @@ import { trpc } from "src/utils/trpc";
 import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { AuthOtherMethods } from "./AuthOtherMethods";
@@ -18,44 +17,26 @@ import { LoadingWithQuote } from "../common/LoadingWithQuote";
 import { useNotifier } from "../notifier";
 
 export const SignUp = () => {
-  const {show} = useNotifier()
-  const {
-    mutate,
-    isLoading,
-    error,
-    data: user,
-  } = trpc.auth.register.useMutation({
+  const { show } = useNotifier();
+  const { mutate, isLoading, error } = trpc.auth.register.useMutation({
     onSuccess: () => {
       show({
-        message: "Success",   
+        message: "Success",
         description: "Account created successfully",
         type: "success",
-      })
+      });
     },
     onError: (error) => {
       show({
-        message: "Error",   
+        message: "Error",
         description: error.message,
         type: "error",
-      })
-    }
+      });
+    },
   });
   const router = useRouter();
 
-  useEffect(() => {
-    if (user) {
-      signIn("email", { email: user.email, redirect: false });
-      router.push("/sign-in");
-    }
-  }, [user, router]);
-
   const session = useSession();
-
-  useEffect(() => {
-    if (session.status === "authenticated") {
-      router.push("/");
-    }
-  }, [router, session.status]);
 
   const {
     register,
@@ -71,7 +52,7 @@ export const SignUp = () => {
   });
 
   if (session.status === "authenticated") {
-    return <LoadingWithQuote />;
+    router.push("/");
   }
 
   const onSubmit = handleSubmit((data) => {
@@ -84,7 +65,7 @@ export const SignUp = () => {
       <Image
         src={background}
         alt="group of people who are working together"
-        className="-z-10 object-cover opacity-30 absolute w-screen h-screen"
+        className="absolute -z-10 h-screen w-screen object-cover opacity-30"
       />
       <div className="flex h-3/4 w-full flex-col px-10 py-4 lg:w-3/4">
         <div>

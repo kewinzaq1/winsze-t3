@@ -8,7 +8,7 @@ import { AuthLeftPanel } from "./AuthLeftPanel";
 import { registerSchema } from "src/zod/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { AuthOtherMethods } from "./AuthOtherMethods";
@@ -18,17 +18,11 @@ import { useNotifier } from "../notifier";
 import { LoadingWithQuote } from "../common/LoadingWithQuote";
 
 export const SignIn = () => {
-  const {show} = useNotifier()
+  const { show } = useNotifier();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const session = useSession();
-
-  useEffect(() => {
-    if (session.status === "authenticated") {
-      router.push("/");
-    }
-  }, [router, session.status]);
 
   const {
     register,
@@ -44,7 +38,7 @@ export const SignIn = () => {
   });
 
   if (session.status === "authenticated") {
-    return <LoadingWithQuote/>;
+    router.push("/");
   }
 
   const onSubmit = handleSubmit(async (data) => {
@@ -54,11 +48,11 @@ export const SignIn = () => {
     setIsLoading(false);
     if (response?.error) {
       show({
-        message: "Error",   
+        message: "Error",
         description: response.error,
         type: "error",
-        placement: 'bottomRight'
-      })
+        placement: "bottomRight",
+      });
     }
   });
 
@@ -68,7 +62,7 @@ export const SignIn = () => {
       <Image
         src={background}
         alt="group of people who are working together"
-        className="-z-10 object-cover opacity-30 absolute w-screen h-screen"
+        className="absolute -z-10 h-screen w-screen object-cover opacity-30"
       />
       <div className="relative z-10 flex h-3/4 w-full flex-col px-10 py-4 lg:w-3/4">
         <div>

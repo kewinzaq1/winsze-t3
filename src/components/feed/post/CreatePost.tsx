@@ -6,7 +6,7 @@ import { Input } from "../../common/Input";
 import { z } from "zod";
 import { imgToBase64 } from "src/utils/imgToBase64";
 import { GiFlyingDagger } from "react-icons/gi";
-import { IoMdRemoveCircle } from "react-icons/io";
+import { TiTimes } from "react-icons/ti";
 import type { LegacyRef } from "react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -112,12 +112,13 @@ export const CreatePost = () => {
           />
         </label>
         {Boolean(image.length) && (
-          <IoMdRemoveCircle
+          <TiTimes
+            color="red"
             onClick={clearImage}
             role="button"
             tabIndex={0}
             aria-label="remove photo"
-            className="absolute right-20 bottom-4 h-12 w-12 text-red-500"
+            className="absolute right-12 bottom-3 h-8 w-8 text-red-500"
           />
         )}
         <Textarea

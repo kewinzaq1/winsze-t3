@@ -13,7 +13,6 @@ import Link from "next/link";
 import { AuthOtherMethods } from "./AuthOtherMethods";
 import background from "src/assets/background/auth-left.svg";
 import Image from "next/image";
-import { LoadingWithQuote } from "../common/LoadingWithQuote";
 import { useNotifier } from "../notifier";
 
 export const SignUp = () => {

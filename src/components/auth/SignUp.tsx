@@ -14,14 +14,32 @@ import Link from "next/link";
 import { AuthOtherMethods } from "./AuthOtherMethods";
 import background from "src/assets/background/auth-left.svg";
 import Image from "next/image";
+import { LoadingWithQuote } from "../common/LoadingWithQuote";
+import { useNotifier } from "../notifier";
 
 export const SignUp = () => {
+  const {show} = useNotifier()
   const {
     mutate,
     isLoading,
     error,
     data: user,
-  } = trpc.auth.register.useMutation();
+  } = trpc.auth.register.useMutation({
+    onSuccess: () => {
+      show({
+        message: "Success",   
+        description: "Account created successfully",
+        type: "success",
+      })
+    },
+    onError: (error) => {
+      show({
+        message: "Error",   
+        description: error.message,
+        type: "error",
+      })
+    }
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -53,7 +71,7 @@ export const SignUp = () => {
   });
 
   if (session.status === "authenticated") {
-    return null;
+    return <LoadingWithQuote />;
   }
 
   const onSubmit = handleSubmit((data) => {

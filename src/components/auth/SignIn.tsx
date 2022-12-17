@@ -16,6 +16,7 @@ import background from "src/assets/background/auth-left.svg";
 import Image from "next/image";
 import { ErrorMessage } from "../common/ErrorMessage";
 import { useNotifier } from "../notifier";
+import { LoadingWithQuote } from "../common/LoadingWithQuote";
 
 export const SignIn = () => {
   const {show} = useNotifier()
@@ -44,7 +45,7 @@ export const SignIn = () => {
   });
 
   if (session.status === "authenticated") {
-    return null;
+    return <LoadingWithQuote/>;
   }
 
   const onSubmit = handleSubmit(async (data) => {

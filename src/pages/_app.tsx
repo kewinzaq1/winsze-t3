@@ -20,13 +20,8 @@ const MyApp: AppType<{ session: Session | null; withoutNavbar: boolean }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-<<<<<<< HEAD
-      <main className={`${spaceGrotesk.variable} font-sans`}>
-        <Layout>
-=======
       <main className={`${spaceGrotesk.variable} min-h-screen font-sans`}>
         <Layout withoutNavbar={pageProps.withoutNavbar}>
->>>>>>> origin/master
           <Component {...pageProps} />
         </Layout>
       </main>

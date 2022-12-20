@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { router, protectedProcedure } from "../trpc";
 
-export const userRouter = router({
+export const usersRouter = router({
   getUser: protectedProcedure
     .input(
       z.object({

@@ -5,7 +5,7 @@ import Image from "next/image";
 import dayjs from "dayjs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useNotifier } from "src/components/notifier";
 import { CommentMenuButton } from "./CommentMenuButton";
 import { CommentMenu } from "./CommentMenu";
@@ -22,6 +22,15 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
   const [openMenu, setOpenMenu] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const { show } = useNotifier();
+
+  const toggleMenu = useCallback(() => {
+    setOpenMenu((c) => !c);
+  }, []);
+
+  const toggleEdit = useCallback(() => {
+    setEditMode((c) => !c);
+    setOpenMenu(false);
+  }, []);
 
   const { mutate: deleteComment } = trpc.posts.deleteComment.useMutation({
     onMutate: async () => {
@@ -100,6 +109,11 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
 
   const userIsAuthor = comment?.user.id === useSession().data?.user?.id;
 
+  const handleDeleteComment = useCallback(
+    () => deleteComment({ id: `${comment?.id}` }),
+    [comment?.id, deleteComment]
+  );
+
   const {
     register,
     handleSubmit,
@@ -150,7 +164,7 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
         </div>
         {userIsAuthor && !openMenu && (
           <BiDotsHorizontalRounded
-            onClick={() => setOpenMenu((c) => !c)}
+            onClick={toggleMenu}
             className="ml-auto h-6 w-6"
             role="button"
             tabIndex={0}
@@ -160,17 +174,10 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
         )}
         {openMenu && (
           <CommentMenu setOpenMenu={setOpenMenu}>
-            <CommentMenuButton
-              onClick={() => {
-                setEditMode((c) => !c);
-                setOpenMenu(false);
-              }}
-            >
+            <CommentMenuButton onClick={toggleEdit}>
               {editMode ? "Cancel" : "Edit"}
             </CommentMenuButton>
-            <CommentMenuButton
-              onClick={() => deleteComment({ id: comment?.id })}
-            >
+            <CommentMenuButton onClick={handleDeleteComment}>
               Delete
             </CommentMenuButton>
           </CommentMenu>

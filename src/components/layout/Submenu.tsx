@@ -9,7 +9,7 @@ import type { DetailedHTMLProps, HTMLAttributes } from "react";
 
 export const Submenu = () => {
   return (
-    <div className="fixed bottom-0 flex w-screen items-center justify-center gap-4 pb-4">
+    <div className="fixed bottom-0 flex w-screen items-center justify-center gap-4  py-4">
       <SubmenuButton active>
         <FeedIcon className="mr-1 text-lg" /> Feed
       </SubmenuButton>

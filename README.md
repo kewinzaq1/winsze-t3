@@ -5,7 +5,7 @@
 
 > typesafe fullstack social media app for geeks built on top of <https://create.t3.gg/>
 
-### ✨ [Demo](https://www.winsze-t3.vercel.app)
+### ✨ [Demo](https://winsze-t3.vercel.app/)
 
 ## Tech stack
 

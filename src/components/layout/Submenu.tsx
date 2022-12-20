@@ -43,7 +43,7 @@ export const SubmenuButton = ({
 }: SubmenuButtonProps) => {
   return (
     <div
-      className={`${className} text-semibold flex cursor-pointer items-center rounded-full bg-slate-300   p-4 text-white shadow-sm transition-all hover:shadow-lg ${
+      className={`${className} text-semibold flex cursor-pointer items-center rounded-full bg-slate-400 p-4 text-white shadow-sm transition-all hover:shadow-lg ${
         active && "bg-gradient-to-r from-cyan-500 to-blue-500"
       }`}
       {...rest}

@@ -6,24 +6,35 @@ import {
 import { HiUsers as UsersIcon } from "react-icons/hi";
 import { SiEventstore as EventsIcon } from "react-icons/si";
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
+import Link from "next/link";
 
-export const Submenu = () => {
+export const Submenu = ({ currentPage }: { currentPage: string }) => {
   return (
     <div className="fixed bottom-0 right-0 left-0 mx-auto flex w-max items-center justify-center gap-4 rounded-md bg-white px-4  py-4">
-      <SubmenuButton active>
-        <FeedIcon className="mr-1 text-lg" /> Feed
+      <SubmenuButton active={currentPage === "feed"}>
+        <Link href="/" className="flex items-center">
+          <FeedIcon className="mr-1 text-lg" /> Feed
+        </Link>
       </SubmenuButton>
-      <SubmenuButton>
-        <UsersIcon className="mr-1 text-lg" /> Users
+      <SubmenuButton active={currentPage === "users"}>
+        <Link href="/users" className="flex items-center">
+          <UsersIcon className="mr-1 text-lg" /> Users
+        </Link>
       </SubmenuButton>
-      <SubmenuButton>
-        <GroupsIcon className="mr-1 text-lg" /> Groups
+      <SubmenuButton active={currentPage === "groups"}>
+        <Link href="/groups" className="flex items-center">
+          <GroupsIcon className="mr-1 text-lg" /> Groups
+        </Link>
       </SubmenuButton>
-      <SubmenuButton>
-        <EventsIcon className="mr-1 text-lg" /> Events
+      <SubmenuButton active={currentPage === "events"}>
+        <Link href="/events" className="flex items-center">
+          <EventsIcon className="mr-1 text-lg" /> Events
+        </Link>
       </SubmenuButton>
-      <SubmenuButton>
-        <MessageIcon className="mr-1 text-lg" /> Message
+      <SubmenuButton active={currentPage === "message"}>
+        <Link href="/message" className="flex items-center">
+          <MessageIcon className="mr-1 text-lg" /> Message
+        </Link>
       </SubmenuButton>
     </div>
   );

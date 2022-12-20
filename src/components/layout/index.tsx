@@ -1,7 +1,6 @@
 import { Notifier } from "../notifier";
 import { Navbar } from "./Navbar";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Submenu } from "./Submenu";
 
 export const Layout = ({
   children,
@@ -14,8 +13,6 @@ export const Layout = ({
     <>
       <ReactQueryDevtools />
       <Notifier />
-      {/* TODO: submenu will be only in pages that are includes in submenu */}
-      <Submenu />
       {!withoutNavbar && <Navbar />}
       {children}
     </>

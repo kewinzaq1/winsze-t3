@@ -1,4 +1,3 @@
-import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import type { DetailedHTMLProps, HTMLAttributes, LegacyRef } from "react";
@@ -7,6 +6,7 @@ import { Button } from "../common/Button";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { useClickAway } from "src/hooks/useClickAway";
+import { signOut, useSession } from "next-auth/react";
 
 const NavbarAvatar = ({
   onClick,

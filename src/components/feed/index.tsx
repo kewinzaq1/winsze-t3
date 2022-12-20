@@ -7,7 +7,7 @@ export const Feed = () => {
     <>
       <CreatePost />
       <Posts />
-      <Submenu />
+      <Submenu currentPage="feed"/>
     </>
   );
 };

@@ -19,6 +19,7 @@ const config = {
       "images.unsplash.com",
       "kdltaabmkmznwqfacwfc.supabase.co",
       "lh3.googleusercontent.com",
+      "loremflickr.com",
     ],
   },
 };

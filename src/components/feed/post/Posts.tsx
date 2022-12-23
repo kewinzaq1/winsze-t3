@@ -1,14 +1,17 @@
 import { trpc } from "src/utils/trpc";
 import { Post } from "./Post";
+import { PostSkeleton } from "./PostSkeleton";
 
 export const Posts = () => {
-  const { data } = trpc.posts.getPosts.useQuery({});
+  const { data: posts, isLoading } = trpc.posts.getPosts.useQuery({});
 
   return (
     <div className="mx-auto mt-10 w-full max-w-xl">
-      {data?.map((post) => (
+      {posts?.map((post) => (
         <Post key={post.id} {...post} />
       ))}
+      {isLoading &&
+        new Array(4).map((_, index) => <PostSkeleton key={index} />)}
     </div>
   );
 };

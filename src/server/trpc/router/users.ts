@@ -16,6 +16,35 @@ export const usersRouter = router({
         where: {
           id,
         },
+        select: {
+          name: true,
+          email: true,
+          role: true,
+          Post: {
+            select: {
+              Like: true,
+              Comment: true,
+              id: true,
+              content: true,
+              createdAt: true,
+              updatedAt: true,
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  image: true,
+                },
+              },
+              _count: {
+                select: {
+                  Like: true,
+                  Comment: true,
+                },
+              },
+            },
+          },
+          Comment: true,
+        },
       });
 
       if (!user) {

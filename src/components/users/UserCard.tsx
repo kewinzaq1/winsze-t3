@@ -1,6 +1,7 @@
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import Image from "next/image";
 import imagePlaceholder from "src/images/avatar_placeholder.png";
+import Link from "next/link";
 
 export const UserCard = ({ user }: { user: User }) => {
   return (
@@ -18,7 +19,9 @@ export const UserCard = ({ user }: { user: User }) => {
       />
       <div className="flex w-full items-center justify-between">
         <div className="col flex flex-col gap-1">
-          <p className="">{user.name}</p>
+          <Link href={`/users/${user.id}`}>
+            <p className="font-semibold">{user.name}</p>
+          </Link>
           <p>{user.email}</p>
         </div>
         <p className="w-max rounded-full bg-slate-300 p-2 px-2 py-1 text-sm lowercase">

@@ -283,24 +283,26 @@ const updateQueryUser = async ({
   post: Post;
   session: Session;
 }) => {
-  const id = user.id;
-  const QUERY = [["users", "getUser"], { input: { id }, type: "query" }];
+  const QUERY = [["users", "getUser"], { input: { id: user }, type: "query" }];
   await queryClient.cancelQueries(QUERY);
+  console.log(QUERY);
 
   queryClient.setQueryData(QUERY, (old) => {
     const modified = old as RouterOutputs["users"]["getUser"];
+    console.log("modified", modified);
     if (!modified) {
       return old;
     }
 
     const postIndex = modified.Post.findIndex((p) => p.id === post.id);
-    if (!postIndex) return;
+    console.log("postIndex", postIndex);
+    if (postIndex === undefined) return;
 
     const updatedPost = modified.Post[postIndex];
     const likeIndex = updatedPost?.Like.findIndex(
       (like) => like.userId === session?.user?.id
     );
-    if (!likeIndex || !updatedPost) {
+    if (likeIndex === undefined || updatedPost === undefined) {
       return old;
     }
     if (likeIndex !== -1) {
@@ -315,6 +317,8 @@ const updateQueryUser = async ({
       updatedPost._count.Like++;
     }
     modified.Post[postIndex] = updatedPost;
+
+    console.log(modified);
     return modified;
   });
 
@@ -350,6 +354,7 @@ const updateQuerySinglePost = async ({
     if (likeIndex === undefined) {
       return old;
     }
+    console.log(likeIndex);
 
     if (likeIndex !== -1) {
       modified.Like.splice(likeIndex, 1);
@@ -362,6 +367,7 @@ const updateQuerySinglePost = async ({
       });
       modified._count.Like++;
     }
+
     return modified;
   });
   return previousValue;

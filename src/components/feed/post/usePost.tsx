@@ -1,5 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Like, Post, User } from "@prisma/client";
+import type { QueryClient } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { createRef, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,7 +13,22 @@ import type { RouterOutputs } from "src/utils/trpc";
 import { trpc } from "src/utils/trpc";
 import { z } from "zod";
 
-export const usePost = (post: RouterOutputs["posts"]["getPosts"][number]) => {
+interface Params {
+  post: RouterOutputs["posts"]["getPosts"][number];
+  user?: User;
+  singlePost?: boolean;
+}
+
+type TotalPost = Post & {
+  user: User;
+  Like: Like[];
+  _count: {
+    Like: number;
+    Comment: number;
+  };
+};
+
+export const usePost = ({ post, user, singlePost }: Params) => {
   const queryClient = useQueryClient();
   const { show } = useNotifier();
   const utils = trpc.useContext();
@@ -135,38 +153,29 @@ export const usePost = (post: RouterOutputs["posts"]["getPosts"][number]) => {
 
   const { mutate: toggleLike } = trpc.posts.toggleLike.useMutation({
     onMutate: async () => {
-      const QUERY = [["posts", "getPosts"], { input: {}, type: "query" }];
+      if (singlePost && session) {
+        return updateQuerySinglePost({
+          post,
+          session,
+          queryClient,
+        });
+      }
 
-      await queryClient.cancelQueries(QUERY);
-      const previousValue = queryClient.getQueryData([
-        ["posts", "getPosts"],
-        { input: {}, type: "query" },
-      ]);
-      queryClient.setQueryData(QUERY, (old) => {
-        type GetPosts = RouterOutputs["posts"]["getPosts"];
-        const postIndex = (old as GetPosts).findIndex((p) => p.id === post.id);
-        const updatedPost = (old as GetPosts)[postIndex];
-        const likeIndex = updatedPost?.Like.findIndex(
-          (like) => like.userId === session?.user?.id
-        );
-        if (!likeIndex || !updatedPost) {
-          return;
-        }
-        if (likeIndex !== -1) {
-          updatedPost?.Like.splice(likeIndex, 1);
-          updatedPost._count.Like--;
-        } else {
-          updatedPost.Like.push({
-            userId: session?.user?.id ?? "",
-            id: "",
-            postId: post.id,
-          });
-          updatedPost._count.Like++;
-        }
-        (old as GetPosts)[postIndex] = updatedPost;
-        return old;
-      });
-      return previousValue;
+      if (!user && session) {
+        return updateQueryPosts({
+          post,
+          session,
+          queryClient,
+        });
+      }
+      if (user && session) {
+        return updateQueryUser({
+          user,
+          post,
+          session,
+          queryClient,
+        });
+      }
     },
   });
 
@@ -212,4 +221,148 @@ export const usePost = (post: RouterOutputs["posts"]["getPosts"][number]) => {
     saveLink,
     setMode,
   };
+};
+
+const updateQueryPosts = async ({
+  queryClient,
+  post,
+  session,
+}: {
+  queryClient: QueryClient;
+  post: Post;
+  session: Session;
+}) => {
+  const QUERY = [["posts", "getPosts"], { input: {}, type: "query" }];
+  await queryClient.cancelQueries(QUERY);
+
+  const previousValue = queryClient.getQueryData([
+    ["posts", "getPosts"],
+    { input: {}, type: "query" },
+  ]);
+  queryClient.setQueryData(QUERY, (old: unknown) => {
+    const modified = old as RouterOutputs["posts"]["getPosts"];
+    const postIndex = modified.findIndex((p) => p.id === post.id);
+    const updatedPost = modified[postIndex];
+    const likeIndex = updatedPost?.Like.findIndex(
+      (like) => like.userId === session?.user?.id
+    );
+
+    if (!updatedPost) {
+      return old;
+    }
+
+    if (likeIndex === undefined) {
+      return old;
+    }
+
+    if (likeIndex !== -1) {
+      updatedPost?.Like.splice(likeIndex, 1);
+      updatedPost._count.Like--;
+    } else {
+      updatedPost.Like.push({
+        userId: session?.user?.id ?? "",
+        id: "",
+        postId: post.id,
+      });
+      updatedPost._count.Like++;
+    }
+    modified[postIndex] = updatedPost;
+    return modified;
+  });
+  return previousValue;
+};
+
+const updateQueryUser = async ({
+  queryClient,
+  user,
+  post,
+  session,
+}: {
+  queryClient: QueryClient;
+  user: User;
+  post: Post;
+  session: Session;
+}) => {
+  const id = user.id;
+  const QUERY = [["users", "getUser"], { input: { id }, type: "query" }];
+  await queryClient.cancelQueries(QUERY);
+
+  queryClient.setQueryData(QUERY, (old) => {
+    const modified = old as RouterOutputs["users"]["getUser"];
+    if (!modified) {
+      return old;
+    }
+
+    const postIndex = modified.Post.findIndex((p) => p.id === post.id);
+    if (!postIndex) return;
+
+    const updatedPost = modified.Post[postIndex];
+    const likeIndex = updatedPost?.Like.findIndex(
+      (like) => like.userId === session?.user?.id
+    );
+    if (!likeIndex || !updatedPost) {
+      return old;
+    }
+    if (likeIndex !== -1) {
+      updatedPost?.Like.splice(likeIndex, 1);
+      updatedPost._count.Like--;
+    } else {
+      updatedPost.Like.push({
+        userId: session?.user?.id ?? "",
+        id: "",
+        postId: post.id,
+      });
+      updatedPost._count.Like++;
+    }
+    modified.Post[postIndex] = updatedPost;
+    return modified;
+  });
+
+  const previousValue = queryClient.getQueryData(QUERY);
+  return previousValue;
+};
+
+const updateQuerySinglePost = async ({
+  queryClient,
+  post,
+  session,
+}: {
+  queryClient: QueryClient;
+  post: Post;
+  session: Session;
+}) => {
+  const QUERY = [
+    ["posts", "getPost"],
+    { input: { id: post.id }, type: "query" },
+  ];
+  await queryClient.cancelQueries(QUERY);
+
+  const previousValue = queryClient.getQueryData(QUERY);
+  queryClient.setQueryData(QUERY, (old: unknown) => {
+    const modified = old as RouterOutputs["posts"]["getPost"];
+    if (!modified) {
+      return old;
+    }
+    const likeIndex = modified.Like.findIndex(
+      (like) => like.userId === session?.user?.id
+    );
+
+    if (likeIndex === undefined) {
+      return old;
+    }
+
+    if (likeIndex !== -1) {
+      modified.Like.splice(likeIndex, 1);
+      modified._count.Like--;
+    } else {
+      modified.Like.push({
+        userId: session?.user?.id ?? "",
+        id: "",
+        postId: post.id,
+      });
+      modified._count.Like++;
+    }
+    return modified;
+  });
+  return previousValue;
 };

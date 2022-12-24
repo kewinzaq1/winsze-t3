@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Like, Post, User } from "@prisma/client";
+import type { Post } from "@prisma/client";
 import type { QueryClient } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Session } from "next-auth";
@@ -15,20 +15,11 @@ import { z } from "zod";
 
 interface Params {
   post: RouterOutputs["posts"]["getPosts"][number];
-  user?: User;
+  userId?: string;
   singlePost?: boolean;
 }
 
-type TotalPost = Post & {
-  user: User;
-  Like: Like[];
-  _count: {
-    Like: number;
-    Comment: number;
-  };
-};
-
-export const usePost = ({ post, user, singlePost }: Params) => {
+export const usePost = ({ post, userId, singlePost }: Params) => {
   const queryClient = useQueryClient();
   const { show } = useNotifier();
   const utils = trpc.useContext();
@@ -161,16 +152,16 @@ export const usePost = ({ post, user, singlePost }: Params) => {
         });
       }
 
-      if (!user && session) {
+      if (!userId && session) {
         return updateQueryPosts({
           post,
           session,
           queryClient,
         });
       }
-      if (user && session) {
+      if (userId && session) {
         return updateQueryUser({
-          user,
+          userId,
           post,
           session,
           queryClient,
@@ -274,16 +265,19 @@ const updateQueryPosts = async ({
 
 const updateQueryUser = async ({
   queryClient,
-  user,
+  userId,
   post,
   session,
 }: {
   queryClient: QueryClient;
-  user: User;
+  userId: string;
   post: Post;
   session: Session;
 }) => {
-  const QUERY = [["users", "getUser"], { input: { id: user }, type: "query" }];
+  const QUERY = [
+    ["users", "getUser"],
+    { input: { id: userId }, type: "query" },
+  ];
   await queryClient.cancelQueries(QUERY);
   console.log(QUERY);
 

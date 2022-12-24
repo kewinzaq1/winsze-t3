@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { router, protectedProcedure } from "../trpc";
+import { protectedProcedure, router } from "../trpc";
 
 export const usersRouter = router({
   getUser: protectedProcedure
@@ -22,6 +22,8 @@ export const usersRouter = router({
           role: true,
           Post: {
             select: {
+              userId: true,
+              image: true,
               Like: true,
               Comment: true,
               id: true,
@@ -30,6 +32,7 @@ export const usersRouter = router({
               updatedAt: true,
               user: {
                 select: {
+                  id: true,
                   name: true,
                   email: true,
                   image: true,

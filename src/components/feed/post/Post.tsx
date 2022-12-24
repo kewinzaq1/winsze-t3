@@ -41,7 +41,15 @@ dayjs.updateLocale("en", {
   },
 });
 
-export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
+export type Post = RouterOutputs["posts"]["getPosts"][number];
+
+interface Props {
+  post: Post;
+  userId?: string;
+  singlePost?: boolean;
+}
+
+export const Post = ({ post, userId, singlePost }: Props) => {
   const {
     isAuthor,
     isEdit,
@@ -66,7 +74,7 @@ export const Post = (post: RouterOutputs["posts"]["getPosts"][number]) => {
     reportPost,
     saveLink,
     setMode,
-  } = usePost(post);
+  } = usePost({ post, userId, singlePost });
 
   const Edit = (
     <form onSubmit={onSubmit}>

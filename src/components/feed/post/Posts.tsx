@@ -8,7 +8,7 @@ export const Posts = () => {
   return (
     <div className="mx-auto mt-10 w-full max-w-xl">
       {posts?.map((post) => (
-        <Post key={post.id} {...post} />
+        <Post key={post.id} post={post} />
       ))}
       {isLoading &&
         new Array(4).map((_, index) => <PostSkeleton key={index} />)}

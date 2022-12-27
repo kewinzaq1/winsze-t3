@@ -154,6 +154,7 @@ export const postsRouter = router({
         include: {
           user: {
             select: {
+              id: true,
               name: true,
               email: true,
               image: true,
@@ -183,7 +184,14 @@ export const postsRouter = router({
           id: input.id,
         },
         include: {
-          user: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
           Like: true,
           _count: {
             select: {

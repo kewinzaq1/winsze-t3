@@ -78,14 +78,20 @@ export function AccountUpdateAvatar() {
   }, [watch]);
 
   const onSubmit = handleSubmit(async (value) => {
+    console.log(value.avatar[0]);
     if (!value.avatar[0]) {
       throw new Error("No file selected");
     }
 
     const { avatar } = value;
 
-    const base64 = await imgToBase64(avatar[0]);
+    const base64 = await imgToBase64({
+      image: avatar[0],
+      maxWidth: 300,
+      maxHeight: 300,
+    });
 
+    console.log(base64);
     mutate({ avatar: base64 });
   });
 
@@ -103,19 +109,19 @@ export function AccountUpdateAvatar() {
               {avatar.length ? (
                 <Image
                   src={avatar}
-                  alt="123"
+                  alt={session.data?.user?.name || "avatar"}
                   width={96}
                   height={96}
-                  className="cover rounded-full"
+                  className="cover h-24 w-24 rounded-full object-cover"
                 />
               ) : (
                 <Image
                   src={avatarPlaceholder}
                   placeholder="blur"
-                  alt="123"
+                  alt="avatar placeholder"
                   width={96}
                   height={96}
-                  className="cover rounded-full"
+                  className="cover h-24 w-24 rounded-full object-cover"
                 />
               )}
             </div>

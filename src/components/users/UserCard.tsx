@@ -20,7 +20,9 @@ export const UserCard = ({ user }: { user: User }) => {
       <div className="flex w-full items-center justify-between">
         <div className="col flex flex-col gap-1">
           <Link href={`/users/${user.id}`}>
-            <p className="font-semibold">{user.name}</p>
+            <p className="font-semibold">
+              {user.name || user.email?.split("@")[0]}
+            </p>
           </Link>
           <p>{user.email}</p>
         </div>

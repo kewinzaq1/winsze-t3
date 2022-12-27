@@ -1,10 +1,16 @@
 import { reduceImageSize } from "./reduceImageSize";
 
-export const imgToBase64 = async (file: File) => {
+interface Params {
+  image: File;
+  maxWidth: number;
+  maxHeight: number;
+}
+
+export const imgToBase64 = async ({ image, maxWidth, maxHeight }: Params) => {
   const reduced = await reduceImageSize({
-    image: file,
-    maxWidth: 500,
-    maxHeight: 500,
+    image,
+    maxWidth,
+    maxHeight,
   });
 
   return new Promise((resolve, reject) => {

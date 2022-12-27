@@ -67,7 +67,11 @@ export const CreatePost = () => {
       mutate({ content: values.content });
       return;
     }
-    const image = await imgToBase64(values.image[0] as File);
+    const image = await imgToBase64({
+      image: values.image[0] as File,
+      maxWidth: 500,
+      maxHeight: 500,
+    });
     mutate({
       content: values.content,
       image: image as string,

@@ -107,7 +107,11 @@ export const usePost = ({ post, userId, singlePost }: Params) => {
       });
       return;
     }
-    const sendingImage = await imgToBase64(values.image[0] as File);
+    const sendingImage = await imgToBase64({
+      image: values.image[0] as File,
+      maxWidth: 500,
+      maxHeight: 500,
+    });
     editPost({
       id: post.id,
       content: values.content,

@@ -15,6 +15,7 @@ export default function SingleUserPage() {
     <div className="max-auto mx-auto flex max-w-xl flex-col items-center justify-center pt-24">
       <header>
         <h1 className="text-4xl">{user?.name || user?.email}</h1>
+        <div className="flex flex-col"></div>
       </header>
       {user?.Post.map((post) => (
         <Post key={post.id} post={post} userId={id} />

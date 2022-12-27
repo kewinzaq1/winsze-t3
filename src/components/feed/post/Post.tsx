@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import relativeRime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import Image from "next/image";
+import Link from "next/link";
 import type { Ref } from "react";
 import {
   AiFillHeart,
@@ -145,9 +146,12 @@ export const Post = ({ post, userId, singlePost }: Props) => {
           <div className="ml-2 flex flex-col">
             <p className="text-xs">{dayjs(post.createdAt).fromNow()}</p>
             <p className="text-sm  opacity-40">{post.user.email}</p>
-            <p className="text-xl font-light">
+            <Link
+              href={`/users/${post.user.id}`}
+              className="text-xl font-light"
+            >
               {post.user.name || post.user.email?.split("@")[0]}
-            </p>
+            </Link>
           </div>
           {isAuthor && (
             <BiDotsHorizontalRounded

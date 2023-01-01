@@ -18,7 +18,7 @@ export default function SingleUserPage() {
         <div className="flex flex-col"></div>
       </header>
       {user?.Post.map((post) => (
-        <Post key={post.id} post={post} userId={id} />
+        <Post key={post.id} post={post} userId={id.toString()} />
       ))}
     </div>
   );

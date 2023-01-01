@@ -1,5 +1,5 @@
 import { trpc } from "src/utils/trpc";
-import { PostType } from "./Post";
+import { Post } from "./Post";
 import { PostSkeleton } from "./PostSkeleton";
 
 export const Posts = () => {

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { PostType } from "src/components/feed/post/Post";
+import { Post } from "src/components/feed/post/Post";
 import { trpc } from "src/utils/trpc";
 
 export default function SingleUserPage() {

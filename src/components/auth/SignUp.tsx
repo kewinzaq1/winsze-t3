@@ -17,7 +17,7 @@ import { useNotifier } from "../notifier";
 
 export const SignUp = () => {
   const { show } = useNotifier();
-  const { mutate, isLoading, error } = trpc.auth.register.useMutation({
+  const { mutateAsync, isLoading, error } = trpc.auth.register.useMutation({
     onSuccess: () => {
       show({
         message: "Success",
@@ -54,8 +54,9 @@ export const SignUp = () => {
     router.push("/");
   }
 
-  const onSubmit = handleSubmit((data) => {
-    mutate(data);
+  const onSubmit = handleSubmit(async (data) => {
+    await mutateAsync(data);
+    router.push("/");
   });
 
   return (

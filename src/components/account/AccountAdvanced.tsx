@@ -5,8 +5,8 @@ import { AccountUpdateAvatar } from "./AccountUpdateAvatar";
 export const AccountAdvanced = () => {
   return (
     <>
-      <div className="col-span-3 h-1 w-full border border-transparent border-t-slate-500"></div>
-      <div className="col-span-3 grid grid-cols-2 gap-10">
+      <div className="h-1 w-full border border-transparent border-t-slate-500 md:col-span-3"></div>
+      <div className="grid gap-10 md:col-span-3 md:grid-cols-2">
         <div>
           <p className="text-4xl font-bold">More actions</p>
           <p className="font-light">
@@ -14,7 +14,7 @@ export const AccountAdvanced = () => {
           </p>
         </div>
         <AccountUpdateAvatar />
-        <div className="col-start-2 flex items-center gap-10">
+        <div className="flex items-center gap-10 md:col-start-2">
           <AccountEmailConfirmation />
           <AccountRemoveAccount />
         </div>

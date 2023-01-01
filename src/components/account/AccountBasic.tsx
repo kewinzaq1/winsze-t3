@@ -86,7 +86,7 @@ export const AccountBasic = () => {
   }, [session, setValue]);
 
   return (
-    <div className="col-span-3 grid grid-cols-2 gap-10">
+    <div className="grid gap-10 md:col-span-3 md:grid-cols-2">
       <div>
         <p className="text-4xl font-bold">Basic information</p>
         <p className="font-light">

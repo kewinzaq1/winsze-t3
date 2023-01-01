@@ -42,10 +42,10 @@ dayjs.updateLocale("en", {
   },
 });
 
-export type Post = RouterOutputs["posts"]["getPosts"][number];
+export type PostType = RouterOutputs["posts"]["getPosts"][number];
 
 interface Props {
-  post: Post;
+  post: PostType;
   userId?: string;
   singlePost?: boolean;
 }

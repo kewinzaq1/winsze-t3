@@ -52,6 +52,7 @@ export const SignIn = () => {
         type: "error",
         placement: "bottomRight",
       });
+      router.push("/");
     }
   });
 

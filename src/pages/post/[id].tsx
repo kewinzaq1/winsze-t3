@@ -21,7 +21,7 @@ export default function SinglePost() {
 
   return (
     <div className="mx-auto flex h-screen w-screen max-w-xl items-center justify-center">
-      <Post {...post}></Post>
+      <Post post={post} singlePost></Post>
     </div>
   );
 }

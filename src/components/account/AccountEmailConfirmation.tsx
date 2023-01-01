@@ -30,7 +30,7 @@ export function AccountEmailConfirmation() {
         isLoading={isLoading}
         onClick={() => mutate()}
       >
-        Update
+        Verify
       </Button>
     </div>
   );

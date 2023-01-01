@@ -1,5 +1,7 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
+import type { LegacyRef } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "src/components/common/Button";
@@ -12,6 +14,7 @@ import { z } from "zod";
 
 export const AccountBasic = () => {
   const { show } = useNotifier();
+  const [ref] = useAutoAnimate();
 
   const { mutate, isLoading } = trpc.account.updateAccount.useMutation({
     onSuccess: () => {
@@ -32,24 +35,31 @@ export const AccountBasic = () => {
 
   const { data: session } = useSession();
 
+  const passwordCondition = z
+    .union([
+      z.string().length(0, "Password must be at least 8 characters"),
+      z.string().min(8, "Password must be at least 8 characters"),
+    ])
+    .optional()
+    .transform((e) => (e === "" ? undefined : e));
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm({
     resolver: zodResolver(
       z.object({
-        name: z.string().min(3).max(20).optional(),
-        email: z.string().email("Invalid email address.").optional(),
-        newPassword: z
+        name: z
           .string()
-          .min(8, "Password must be at least 8 characters")
+          .min(3, "Name must be at least 3 characters")
+          .max(20, "Name must be not longer than 20 characters")
           .optional(),
-        passwordConfirmation: z
-          .string()
-          .min(8, "Password must be at least 8 characters")
-          .optional(),
+        email: z.optional(z.string().email("Invalid email address.")),
+        newPassword: passwordCondition,
+        passwordConfirmation: z.string(),
         password: z.string().min(8, "Password must be at least 8 characters"),
       })
     ),
@@ -76,14 +86,18 @@ export const AccountBasic = () => {
   }, [session, setValue]);
 
   return (
-    <div className="col-span-3 grid grid-cols-2 gap-10">
+    <div className="grid gap-10 md:col-span-3 md:grid-cols-2">
       <div>
         <p className="text-4xl font-bold">Basic information</p>
         <p className="font-light">
           Update your account information and password.
         </p>
       </div>
-      <form onSubmit={onSubmit} className="flex flex-col gap-2">
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-col gap-2"
+        ref={ref as LegacyRef<HTMLFormElement>}
+      >
         <FormGroup>
           <Label>Name</Label>
           <Input placeholder="Name" {...register("name")} error={errors.name} />
@@ -105,15 +119,17 @@ export const AccountBasic = () => {
             type="password"
           />
         </FormGroup>
-        <FormGroup>
-          <Label>Confirm new password</Label>
-          <Input
-            placeholder="your super secret password"
-            {...register("passwordConfirmation")}
-            error={errors.passwordConfirmation}
-            type="password"
-          />
-        </FormGroup>
+        {Boolean(watch("newPassword")[0]?.length) && (
+          <FormGroup>
+            <Label>Confirm new password</Label>
+            <Input
+              placeholder="your super secret password"
+              {...register("passwordConfirmation")}
+              error={errors.passwordConfirmation}
+              type="password"
+            />
+          </FormGroup>
+        )}
         <FormGroup>
           <Label>Current password</Label>
           <Input

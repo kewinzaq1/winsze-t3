@@ -75,7 +75,7 @@ export const SignIn = () => {
           </p>
         </div>
         <AuthOtherMethods />
-        <form className="mt-10" onSubmit={onSubmit}>
+        <form className="mt-10 flex flex-col gap-2 w-full md:w-max" onSubmit={onSubmit}>
           <FormGroup>
             <Label htmlFor="email">Email</Label>
             <Input
@@ -100,7 +100,7 @@ export const SignIn = () => {
               Forgot password?
             </Link>
           </FormGroup>
-          <Button className="mt-6" type="submit" isLoading={isLoading}>
+          <Button className="mt-6 w-max" type="submit" isLoading={isLoading}>
             Sign in
           </Button>
         </form>

@@ -78,13 +78,12 @@ export const SignUp = () => {
           </p>
         </div>
         <AuthOtherMethods />
-        <form className="mt-10" onSubmit={onSubmit}>
+        <form className="mt-10 flex flex-col gap-2" onSubmit={onSubmit}>
           {error && (
             <p className="m-0 p-0 text-sm text-red-500">{error?.message}</p>
           )}
           <FormGroup>
             <Label htmlFor="email">Email</Label>
-
             <Input
               id="email"
               placeholder="john@doe.com"
@@ -105,7 +104,7 @@ export const SignUp = () => {
             <Label htmlFor="role">Role</Label>
             <Input id="role" {...register("role")} error={errors.role} />
           </FormGroup>
-          <Button className="mt-6" type="submit" isLoading={isLoading}>
+          <Button className="mt-6 w-max" type="submit" isLoading={isLoading}>
             Sign up
           </Button>
         </form>

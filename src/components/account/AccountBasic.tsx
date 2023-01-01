@@ -52,12 +52,14 @@ export const AccountBasic = () => {
   } = useForm({
     resolver: zodResolver(
       z.object({
-        name: z.optional(z.string().min(3).max(20)),
+        name: z
+          .string()
+          .min(3, "Name must be at least 3 characters")
+          .max(20, "Name must be not longer than 20 characters")
+          .optional(),
         email: z.optional(z.string().email("Invalid email address.")),
         newPassword: passwordCondition,
-        passwordConfirmation: z
-          .string()
-          .min(8, "Password must be at least 8 characters"),
+        passwordConfirmation: z.string(),
         password: z.string().min(8, "Password must be at least 8 characters"),
       })
     ),

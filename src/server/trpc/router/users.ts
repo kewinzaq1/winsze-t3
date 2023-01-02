@@ -4,6 +4,23 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
 export const usersRouter = router({
+  getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    return user;
+  }),
+
   getUser: protectedProcedure
     .input(
       z.object({

@@ -95,10 +95,13 @@ export const Navbar = () => {
               </Link>
               <p
                 onClick={() => {
-                  signOut();
+                  signOut({
+                    redirect: true,
+                    callbackUrl: `${window.location.origin}/`,
+                  });
                   setIsOpen(false);
                 }}
-                className="rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"
+                className="cursor-pointer rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"
               >
                 Logout
               </p>

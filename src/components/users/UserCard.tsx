@@ -27,7 +27,7 @@ export const UserCard = ({ user }: { user: User }) => {
           <p>{user.email}</p>
         </div>
         <p className="w-max rounded-full bg-slate-300 p-2 px-2 py-1 text-sm lowercase">
-          {user.role}
+          {user.role || "user"}
         </p>
       </div>
     </div>

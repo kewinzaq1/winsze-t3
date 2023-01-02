@@ -48,9 +48,6 @@ export const accountRouter = router({
   updateAvatar: protectedProcedure
     .input(z.object({ avatar: z.any() }))
     .mutation(async ({ ctx, input }) => {
-      console.log(ctx.session.user);
-      console.log(new Date().toLocaleDateString());
-
       const user = await ctx.prisma.user.findUnique({
         where: { email: ctx.session.user.email as string },
       });

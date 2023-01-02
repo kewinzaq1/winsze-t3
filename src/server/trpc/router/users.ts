@@ -7,10 +7,14 @@ export const usersRouter = router({
   getUser: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
+      if (!input.id) {
+        return null;
+      }
+
       const { id } = input;
       const user = ctx.prisma.user.findUnique({
         where: {
@@ -20,6 +24,8 @@ export const usersRouter = router({
           name: true,
           email: true,
           role: true,
+          createdAt: true,
+          image: true,
           Post: {
             select: {
               userId: true,

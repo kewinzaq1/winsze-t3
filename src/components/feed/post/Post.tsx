@@ -21,6 +21,7 @@ import { Comments } from "../comment/Comments";
 import { PostMenu } from "./PostMenu";
 import { PostMenuButton } from "./PostMenuButton";
 import { usePost } from "./usePost";
+import avatarPlaceholder from "src/images/avatar_placeholder.png";
 
 dayjs.extend(relativeRime);
 dayjs.extend(updateLocale);
@@ -136,13 +137,24 @@ export const Post = ({ post, userId, singlePost }: Props) => {
     <>
       <div className="relative flex w-full select-none flex-col rounded-md p-4 shadow-md">
         <div className="flex py-2">
-          <Image
-            src={`${post.user.image}`}
-            width={50}
-            height={50}
-            alt={`${post.user.name}`}
-            className="h-16 w-16 rounded-full object-cover"
-          />
+          {!post.user.image ? (
+            <Image
+              src={avatarPlaceholder}
+              width={50}
+              height={50}
+              alt={`${post.user.name} avatar`}
+              className="h-16 w-16 rounded-full object-cover"
+              placeholder="blur"
+            />
+          ) : (
+            <Image
+              src={`${post.user.image}`}
+              width={50}
+              height={50}
+              alt={`${post.user.name} avatar`}
+              className="h-16 w-16 rounded-full object-cover"
+            />
+          )}
           <div className="ml-2 flex flex-col">
             <p className="text-xs">{dayjs(post.createdAt).fromNow()}</p>
             <p className="text-sm  opacity-40">{post.user.email}</p>
@@ -170,7 +182,7 @@ export const Post = ({ post, userId, singlePost }: Props) => {
         </div>
         <div className="mt-2 flex flex-col">
           {isPreview && <p className="text-2xl">{post.content}</p>}
-          {post.image && isPreview && (
+          {post.image?.length && isPreview && (
             <Image
               width={500}
               height={500}

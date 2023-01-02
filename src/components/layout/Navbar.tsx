@@ -89,11 +89,15 @@ export const Navbar = () => {
               <Link
                 href="/account"
                 className="rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"
+                onClick={() => setIsOpen(false)}
               >
                 Account
               </Link>
               <p
-                onClick={() => signOut()}
+                onClick={() => {
+                  signOut();
+                  setIsOpen(false);
+                }}
                 className="rounded-sm bg-slate-50 p-2 transition hover:bg-slate-300"
               >
                 Logout

@@ -1,8 +1,11 @@
+import { useSession } from "next-auth/react";
 import { Button } from "src/components/common/Button";
 import { trpc } from "src/utils/trpc";
 import { useNotifier } from "../notifier";
 
 export function AccountEmailConfirmation() {
+  const { data: user } = trpc.users.getCurrentUser.useQuery();
+
   const { show } = useNotifier();
   const { mutate, isLoading } = trpc.account.sendVerifyEmail.useMutation({
     onSuccess: () => {
@@ -25,12 +28,13 @@ export function AccountEmailConfirmation() {
     <div className="relative mt-4 flex h-full w-full flex-col items-start">
       <p className="text-2xl font-semibold">Verify email</p>
       <Button
+        disabled={Boolean(user?.emailVerified)}
         type="submit"
         className="mt-5 w-full text-center"
         isLoading={isLoading}
         onClick={() => mutate()}
       >
-        Verify
+        {user?.emailVerified ? "Email verified" : "Send verification email"}
       </Button>
     </div>
   );

@@ -88,7 +88,6 @@ export const usePost = ({ post, userId, singlePost }: Params) => {
 
   useEffect(() => {
     const subscription = watch((value) => {
-      console.log(value);
       if (!value.image?.[0]) {
         return;
       }
@@ -283,17 +282,14 @@ const updateQueryUser = async ({
     { input: { id: userId }, type: "query" },
   ];
   await queryClient.cancelQueries(QUERY);
-  console.log(QUERY);
 
   queryClient.setQueryData(QUERY, (old) => {
     const modified = old as RouterOutputs["users"]["getUser"];
-    console.log("modified", modified);
     if (!modified) {
       return old;
     }
 
     const postIndex = modified.Post.findIndex((p) => p.id === post.id);
-    console.log("postIndex", postIndex);
     if (postIndex === undefined) return;
 
     const updatedPost = modified.Post[postIndex];
@@ -316,7 +312,6 @@ const updateQueryUser = async ({
     }
     modified.Post[postIndex] = updatedPost;
 
-    console.log(modified);
     return modified;
   });
 
@@ -352,7 +347,6 @@ const updateQuerySinglePost = async ({
     if (likeIndex === undefined) {
       return old;
     }
-    console.log(likeIndex);
 
     if (likeIndex !== -1) {
       modified.Like.splice(likeIndex, 1);

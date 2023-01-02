@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { Button } from "src/components/common/Button";
 import { trpc } from "src/utils/trpc";
 import { useNotifier } from "../notifier";

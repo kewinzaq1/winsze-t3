@@ -19,8 +19,6 @@ export const TestimonialsSlider = () => {
       autoplay={{ delay: 2000 }}
       style={style}
       spaceBetween={50}
-      onSlideChange={() => console.log("slide change")}
-      onSwiper={(swiper) => console.log(swiper)}
       className="w-[90%] !pb-12"
       pagination={{ clickable: true }}
       modules={[Pagination, Autoplay]}

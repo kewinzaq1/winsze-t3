@@ -75,7 +75,7 @@ export const SignIn = () => {
           </p>
         </div>
         <AuthOtherMethods />
-        <form className="mt-10 flex flex-col gap-2 w-full md:w-max" onSubmit={onSubmit}>
+        <form className="mt-10 flex flex-col gap-2 w-full" onSubmit={onSubmit}>
           <FormGroup>
             <Label htmlFor="email">Email</Label>
             <Input

@@ -1,6 +1,6 @@
 import { trpc } from "src/utils/trpc";
 import { Post } from "./Post";
-import { PostSkeleton } from "./PostSkeleton";
+import { PostSkeletons } from "./PostSkeletons";
 
 export const Posts = () => {
   const { data: posts, isLoading } = trpc.posts.getPosts.useQuery({});
@@ -10,8 +10,7 @@ export const Posts = () => {
       {posts?.map((post) => (
         <Post key={post.id} post={post} />
       ))}
-      {isLoading &&
-        new Array(4).map((_, index) => <PostSkeleton key={index} />)}
+      {isLoading && <PostSkeletons />}
     </div>
   );
 };

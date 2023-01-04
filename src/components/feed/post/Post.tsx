@@ -20,8 +20,8 @@ import { Textarea } from "../../common/Textarea";
 import { Comments } from "../comment/Comments";
 import { PostMenu } from "./PostMenu";
 import { PostMenuButton } from "./PostMenuButton";
-import { usePost } from "./usePost";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
+import { PostProvider, usePost } from "./PostContext";
 
 dayjs.extend(relativeRime);
 dayjs.extend(updateLocale);
@@ -51,34 +51,11 @@ interface Props {
   singlePost?: boolean;
 }
 
-export const Post = ({ post, userId, singlePost }: Props) => {
-  const {
-    isAuthor,
-    isEdit,
-    isPreview,
-    isEditLoading,
-    isDeleting,
-    openMenu,
-    openConfirm,
-    openComments,
-    setOpenMenu,
-    setOpenConfirm,
-    setOpenComments,
-    menuRef,
-    register,
-    onSubmit,
-    setEdit,
-    clearImage,
-    image,
-    deletePost,
-    userLike,
-    toggleLike,
-    reportPost,
-    saveLink,
-    setMode,
-  } = usePost({ post, userId, singlePost });
+const Edit = () => {
+  const { onSubmit, register, isEdit, image, clearImage, isEditLoading, post } =
+    usePost();
 
-  const Edit = (
+  return (
     <form onSubmit={onSubmit}>
       {isEdit && (
         <Textarea
@@ -132,135 +109,151 @@ export const Post = ({ post, userId, singlePost }: Props) => {
       </Button>
     </form>
   );
+};
+
+const BasePost = () => {
+  const {
+    isAuthor,
+    isEdit,
+    isPreview,
+    isEditLoading,
+    isDeleting,
+    openMenu,
+    openConfirm,
+    openComments,
+    setOpenMenu,
+    setOpenConfirm,
+    setOpenComments,
+    menuRef,
+    register,
+    onSubmit,
+    setEdit,
+    clearImage,
+    image,
+    deletePost,
+    userLike,
+    toggleLike,
+    reportPost,
+    saveLink,
+    setMode,
+    post,
+  } = usePost();
 
   return (
-    <>
-      <div className="relative flex w-full select-none flex-col rounded-md p-4 shadow-md">
-        <div className="flex py-2">
-          {!post.user.image ? (
-            <Image
-              src={avatarPlaceholder}
-              width={50}
-              height={50}
-              alt={`${post.user.name} avatar`}
-              className="h-16 w-16 rounded-full object-cover"
-              placeholder="blur"
-            />
-          ) : (
-            <Image
-              src={`${post.user.image}`}
-              width={50}
-              height={50}
-              alt={`${post.user.name} avatar`}
-              className="h-16 w-16 rounded-full object-cover"
-            />
-          )}
-          <div className="ml-2 flex flex-col">
-            <p className="text-xs">{dayjs(post.createdAt).fromNow()}</p>
-            <p className="text-sm  opacity-40">{post.user.email}</p>
-            <Link
-              href={`/users/${post.user.id}`}
-              className="text-xl font-light"
-            >
-              {post.user.name || post.user.email?.split("@")[0]}
-            </Link>
-          </div>
-          {isAuthor && (
-            <BiDotsHorizontalRounded
-              className="pointer z-1 absolute top-4 right-4 h-8 w-8"
-              role="button"
-              tabIndex={0}
-              aria-label="manage post"
-              title="manage post"
-              onClick={() => {
-                if (!openMenu) {
-                  setOpenMenu(true);
-                }
-              }}
-            />
-          )}
+    <div className="relative flex w-full select-none flex-col rounded-md p-4 shadow-md">
+      <div className="flex py-2">
+        {!post.user.image ? (
+          <Image
+            src={avatarPlaceholder}
+            width={50}
+            height={50}
+            alt={`${post.user.name} avatar`}
+            className="h-16 w-16 rounded-full object-cover"
+            placeholder="blur"
+          />
+        ) : (
+          <Image
+            src={`${post.user.image}`}
+            width={50}
+            height={50}
+            alt={`${post.user.name} avatar`}
+            className="h-16 w-16 rounded-full object-cover"
+          />
+        )}
+        <div className="ml-2 flex flex-col">
+          <p className="text-xs">{dayjs(post.createdAt).fromNow()}</p>
+          <p className="text-sm  opacity-40">{post.user.email}</p>
+          <Link href={`/users/${post.user.id}`} className="text-xl font-light">
+            {post.user.name || post.user.email?.split("@")[0]}
+          </Link>
         </div>
-        <div className="mt-2 flex flex-col">
-          {isPreview && <p className="text-2xl">{post.content}</p>}
-          {post.image?.length && isPreview && (
-            <Image
-              width={500}
-              height={500}
-              src={post.image}
-              alt={post.content}
-              className="mt-2 h-full w-full rounded-md object-contain"
-            />
-          )}
-          {isPreview && (
-            <div className="flex w-full items-center">
-              <button
-                className="flex items-center gap-1"
-                onClick={() => toggleLike({ id: post.id })}
-                aria-label={`${userLike ? "unlike" : "like"} post`}
-                title={`${userLike ? "unlike" : "like"} post`}
-              >
-                {post._count.Like}
-                {userLike ? (
-                  <AiFillHeart color="red" className="h-8 w-8" />
-                ) : (
-                  <AiOutlineHeart className="h-8 w-8" />
-                )}
-              </button>
-              <button
-                className="flex items-center gap-1 rounded-md p-2"
-                aria-label="show comments"
-                title="show comment"
-                onClick={() => setOpenComments((prev) => !prev)}
-              >
-                {post._count.Comment}
-                <AiOutlineComment className="h-8 w-8" />
-              </button>
-              <button
-                className="ml-auto justify-self-end rounded-md p-2"
-                aria-label="share post"
-                title="share-post"
-                onClick={saveLink}
-              >
-                <AiOutlineShareAlt className="h-8 w-8" />
-              </button>
-            </div>
-          )}
-          {isEdit && Edit}
-          {openComments && <Comments postId={post.id} />}
-        </div>
-        {openMenu && (
-          <PostMenu ref={menuRef as Ref<HTMLDivElement>}>
-            <PostMenuButton
-              onClick={() => {
-                if (isPreview) {
-                  return setEdit();
-                }
-                return setMode("preview");
-              }}
-            >
-              {isPreview ? "Edit" : "Cancel edit"}
-            </PostMenuButton>
-            <PostMenuButton onClick={() => setOpenConfirm(true)}>
-              Delete
-            </PostMenuButton>
-            <PostMenuButton
-              onClick={() => {
-                reportPost({ postId: post.id });
-              }}
-            >
-              report
-            </PostMenuButton>
-          </PostMenu>
+        {isAuthor && (
+          <BiDotsHorizontalRounded
+            className="pointer z-1 absolute top-4 right-4 h-8 w-8"
+            role="button"
+            tabIndex={0}
+            aria-label="manage post"
+            title="manage post"
+            onClick={() => {
+              if (!openMenu) {
+                setOpenMenu(true);
+              }
+            }}
+          />
         )}
       </div>
-
+      <div className="mt-2 flex flex-col">
+        {isPreview && <p className="text-2xl">{post.content}</p>}
+        {post.image?.length && isPreview && (
+          <Image
+            width={500}
+            height={500}
+            src={post.image}
+            alt={post.content}
+            className="mt-2 h-full w-full rounded-md object-contain"
+          />
+        )}
+        {isPreview && (
+          <div className="flex w-full items-center">
+            <button
+              className="flex items-center gap-1"
+              onClick={toggleLike}
+              aria-label={`${userLike ? "unlike" : "like"} post`}
+              title={`${userLike ? "unlike" : "like"} post`}
+            >
+              {post._count.Like}
+              {userLike ? (
+                <AiFillHeart color="red" className="h-8 w-8" />
+              ) : (
+                <AiOutlineHeart className="h-8 w-8" />
+              )}
+            </button>
+            <button
+              className="flex items-center gap-1 rounded-md p-2"
+              aria-label="show comments"
+              title="show comment"
+              onClick={() => setOpenComments((prev) => !prev)}
+            >
+              {post._count.Comment}
+              <AiOutlineComment className="h-8 w-8" />
+            </button>
+            <button
+              className="ml-auto justify-self-end rounded-md p-2"
+              aria-label="share post"
+              title="share-post"
+              onClick={saveLink}
+            >
+              <AiOutlineShareAlt className="h-8 w-8" />
+            </button>
+          </div>
+        )}
+        {isEdit && <Edit />}
+        {openComments && <Comments postId={post.id} />}
+      </div>
+      {openMenu && (
+        <PostMenu ref={menuRef as Ref<HTMLDivElement>}>
+          <PostMenuButton
+            onClick={() => {
+              if (isPreview) {
+                return setEdit();
+              }
+              return setMode("preview");
+            }}
+          >
+            {isPreview ? "Edit" : "Cancel edit"}
+          </PostMenuButton>
+          <PostMenuButton onClick={() => setOpenConfirm(true)}>
+            Delete
+          </PostMenuButton>
+          <PostMenuButton onClick={reportPost}>report</PostMenuButton>
+        </PostMenu>
+      )}
       {openConfirm && (
         <div
           className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-20"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setOpenConfirm(false);
-              setOpenMenu(false);
             }
           }}
         >
@@ -284,7 +277,7 @@ export const Post = ({ post, userId, singlePost }: Props) => {
                 variant="error"
                 className="p-2"
                 isLoading={isDeleting}
-                onClick={() => deletePost({ postId: post.id })}
+                onClick={deletePost}
               >
                 delete
               </Button>
@@ -292,6 +285,14 @@ export const Post = ({ post, userId, singlePost }: Props) => {
           </div>
         </div>
       )}
-    </>
+    </div>
+  );
+};
+
+export const Post = (props: Props) => {
+  return (
+    <PostProvider {...props}>
+      <BasePost />
+    </PostProvider>
   );
 };

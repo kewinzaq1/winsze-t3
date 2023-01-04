@@ -1,9 +1,10 @@
 import { Submenu } from "src/components/layout/Submenu";
 import { trpc } from "src/utils/trpc";
 import { UserCard } from "./UserCard";
+import { UserSkeletons } from "./UserSkeltons";
 
 export const Users = () => {
-  const { data: users } = trpc.users.getUsers.useQuery();
+  const { data: users, isLoading } = trpc.users.getUsers.useQuery();
 
   return (
     <div className="pt-24">
@@ -12,6 +13,7 @@ export const Users = () => {
         {users?.map((user) => (
           <UserCard key={user.id} user={user} />
         ))}
+        {isLoading && <UserSkeletons length={12} />}
       </div>
       <Submenu currentPage="users" />
     </div>

@@ -13,7 +13,7 @@ const getPostsSchema = z.object({
 });
 
 const deletePostSchema = z.object({
-  postId: z.string(),
+  id: z.string(),
 });
 
 export const postsRouter = router({
@@ -127,7 +127,7 @@ export const postsRouter = router({
 
       const post = await ctx.prisma.post.findUnique({
         where: {
-          id: input.postId,
+          id: input.id,
         },
       });
 
@@ -140,7 +140,7 @@ export const postsRouter = router({
 
       return ctx.prisma.post.delete({
         where: {
-          id: input.postId,
+          id: input.id,
         },
       });
     }),
@@ -207,14 +207,14 @@ export const postsRouter = router({
   reportPost: protectedProcedure
     .input(
       z.object({
-        postId: z.string(),
+        id: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       const post = await ctx.prisma.post.findUnique({
         where: {
-          id: input.postId,
+          id: input.id,
         },
       });
 
@@ -234,7 +234,7 @@ export const postsRouter = router({
           },
           post: {
             connect: {
-              id: input.postId,
+              id: input.id,
             },
           },
         },

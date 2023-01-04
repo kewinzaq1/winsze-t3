@@ -1,11 +1,13 @@
 import { PostSkeleton } from "./PostSkeleton";
 
 export const PostSkeletons = ({ length }: { length?: number }) => {
+  const arr = new Array(length || 6).fill(0);
+
   return (
-    <div className="animate-pulse">
-      {new Array(length || 6).map((_, i) => (
-        <PostSkeleton key={i} />
+    <>
+      {arr.map((_, index) => (
+        <PostSkeleton key={index} />
       ))}
-    </div>
+    </>
   );
 };

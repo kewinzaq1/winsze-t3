@@ -3,7 +3,7 @@ import relativeRime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import Image from "next/image";
 import Link from "next/link";
-import type { Ref } from "react";
+import { Ref, useCallback } from "react";
 import {
   AiFillHeart,
   AiOutlineComment,
@@ -116,7 +116,6 @@ const BasePost = () => {
     isAuthor,
     isEdit,
     isPreview,
-    isEditLoading,
     isDeleting,
     openMenu,
     openConfirm,
@@ -125,11 +124,6 @@ const BasePost = () => {
     setOpenConfirm,
     setOpenComments,
     menuRef,
-    register,
-    onSubmit,
-    setEdit,
-    clearImage,
-    image,
     deletePost,
     userLike,
     toggleLike,
@@ -137,7 +131,28 @@ const BasePost = () => {
     saveLink,
     setMode,
     post,
+    setEdit,
   } = usePost();
+
+  const cancelEdit = useCallback(() => {
+    setOpenConfirm(false);
+    setOpenMenu(false);
+  }, []);
+
+  const toggleEdit = useCallback(() => {
+    if (isPreview) {
+      return setEdit();
+    }
+    return setMode("preview");
+  }, []);
+
+  const handleDelete = useCallback(() => {
+    setOpenConfirm(true);
+  }, []);
+
+  const handleMenu = useCallback(() => {
+    setOpenMenu((c) => !c);
+  }, []);
 
   return (
     <div className="relative flex w-full select-none flex-col rounded-md p-4 shadow-md">
@@ -174,11 +189,7 @@ const BasePost = () => {
             tabIndex={0}
             aria-label="manage post"
             title="manage post"
-            onClick={() => {
-              if (!openMenu) {
-                setOpenMenu(true);
-              }
-            }}
+            onClick={handleMenu}
           />
         )}
       </div>
@@ -232,19 +243,10 @@ const BasePost = () => {
       </div>
       {openMenu && (
         <PostMenu ref={menuRef as Ref<HTMLDivElement>}>
-          <PostMenuButton
-            onClick={() => {
-              if (isPreview) {
-                return setEdit();
-              }
-              return setMode("preview");
-            }}
-          >
+          <PostMenuButton onClick={toggleEdit}>
             {isPreview ? "Edit" : "Cancel edit"}
           </PostMenuButton>
-          <PostMenuButton onClick={() => setOpenConfirm(true)}>
-            Delete
-          </PostMenuButton>
+          <PostMenuButton onClick={handleDelete}>Delete</PostMenuButton>
           <PostMenuButton onClick={reportPost}>report</PostMenuButton>
         </PostMenu>
       )}
@@ -263,14 +265,7 @@ const BasePost = () => {
               <p>To delete this post</p>
             </header>
             <footer className="flex w-full items-center justify-end gap-2">
-              <Button
-                variant="secondary"
-                className="p-2"
-                onClick={() => {
-                  setOpenConfirm(false);
-                  setOpenMenu(false);
-                }}
-              >
+              <Button variant="secondary" className="p-2" onClick={cancelEdit}>
                 cancel
               </Button>
               <Button

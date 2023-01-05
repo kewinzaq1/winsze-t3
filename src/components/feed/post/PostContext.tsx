@@ -172,7 +172,10 @@ export const PostProvider = ({
   });
 
   const menuRef = createRef<HTMLElement>();
-  useClickAway(menuRef, () => setOpenMenu(false));
+  useClickAway(menuRef, () => {
+    const tId = setTimeout(() => setOpenMenu(false), 100);
+    return clearTimeout(tId);
+  });
 
   const { mutate: deletePost, isLoading: isDeleting } =
     trpc.posts.deletePost.useMutation({
@@ -269,7 +272,34 @@ export const PostProvider = ({
       setMode,
       post,
     }),
-    []
+    [
+      isAuthor,
+      isEdit,
+      isPreview,
+      isEditLoading,
+      isDeleting,
+      openMenu,
+      openConfirm,
+      openComments,
+      setOpenMenu,
+      setOpenConfirm,
+      setOpenComments,
+      menuRef,
+      editError,
+      errors,
+      register,
+      onSubmit,
+      setEdit,
+      clearImage,
+      image,
+      deletePost,
+      userLike,
+      toggleLike,
+      reportPost,
+      saveLink,
+      setMode,
+      post,
+    ]
   );
 
   return <PostContext.Provider value={props}>{children}</PostContext.Provider>;

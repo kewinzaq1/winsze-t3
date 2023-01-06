@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { router, protectedProcedure } from "../trpc";
@@ -12,6 +13,13 @@ export const friendsRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { userId } = input;
       const { prisma, session } = ctx;
+
+      if (userId === session.user.id) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You cannot add yourself as a friend",
+        });
+      }
 
       const friend = await prisma.friend.create({
         data: {
@@ -43,17 +51,15 @@ export const friendsRouter = router({
 
       return friend;
     }),
-  getAllFriends: protectedProcedure
-    .input(z.object({}))
-    .query(async ({ ctx }) => {
-      const { prisma, session } = ctx;
+  getFriends: protectedProcedure.input(z.object({})).query(async ({ ctx }) => {
+    const { prisma, session } = ctx;
 
-      const friends = await prisma.friend.findMany({
-        where: {
-          userId: session.user.id,
-        },
-      });
+    const friends = await prisma.friend.findMany({
+      where: {
+        friendId: session.user.id,
+      },
+    });
 
-      return friends;
-    }),
+    return friends;
+  }),
 });

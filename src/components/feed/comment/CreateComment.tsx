@@ -1,4 +1,5 @@
 import { Input } from "src/components/common/Input";
+import type { RouterOutputs } from "src/utils/trpc";
 import { trpc } from "src/utils/trpc";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -53,13 +54,15 @@ export const CreateComment = ({ postId }: { postId: string }) => {
       await queryClient.cancelQueries(POSTS_QUERY);
       await queryClient.cancelQueries(SINGLE_POST_QUERY);
 
-      queryClient.setQueryData(QUERY, (oldData) => {
-        return [...(oldData as []), comment];
+      queryClient.setQueryData(QUERY, (old: unknown) => {
+        const oldData = old as RouterOutputs["posts"]["getPostComments"];
+        return [...oldData, comment];
       });
 
-      queryClient.setQueryData(POSTS_QUERY, (oldData: any) => {
+      queryClient.setQueryData(POSTS_QUERY, (old: unknown) => {
+        const oldData = old as RouterOutputs["posts"]["getPosts"];
         if (!oldData?.length) return oldData;
-        return (oldData as any).map((post: any) => {
+        return oldData.map((post) => {
           if (post.id === postId) {
             return {
               ...post,
@@ -73,7 +76,8 @@ export const CreateComment = ({ postId }: { postId: string }) => {
         });
       });
 
-      queryClient.setQueryData(SINGLE_POST_QUERY, (oldData: any) => {
+      queryClient.setQueryData(SINGLE_POST_QUERY, (old: unknown) => {
+        const oldData = old as RouterOutputs["posts"]["getPost"];
         if (!oldData) return oldData;
         return {
           ...oldData,

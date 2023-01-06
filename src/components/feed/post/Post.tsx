@@ -3,7 +3,7 @@ import relativeRime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import Image from "next/image";
 import Link from "next/link";
-import { Ref, useCallback } from "react";
+import { LegacyRef, Ref, useCallback } from "react";
 import {
   AiFillHeart,
   AiOutlineComment,
@@ -22,6 +22,7 @@ import { PostMenu } from "./PostMenu";
 import { PostMenuButton } from "./PostMenuButton";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { PostProvider, usePost } from "./PostContext";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 dayjs.extend(relativeRime);
 dayjs.extend(updateLocale);
@@ -154,6 +155,8 @@ const BasePost = () => {
     setOpenMenu((c) => !c);
   }, []);
 
+  const [ref] = useAutoAnimate();
+
   return (
     <div className="relative flex w-full select-none flex-col rounded-md p-4 shadow-md">
       <div className="flex py-2">
@@ -193,7 +196,10 @@ const BasePost = () => {
           />
         )}
       </div>
-      <div className="mt-2 flex flex-col">
+      <div
+        className="mt-2 flex flex-col"
+        ref={ref as LegacyRef<HTMLDivElement>}
+      >
         {isPreview && <p className="text-2xl">{post.content}</p>}
         {post.image?.length && isPreview && (
           <Image

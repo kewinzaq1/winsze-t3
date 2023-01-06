@@ -51,7 +51,7 @@ export const Navbar = () => {
 
   return (
     <div>
-      <nav className="fixed z-50 flex w-full items-center justify-between overflow-x-hidden rounded-b-md bg-white bg-opacity-80 p-4 text-slate-700 shadow-md backdrop-blur">
+      <nav className="fixed top-0 z-50 flex w-full items-center justify-between rounded-b-md bg-white bg-opacity-80 p-4 text-slate-700 shadow-md backdrop-blur overflow-x-hidden">
         <div className="text-violetPrimary flex-1 font-bold uppercase">
           winsze t3
         </div>

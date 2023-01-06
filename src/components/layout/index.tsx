@@ -11,9 +11,9 @@ export const Layout = ({
 }) => {
   return (
     <>
+      {!withoutNavbar && <Navbar />}
       <ReactQueryDevtools />
       <Notifier />
-      {!withoutNavbar && <Navbar />}
       {children}
     </>
   );

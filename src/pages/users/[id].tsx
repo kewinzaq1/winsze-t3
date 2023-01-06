@@ -7,6 +7,7 @@ import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { useCallback, useEffect } from "react";
 import { LoadingWithQuote } from "src/components/common/LoadingWithQuote";
 import notFoundUser from "src/assets/not_found_user.png";
+import SingleUserSkeleton from "./skeleton";
 
 export default function SingleUserPage() {
   const router = useRouter();
@@ -16,25 +17,12 @@ export default function SingleUserPage() {
     data: user,
     refetch,
     isLoading,
-  } = trpc.users.getUser.useQuery({
-    id: id as string,
-  });
-
-  const refetchUser = useCallback(() => refetch(), [refetch]);
-
-  useEffect(() => {
-    if (id) {
-      refetchUser();
-    }
-  }, [refetchUser, id]);
-
-  if (!user && isLoading) {
-    return (
-      <div>
-        <LoadingWithQuote />
-      </div>
-    );
-  }
+  } = trpc.users.getUser.useQuery(
+    {
+      id: id as string,
+    },
+    { enabled: Boolean(id) }
+  );
 
   if (!user && !isLoading) {
     return (
@@ -45,10 +33,14 @@ export default function SingleUserPage() {
     );
   }
 
+  if (isLoading) {
+    return <SingleUserSkeleton />;
+  }
+
   return (
-    <div className="max-auto mx-auto flex max-w-xl flex-col items-center justify-center pt-24">
-      <header className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
+    <div className="mx-auto flex max-w-xl flex-col items-center justify-center pt-24">
+      <header className="flex w-full flex-col justify-between gap-2">
+        <div className="flex items-center justify-between gap-2">
           {user?.image ? (
             <Image
               src={user?.image}
@@ -68,9 +60,9 @@ export default function SingleUserPage() {
               className="h-16 w-16 rounded-full object-cover"
             />
           )}
-          <div className="flex flex-col">
+          <div className="flex flex-col justify-end">
             <h1 className="text-4xl">{user?.name || user?.email}</h1>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center justify-end gap-1">
               <p className="w-max rounded-full bg-blue-100 px-2 py-1">
                 In winsze {dayjs(user?.createdAt).toNow()}
               </p>

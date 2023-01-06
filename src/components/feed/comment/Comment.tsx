@@ -73,13 +73,16 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
         });
       });
 
-      queryClient.setQueryData(SINGLE_POST_QUERY, (old: any) => ({
-        ...old,
-        _count: {
-          ...old._count,
-          Comment: old._count.Comment - 1,
-        },
-      }));
+      queryClient.setQueryData(SINGLE_POST_QUERY, (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          _count: {
+            ...old._count,
+            Comment: old._count.Comment - 1,
+          },
+        };
+      });
 
       return prevComments;
     },

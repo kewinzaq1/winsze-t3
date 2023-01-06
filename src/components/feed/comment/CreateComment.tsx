@@ -73,13 +73,16 @@ export const CreateComment = ({ postId }: { postId: string }) => {
         });
       });
 
-      queryClient.setQueryData(SINGLE_POST_QUERY, (oldData: any) => ({
-        ...oldData,
-        _count: {
-          ...oldData._count,
-          Comment: oldData._count.Comment + 1,
-        },
-      }));
+      queryClient.setQueryData(SINGLE_POST_QUERY, (oldData: any) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          _count: {
+            ...oldData._count,
+            Comment: oldData._count.Comment + 1,
+          },
+        };
+      });
     },
     onSuccess: () => {
       show({

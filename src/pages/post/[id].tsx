@@ -12,7 +12,7 @@ export default function SinglePost() {
     {
       id: id ?? "",
     },
-    { skip: !id }
+    { enabled: Boolean(id) }
   );
 
   return (

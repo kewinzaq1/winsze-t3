@@ -37,7 +37,7 @@ export const SignIn = () => {
   });
 
   if (session.status === "authenticated") {
-    router.push("/");
+    router.push("/feed");
   }
 
   const onSubmit = handleSubmit(async (data) => {
@@ -51,7 +51,7 @@ export const SignIn = () => {
         type: "error",
         placement: "bottomRight",
       });
-      router.push("/");
+      router.push("/feed");
     }
   });
 

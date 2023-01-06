@@ -303,6 +303,13 @@ export const postsRouter = router({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
 
+      if (!input.content.length) {
+        throw new TRPCError({
+          code: "PARSE_ERROR",
+          message: "Comment content is required",
+        });
+      }
+
       const comment = await ctx.prisma.comment.create({
         data: {
           content: input.content,

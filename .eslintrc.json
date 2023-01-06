@@ -3,12 +3,11 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint", "react-hooks", "tailwindcss"],
+  "plugins": ["@typescript-eslint", "react-hooks"],
   "extends": [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:tailwindcss/recommended"
+    "plugin:react-hooks/recommended"
   ],
   "rules": {
     "@typescript-eslint/consistent-type-imports": "warn",

@@ -18,6 +18,8 @@ import { Button } from "src/components/common/Button";
 import { AiOutlineSave } from "react-icons/ai";
 
 export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
+  console.log("comment", comment);
+
   const queryClient = useQueryClient();
   const [openMenu, setOpenMenu] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -34,24 +36,52 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
 
   const { mutate: deleteComment } = trpc.posts.deleteComment.useMutation({
     onMutate: async () => {
-      await queryClient.cancelQueries([
+      const POSTS_QUERY = [["posts", "getPosts"], { input: {}, type: "query" }];
+      const QUERY = [
         ["posts", "getPostComments"],
         { input: { postId: comment?.postId }, type: "query" },
-      ]);
-      const previousComments = queryClient.getQueryData([
-        ["posts", "getPostComments"],
-        { input: { postId: comment?.postId }, type: "query" },
-      ]);
-      queryClient.setQueryData(
-        [
-          ["posts", "getPostComments"],
-          { input: { postId: comment?.postId }, type: "query" },
-        ],
-        (old: any) => {
-          return old.filter((c: any) => c.id !== comment?.id);
-        }
-      );
-      return { previousComments };
+      ];
+      const SINGLE_POST_QUERY = [
+        ["posts", "getPost"],
+        { input: { id: comment?.postId }, type: "query" },
+      ];
+
+      await queryClient.cancelQueries(QUERY);
+      await queryClient.cancelQueries(POSTS_QUERY);
+      await queryClient.cancelQueries(SINGLE_POST_QUERY);
+
+      const prevComments = queryClient.getQueryData(QUERY);
+
+      queryClient.setQueryData(QUERY, (old: any) => {
+        return old.filter((c: any) => c.id !== comment?.id);
+      });
+
+      queryClient.setQueryData(POSTS_QUERY, (old: any) => {
+        if (!old?.length) return old;
+        return old.map((p: any) => {
+          if (p.id === comment?.postId) {
+            return {
+              ...p,
+              _count: {
+                ...p._count,
+                Comment: p._count.Comment - 1,
+              },
+            };
+          }
+
+          return p;
+        });
+      });
+
+      queryClient.setQueryData(SINGLE_POST_QUERY, (old: any) => ({
+        ...old,
+        _count: {
+          ...old._count,
+          Comment: old._count.Comment - 1,
+        },
+      }));
+
+      return prevComments;
     },
     onSuccess: () => {
       setOpenMenu(false);

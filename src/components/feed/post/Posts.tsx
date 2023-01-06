@@ -7,6 +7,8 @@ import { PostSkeletons } from "./PostSkeletons";
 export const Posts = () => {
   const { data: posts, isLoading } = trpc.posts.getPosts.useQuery({});
 
+  console.log("posts", posts);
+
   return (
     <div className="mx-auto mt-10 w-full max-w-xl">
       {isLoading && <PostSkeletons length={12} />}

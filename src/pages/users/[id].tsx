@@ -5,9 +5,8 @@ import { trpc } from "src/utils/trpc";
 import Image from "next/image";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { useCallback, useEffect } from "react";
-import { LoadingWithQuote } from "src/components/common/LoadingWithQuote";
 import notFoundUser from "src/assets/not_found_user.png";
-import SingleUserSkeleton from "./skeleton";
+import { SingleUserSkeleton } from "src/components/users/SingleUser/SingleUserSkeleton";
 
 export default function SingleUserPage() {
   const router = useRouter();

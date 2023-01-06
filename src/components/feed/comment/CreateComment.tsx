@@ -14,11 +14,13 @@ import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNotifier } from "src/components/notifier";
 import { getUUID } from "src/utils/getUUID";
+import { useRouter } from "next/router";
 
 export const CreateComment = ({ postId }: { postId: string }) => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const { show } = useNotifier();
+  const router = useRouter();
 
   const { mutate: addComment } = trpc.posts.addComment.useMutation({
     onMutate: async (newComment) => {
@@ -38,6 +40,10 @@ export const CreateComment = ({ postId }: { postId: string }) => {
         ["posts", "getPost"],
         { input: { id: postId }, type: "query" },
       ];
+      const USER_QUERY = [
+        ["users", "getUser"],
+        { input: { id: router.query.id }, type: "query" },
+      ];
 
       const name = session?.user?.name;
       const email = session?.user?.email;
@@ -53,6 +59,7 @@ export const CreateComment = ({ postId }: { postId: string }) => {
       await queryClient.cancelQueries(QUERY);
       await queryClient.cancelQueries(POSTS_QUERY);
       await queryClient.cancelQueries(SINGLE_POST_QUERY);
+      if (router.query.id) await queryClient.cancelQueries(USER_QUERY);
 
       queryClient.setQueryData(QUERY, (old: unknown) => {
         const oldData = old as RouterOutputs["posts"]["getPostComments"];
@@ -75,6 +82,32 @@ export const CreateComment = ({ postId }: { postId: string }) => {
           return post;
         });
       });
+
+      if (router.query.id) {
+        queryClient.setQueryData(USER_QUERY, (old: unknown) => {
+          const oldData = old as RouterOutputs["users"]["getUser"];
+          if (!oldData) return oldData;
+
+          const filtered = oldData.Post.filter((post) => post.id !== postId);
+          const updated = oldData.Post.find((post) => post.id === postId);
+          if (updated) {
+            return {
+              ...oldData,
+              Post: [
+                ...filtered,
+                {
+                  ...updated,
+                  _count: {
+                    ...updated._count,
+                    Comment: updated._count.Comment + 1,
+                  },
+                },
+              ],
+            };
+          }
+          return oldData;
+        });
+      }
 
       queryClient.setQueryData(SINGLE_POST_QUERY, (old: unknown) => {
         const oldData = old as RouterOutputs["posts"]["getPost"];

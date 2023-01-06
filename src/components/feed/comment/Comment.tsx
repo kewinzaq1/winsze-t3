@@ -16,12 +16,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "src/components/common/Button";
 import { AiOutlineSave } from "react-icons/ai";
+import { useRouter } from "next/router";
 
 export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
   const queryClient = useQueryClient();
   const [openMenu, setOpenMenu] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const { show } = useNotifier();
+  const router = useRouter();
 
   const toggleMenu = useCallback(() => {
     setOpenMenu((c) => !c);
@@ -42,6 +44,10 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
       const SINGLE_POST_QUERY = [
         ["posts", "getPost"],
         { input: { id: comment?.postId }, type: "query" },
+      ];
+      const USER_QUERY = [
+        ["users", "getUser"],
+        { input: { id: router.query.id }, type: "query" },
       ];
 
       await queryClient.cancelQueries(QUERY);
@@ -81,6 +87,36 @@ export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
           },
         };
       });
+
+      if (router.query.id) {
+        queryClient.setQueryData(USER_QUERY, (old: unknown) => {
+          const oldData = old as RouterOutputs["users"]["getUser"];
+          if (!oldData) return oldData;
+
+          const filtered = oldData.Post.filter(
+            (post) => post.id !== comment?.postId
+          );
+          const updated = oldData.Post.find(
+            (post) => post.id === comment?.postId
+          );
+          if (updated) {
+            return {
+              ...oldData,
+              Post: [
+                ...filtered,
+                {
+                  ...updated,
+                  _count: {
+                    ...updated._count,
+                    Comment: updated._count.Comment - 1,
+                  },
+                },
+              ],
+            };
+          }
+          return oldData;
+        });
+      }
 
       return prevComments;
     },

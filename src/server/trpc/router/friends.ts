@@ -21,6 +21,22 @@ export const friendsRouter = router({
         });
       }
 
+      const friendExists = await prisma.friend.findUnique({
+        where: {
+          userId_friendId: {
+            userId,
+            friendId: session.user.id,
+          },
+        },
+      });
+
+      if (friendExists) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You are already friends with this user",
+        });
+      }
+
       const friend = await prisma.friend.create({
         data: {
           userId,
@@ -57,6 +73,9 @@ export const friendsRouter = router({
     const friends = await prisma.friend.findMany({
       where: {
         friendId: session.user.id,
+      },
+      include: {
+        user: true,
       },
     });
 

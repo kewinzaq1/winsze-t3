@@ -15,10 +15,6 @@ const Home: NextPage = () => {
     }
   }, [session]);
 
-  if (status === "loading" || status !== "unauthenticated") {
-    return <></>;
-  }
-
   return (
     <>
       <Head>

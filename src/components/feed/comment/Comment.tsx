@@ -18,8 +18,6 @@ import { Button } from "src/components/common/Button";
 import { AiOutlineSave } from "react-icons/ai";
 
 export const Comment = (comment: RouterOutputs["posts"]["addComment"]) => {
-  console.log("comment", comment);
-
   const queryClient = useQueryClient();
   const [openMenu, setOpenMenu] = useState(false);
   const [editMode, setEditMode] = useState(false);

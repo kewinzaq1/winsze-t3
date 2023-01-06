@@ -43,7 +43,6 @@ export const SignIn = () => {
   const onSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
     const response = await signIn("credentials", { ...data, redirect: false });
-    console.log(response);
     setIsLoading(false);
     if (response?.error) {
       show({
@@ -75,7 +74,7 @@ export const SignIn = () => {
           </p>
         </div>
         <AuthOtherMethods />
-        <form className="mt-10 flex flex-col gap-2 w-full" onSubmit={onSubmit}>
+        <form className="mt-10 flex w-full flex-col gap-2" onSubmit={onSubmit}>
           <FormGroup>
             <Label htmlFor="email">Email</Label>
             <Input

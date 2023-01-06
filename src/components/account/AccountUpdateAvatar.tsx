@@ -78,7 +78,6 @@ export function AccountUpdateAvatar() {
   }, [watch]);
 
   const onSubmit = handleSubmit(async (value) => {
-    console.log(value.avatar[0]);
     if (!value.avatar[0]) {
       throw new Error("No file selected");
     }
@@ -91,7 +90,6 @@ export function AccountUpdateAvatar() {
       maxHeight: 300,
     });
 
-    console.log(base64);
     mutate({ avatar: base64 });
   });
 

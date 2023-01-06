@@ -15,8 +15,6 @@ import { useNotifier } from "src/components/notifier";
 import { getUUID } from "src/utils/getUUID";
 
 export const CreateComment = ({ postId }: { postId: string }) => {
-  console.log("postId", postId);
-
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const { show } = useNotifier();
@@ -45,7 +43,6 @@ export const CreateComment = ({ postId }: { postId: string }) => {
 
       const comment = {
         ...newComment,
-        id: getUUID(),
         user: { name, email, image, id },
       };
 

@@ -97,7 +97,7 @@ export const CreatePost = () => {
   }, [watch]);
 
   return (
-    <div className="mx-auto max-w-xl pt-24">
+    <div className="mx-auto mt-24 max-w-xl shadow-md">
       {error && (
         <div className="border-2 border-red-500 bg-red-300 p-4 text-sm text-red-500">
           {error.message}

@@ -1,12 +1,5 @@
-import {
-  createContext,
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useMemo,
-  useContext,
-} from "react";
-import type { ReactNode } from "react";
+import { createContext, useMemo, useContext, useCallback } from "react";
+import type { ReactNode, Dispatch, RefObject, SetStateAction } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Post } from "@prisma/client";
 import type { QueryClient } from "@tanstack/react-query";
@@ -14,13 +7,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { createRef, useEffect, useState } from "react";
-import {
+import type {
   FieldErrors,
   SubmitHandler,
-  useForm,
   UseFormRegister,
   UseFormSetValue,
 } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNotifier } from "src/components/notifier";
 import { useClickAway } from "src/hooks/useClickAway";
 import { imgToBase64 } from "src/utils/imgToBase64";
@@ -45,6 +38,7 @@ interface Context {
   editError: unknown;
   errors: FieldErrors;
   register: UseFormRegister<{ content: string; image: FileList }>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: SubmitHandler<any>;
   image: string;
   clearImage: () => void;
@@ -130,16 +124,16 @@ export const PostProvider = ({
 
   const isEdit = mode === "edit";
   const isPreview = mode === "preview";
-  const setEdit = () => {
+  const setEdit = useCallback(() => {
     setMode("edit");
     setTimeout(() => setFocus("content"), 100);
     setOpenMenu(false);
-  };
+  }, [setFocus]);
 
-  const clearImage = () => {
+  const clearImage = useCallback(() => {
     setImage("");
     resetField("image");
-  };
+  }, [resetField]);
 
   useEffect(() => {
     const subscription = watch((value) => {
@@ -239,14 +233,14 @@ export const PostProvider = ({
     },
   });
 
-  const saveLink = () => {
+  const saveLink = useCallback(() => {
     navigator.clipboard.writeText(`${window.origin}/post/${post.id}`);
     show({
       message: "Link copied",
       description: "The link has been copied to your clipboard",
       type: "success",
     });
-  };
+  }, [post.id, show]);
 
   const props = useMemo<Context>(
     () => ({

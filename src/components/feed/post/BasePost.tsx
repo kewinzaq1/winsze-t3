@@ -127,7 +127,7 @@ export const BasePost = () => {
           />
         )}
         {isPreview && (
-          <div className="flex w-full items-center">
+          <div className="mt-4 flex w-full items-center">
             <button
               className="flex items-center gap-1"
               onClick={toggleLike}

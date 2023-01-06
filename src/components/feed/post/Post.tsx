@@ -141,6 +141,10 @@ const BasePost = () => {
   }, []);
 
   const toggleEdit = useCallback(() => {
+    setOpenConfirm(false);
+    setOpenMenu(false);
+    setOpenComments(false);
+
     if (isPreview) {
       return setEdit();
     }

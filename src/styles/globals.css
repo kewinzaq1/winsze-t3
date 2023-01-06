@@ -15,7 +15,12 @@ html {
 }
 
 @layer base {
-  * {
+  .overflow-y-auto,
+  .overflow-y-scroll,
+  .overflow-y-visible .overflow-x-auto,
+  .overflow-x-scroll,
+  .overflow-x-visible,
+  body {
     @apply scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300;
   }
 }

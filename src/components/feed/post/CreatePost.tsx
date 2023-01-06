@@ -128,7 +128,8 @@ export const CreatePost = () => {
         )}
         <Textarea
           maxLength={255}
-          placeholder="What is on your mind?"
+          placeholder="How's your day going?"
+          className="placeholder:text-xl"
           {...register("content")}
         />
         <Input

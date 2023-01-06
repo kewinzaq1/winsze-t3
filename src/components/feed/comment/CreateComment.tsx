@@ -45,6 +45,7 @@ export const CreateComment = ({ postId }: { postId: string }) => {
 
       const comment = {
         ...newComment,
+        createdAt: new Date(),
         user: { name, email, image, id },
       };
 

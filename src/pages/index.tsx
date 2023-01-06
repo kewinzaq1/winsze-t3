@@ -13,7 +13,7 @@ const Home: NextPage = () => {
     if (status === "authenticated") {
       router.replace("/feed");
     }
-  }, [session]);
+  }, [router, session, status]);
 
   return (
     <>

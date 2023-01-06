@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { createRef } from "react";
 import { useClickAway } from "src/hooks/useClickAway";
 

@@ -11,11 +11,7 @@ export default function SingleUserPage() {
   const router = useRouter();
 
   const id = router.query.id as string;
-  const {
-    data: user,
-    refetch,
-    isLoading,
-  } = trpc.users.getUser.useQuery(
+  const { data: user, isLoading } = trpc.users.getUser.useQuery(
     {
       id: id as string,
     },

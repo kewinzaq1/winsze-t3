@@ -2,7 +2,7 @@ import { trpc } from "src/utils/trpc";
 import { CreateComment } from "./CreateComment";
 import { Comment } from "./Comment";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { LegacyRef, useEffect } from "react";
+import type { LegacyRef } from "react";
 
 export const Comments = ({ postId }: { postId: string }) => {
   const { data: comments } = trpc.posts.getPostComments.useQuery({ postId });

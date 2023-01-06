@@ -38,6 +38,7 @@ export const usersRouter = router({
           id,
         },
         select: {
+          Friend: true,
           name: true,
           email: true,
           role: true,

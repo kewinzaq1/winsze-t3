@@ -4,7 +4,6 @@ import { Post } from "src/components/feed/post/Post";
 import { trpc } from "src/utils/trpc";
 import Image from "next/image";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
-import { useCallback, useEffect } from "react";
 import notFoundUser from "src/assets/not_found_user.png";
 import { SingleUserSkeleton } from "src/components/users/SingleUser/SingleUserSkeleton";
 

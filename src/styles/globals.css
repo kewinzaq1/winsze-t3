@@ -13,3 +13,9 @@ html {
     @apply rounded-md bg-white bg-opacity-25 p-2 shadow-sm backdrop-blur-md;
   }
 }
+
+@layer base {
+  * {
+    @apply scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300;
+  }
+}

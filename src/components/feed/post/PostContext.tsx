@@ -184,6 +184,8 @@ export const PostProvider = ({
     trpc.posts.deletePost.useMutation({
       onSuccess: () => {
         utils.posts.getPosts.invalidate({});
+        utils.users.getUser.invalidate({ id: post.userId });
+        utils.posts.getPost.invalidate({ id: post.id });
         setOpenConfirm(false);
         setOpenMenu(false);
         show({

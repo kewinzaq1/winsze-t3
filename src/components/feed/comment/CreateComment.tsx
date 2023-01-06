@@ -130,7 +130,7 @@ export const CreateComment = ({ postId }: { postId: string }) => {
   return (
     <form onSubmit={onSubmit}>
       <FormGroup>
-        <Label>Add comment:</Label>
+        <Label className="py-2 text-lg font-semibold">Add comment:</Label>
         <div className="flex items-center gap-2">
           <Image
             src={session?.user?.image ?? avatarPlaceholder}

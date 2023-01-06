@@ -21,7 +21,7 @@ export const CreateComment = ({ postId }: { postId: string }) => {
 
   const { mutate: addComment } = trpc.posts.addComment.useMutation({
     onMutate: async (newComment) => {
-      console.log("onMutate", newComment);
+      resetField("content");
 
       const QUERY = [
         ["posts", "getPostComments"],
@@ -89,7 +89,6 @@ export const CreateComment = ({ postId }: { postId: string }) => {
         message: "Comment added",
         description: "Your comment has been added",
       });
-      resetField("content");
     },
     onError: (error) => {
       show({

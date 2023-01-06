@@ -212,7 +212,9 @@ const BasePost = () => {
               aria-label={`${userLike ? "unlike" : "like"} post`}
               title={`${userLike ? "unlike" : "like"} post`}
             >
-              {post._count.Like}
+              {Boolean(post._count.Like) && (
+                <span className="text-sm">{post._count.Like}</span>
+              )}
               {userLike ? (
                 <AiFillHeart color="red" className="h-8 w-8" />
               ) : (
@@ -221,11 +223,13 @@ const BasePost = () => {
             </button>
             <button
               className="flex items-center gap-1 rounded-md p-2"
-              aria-label="show comments"
-              title="show comment"
+              aria-label={`${openComments ? "hide" : "show"} comment}`}
+              title={`${openComments ? "hide" : "show"} comment`}
               onClick={() => setOpenComments((prev) => !prev)}
             >
-              {post._count.Comment}
+              {Boolean(post._count.Comment) && (
+                <span className="text-sm">{post._count.Comment}</span>
+              )}
               <AiOutlineComment className="h-8 w-8" />
             </button>
             <button

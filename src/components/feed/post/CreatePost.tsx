@@ -85,7 +85,6 @@ export const CreatePost = () => {
 
   useEffect(() => {
     const subscription = watch((value) => {
-      console.log(value);
       if (!value.image?.[0]) {
         return;
       }

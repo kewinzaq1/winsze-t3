@@ -21,6 +21,8 @@ export const CreateComment = ({ postId }: { postId: string }) => {
 
   const { mutate: addComment } = trpc.posts.addComment.useMutation({
     onMutate: async (newComment) => {
+      console.log("onMutate", newComment);
+
       const QUERY = [
         ["posts", "getPostComments"],
         {
@@ -120,6 +122,7 @@ export const CreateComment = ({ postId }: { postId: string }) => {
   const onSubmit = handleSubmit((data) => {
     addComment({
       postId,
+      id: getUUID(),
       ...data,
     });
   });

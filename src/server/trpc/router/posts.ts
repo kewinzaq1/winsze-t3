@@ -22,7 +22,7 @@ export const postsRouter = router({
     .mutation(async ({ ctx, input }) => {
       let image = "";
       if (input.image?.length) {
-        const fileName = `posts/${getUUID()}.${getTypeFromBase64(input.image)}`;
+        const fileName = `posts/${input.id}.${getTypeFromBase64(input.image)}`;
         const { error } = await storageClient
           .from("posts")
           .upload(fileName, base64ToBuffer(input.image));
@@ -57,7 +57,7 @@ export const postsRouter = router({
   editPost: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.string().uuid(),
         content: z.string().optional(),
         image: z.string().optional(),
         removePhoto: z.boolean().optional(),
@@ -298,10 +298,12 @@ export const postsRouter = router({
       z.object({
         postId: z.string(),
         content: z.string(),
+        id: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
+      const { postId, content, id } = input;
 
       if (!input.content.length) {
         throw new TRPCError({
@@ -312,7 +314,8 @@ export const postsRouter = router({
 
       const comment = await ctx.prisma.comment.create({
         data: {
-          content: input.content,
+          content,
+          id,
           user: {
             connect: {
               id: userId,
@@ -320,7 +323,7 @@ export const postsRouter = router({
           },
           post: {
             connect: {
-              id: input.postId,
+              id: postId,
             },
           },
         },

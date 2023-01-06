@@ -14,6 +14,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Textarea } from "../../common/Textarea";
 import { useNotifier } from "../../notifier";
 import { HiOutlinePhotograph } from "react-icons/hi";
+import { getUUID } from "src/utils/getUUID";
 
 export const CreatePost = () => {
   const { show } = useNotifier();
@@ -64,7 +65,7 @@ export const CreatePost = () => {
 
   const onSubmit = handleSubmit(async (values) => {
     if (!values.image.length) {
-      mutate({ content: values.content });
+      mutate({ content: values.content, id: getUUID() });
       return;
     }
     const image = await imgToBase64({
@@ -75,6 +76,7 @@ export const CreatePost = () => {
     mutate({
       content: values.content,
       image: image as string,
+      id: getUUID(),
     });
   });
 

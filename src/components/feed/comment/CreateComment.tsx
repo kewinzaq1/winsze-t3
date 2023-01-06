@@ -179,7 +179,7 @@ export const CreateComment = ({ postId }: { postId: string }) => {
             }`}
           />
           <Input
-            placeholder="You comment here!"
+            placeholder="Your comment here!"
             {...register("content")}
             className="h-max max-h-48 w-full"
             error={errors.content}

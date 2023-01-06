@@ -38,6 +38,7 @@
     "sharp": "^0.31.2",
     "superjson": "1.9.1",
     "swiper": "^8.4.5",
+    "tailwind-scrollbar": "^2.1.0",
     "yarn": "^1.22.19",
     "zod": "^3.18.0"
   },

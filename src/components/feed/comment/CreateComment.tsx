@@ -106,7 +106,10 @@ export const CreateComment = ({ postId }: { postId: string }) => {
   } = useForm({
     resolver: zodResolver(
       z.object({
-        content: z.string(),
+        content: z
+          .string()
+          .min(1, "Comment cannot be empty")
+          .max(500, "Comment cannot be longer than 500 characters"),
       })
     ),
     defaultValues: {

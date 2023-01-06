@@ -62,6 +62,7 @@ const Edit = () => {
         <Textarea
           maxLength={255}
           placeholder="What is on your mind?"
+          className="!text-2xl"
           {...register("content")}
         />
       )}
@@ -72,14 +73,14 @@ const Edit = () => {
             height={500}
             src={image}
             alt={image}
-            className="mt-2 h-[500px] w-full object-cover"
+            className="mt-2 h-full w-full rounded-md object-contain"
           />
           <IoMdRemoveCircle
             onClick={clearImage}
             role="button"
             tabIndex={0}
             aria-label="remove photo"
-            className="absolute right-20 bottom-4 h-12 w-12 text-red-500"
+            className="absolute right-20 bottom-0 h-12 w-12 text-red-500"
           />
         </>
       )}
@@ -94,7 +95,7 @@ const Edit = () => {
         <FcStackOfPhotos
           role="button"
           tabIndex={0}
-          className="absolute right-4 bottom-4 h-12 w-12"
+          className="absolute right-4 bottom-0 h-12 w-12"
           title="pick a photo"
         />
       </label>
@@ -132,23 +133,22 @@ const BasePost = () => {
     saveLink,
     setMode,
     post,
-    setEdit,
+    setImage,
+    setValue,
   } = usePost();
 
   const cancelEdit = useCallback(() => {
-    setOpenConfirm(false);
+    setMode("preview");
+    setOpenComments(false);
     setOpenMenu(false);
+    setImage(post.image || "");
+    setValue("content", post.content);
   }, []);
 
   const toggleEdit = useCallback(() => {
-    setOpenConfirm(false);
-    setOpenMenu(false);
+    setMode("edit");
     setOpenComments(false);
-
-    if (isPreview) {
-      return setEdit();
-    }
-    return setMode("preview");
+    setOpenMenu(false);
   }, []);
 
   const handleDelete = useCallback(() => {
@@ -257,7 +257,7 @@ const BasePost = () => {
       </div>
       {openMenu && (
         <PostMenu ref={menuRef as Ref<HTMLDivElement>}>
-          <PostMenuButton onClick={toggleEdit}>
+          <PostMenuButton onClick={isPreview ? toggleEdit : cancelEdit}>
             {isPreview ? "Edit" : "Cancel edit"}
           </PostMenuButton>
           <PostMenuButton onClick={handleDelete}>Delete</PostMenuButton>

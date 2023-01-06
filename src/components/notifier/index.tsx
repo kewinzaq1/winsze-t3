@@ -96,7 +96,6 @@ export const Notifier = () => {
   const [visible] = useAtom(atomVisible);
   const [ref] = useAutoAnimate();
 
-
   return (
     <div className="" id="notifier" ref={ref as LegacyRef<HTMLDivElement>}>
       {visible && <Toast />}

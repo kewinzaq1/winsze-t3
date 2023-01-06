@@ -4,7 +4,6 @@ import {
   RefObject,
   SetStateAction,
   useMemo,
-  SyntheticEvent as RBaseSyntheticEvent,
   useContext,
 } from "react";
 import type { ReactNode } from "react";
@@ -20,6 +19,7 @@ import {
   SubmitHandler,
   useForm,
   UseFormRegister,
+  UseFormSetValue,
 } from "react-hook-form";
 import { useNotifier } from "src/components/notifier";
 import { useClickAway } from "src/hooks/useClickAway";
@@ -55,6 +55,8 @@ interface Context {
   post: RouterOutputs["posts"]["getPosts"][number];
   setMode: Dispatch<SetStateAction<"preview" | "edit">>;
   userLike: boolean;
+  setImage: Dispatch<SetStateAction<string>>;
+  setValue: UseFormSetValue<{ content: string; image: FileList }>;
 }
 
 const PostContext = createContext<Context | null>(null);
@@ -113,6 +115,7 @@ export const PostProvider = ({
     watch,
     resetField,
     setFocus,
+    setValue,
   } = useForm({
     resolver: zodResolver(
       z.object({ content: z.string(), image: z.any().optional() })
@@ -245,6 +248,7 @@ export const PostProvider = ({
 
   const props = useMemo<Context>(
     () => ({
+      setValue,
       isAuthor,
       isEdit,
       isPreview,
@@ -271,8 +275,11 @@ export const PostProvider = ({
       saveLink,
       setMode,
       post,
+      setImage,
     }),
     [
+      setValue,
+      setImage,
       isAuthor,
       isEdit,
       isPreview,

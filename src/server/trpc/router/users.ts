@@ -94,6 +94,11 @@ export const usersRouter = router({
         image: true,
         id: true,
       },
+      where: {
+        id: {
+          not: ctx.session.user.id,
+        },
+      },
     });
 
     return users;

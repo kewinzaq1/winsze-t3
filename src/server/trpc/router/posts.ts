@@ -147,9 +147,28 @@ export const postsRouter = router({
   getPosts: publicProcedure
     .input(getPostsSchema)
     .query(async ({ ctx, input }) => {
+      const followingUsers = await ctx.prisma.user.findMany({
+        where: {
+          Follow: {
+            some: {
+              followerId: input.userId,
+            },
+          },
+        },
+      });
+
+      const followingUsersIds = followingUsers.map((user) => user.id);
+      console.log("followingUsersIds", followingUsersIds);
+
       const posts = await ctx.prisma.post.findMany({
         where: {
-          userId: input.userId,
+          OR: [
+            {
+              userId: {
+                in: followingUsersIds,
+              },
+            },
+          ],
         },
         include: {
           user: {

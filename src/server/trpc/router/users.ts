@@ -84,7 +84,17 @@ export const usersRouter = router({
       return user;
     }),
   getUsers: protectedProcedure.query(async ({ ctx }) => {
-    const users = await ctx.prisma.user.findMany();
+    const users = await ctx.prisma.user.findMany({
+      select: {
+        Follow: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        image: true,
+        id: true,
+      },
+    });
 
     return users;
   }),

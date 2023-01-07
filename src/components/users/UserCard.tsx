@@ -7,6 +7,7 @@ import { trpc } from "src/utils/trpc";
 import { Button } from "../common/Button";
 import { useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
 
 export const UserCard = ({
   user,
@@ -48,7 +49,7 @@ export const UserCard = ({
         );
       },
     });
-  const { mutate: unfollow, isLoading: isUnfollowing } =
+  const { mutate: unFollow, isLoading: isUnFollowing } =
     trpc.follow.unFollow.useMutation({
       onMutate: (unFollowed) => {
         const QUERY = [["users", "getUsers"], { type: "query" }];
@@ -84,6 +85,15 @@ export const UserCard = ({
     (f) => f.followerId === session?.user?.id
   );
 
+  const handleFollow = useCallback(() => {
+    if (isFollowing || isUnFollowing) return;
+    if (isFollowed) {
+      unFollow({ userId: user.id });
+    } else {
+      follow({ userId: user.id });
+    }
+  }, [isFollowing, isUnFollowing, isFollowed, follow, unFollow, user.id]);
+
   return (
     <div
       className="flex gap-4 rounded-md border-2 border-transparent border-b-slate-400 border-opacity-10 bg-white p-4
@@ -110,16 +120,9 @@ export const UserCard = ({
       <Button
         className="rounded-full"
         variant={isFollowed ? "secondary" : "primary"}
-        onClick={() => {
-          if (isFollowing || isUnfollowing) return;
-          if (isFollowed) {
-            unfollow({ userId: user.id });
-          } else {
-            follow({ userId: user.id });
-          }
-        }}
+        onClick={handleFollow}
       >
-        {isFollowed ? "Unfollow" : "Follow"}
+        {isFollowed ? "unFollow" : "Follow"}
       </Button>
     </div>
   );

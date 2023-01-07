@@ -158,7 +158,6 @@ export const postsRouter = router({
       });
 
       const followingUsersIds = followingUsers.map((user) => user.id);
-      console.log("followingUsersIds", followingUsersIds);
 
       const posts = await ctx.prisma.post.findMany({
         where: {

@@ -63,7 +63,7 @@ model User {
   Like          Like[]
   Report        Report[]
   Comment       Comment[]
-  Friend        Friend[]
+  Follow        Follow[]
 }
 
 model ResetToken {
@@ -135,12 +135,12 @@ model Comment {
   @@index([postId])
 }
 
-model Friend {
-  id       String @id @default(cuid())
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String
-  friendId String
+model Follow {
+  id         String @id @default(cuid())
+  user       User   @relation(fields: [userId], references: [id])
+  userId     String
+  followerId String
 
-  @@unique([userId, friendId])
-  @@index([friendId])
+  @@unique([userId, followerId])
+  @@index([followerId])
 }

@@ -24,12 +24,12 @@ export default function SingleUserPage() {
     { enabled: Boolean(id) }
   );
 
-  const { mutate: addFriend, isLoading: isAddingFriend } =
-    trpc.friends.addUserToFriends.useMutation({
+  const { mutate: follow, isLoading: isFollowAdding } =
+    trpc.follow.follow.useMutation({
       onSuccess: () => {
         show({
           type: "success",
-          message: "User added to friends",
+          message: "Followed user",
           description: "You can now see his posts in your feed",
         });
       },
@@ -40,7 +40,7 @@ export default function SingleUserPage() {
           description: error.message,
         });
       },
-      onMutate: (newFriend) => {
+      onMutate: (newFollower) => {
         const QUERY = [["users", "getUser"], { input: { id }, type: "query" }];
         queryClient.cancelQueries(QUERY);
 
@@ -50,7 +50,7 @@ export default function SingleUserPage() {
           const oldData = old as RouterOutputs["users"]["getUser"];
           return {
             ...oldData,
-            Friend: [...(oldData?.Friend || []), newFriend],
+            Follow: [...(oldData?.Follow || []), newFollower],
           };
         });
 
@@ -58,12 +58,12 @@ export default function SingleUserPage() {
       },
     });
 
-  const { mutate: removeFriend, isLoading: isRemovingFriend } =
-    trpc.friends.removeUserFromFriends.useMutation({
+  const { mutate: unFollow, isLoading: isUnFollowing } =
+    trpc.follow.unFollow.useMutation({
       onSuccess: () => {
         show({
           type: "success",
-          message: "User removed from friends",
+          message: "Unfollowed user",
           description: "You can no longer see his posts in your feed",
         });
       },
@@ -84,7 +84,9 @@ export default function SingleUserPage() {
           const oldData = old as RouterOutputs["users"]["getUser"];
           return {
             ...oldData,
-            Friend: oldData?.Friend?.filter((friend) => friend.userId !== id),
+            Follow: oldData?.Follow?.filter(
+              (follower) => follower.userId !== id
+            ),
           };
         });
 
@@ -92,7 +94,7 @@ export default function SingleUserPage() {
       },
     });
 
-  const isYourFriend = user?.Friend?.some((friend) => friend.userId === id);
+  const isFollowed = user?.Follow?.some((follower) => follower.userId === id);
 
   if (!user && !isLoading) {
     return (
@@ -142,19 +144,19 @@ export default function SingleUserPage() {
             </div>
             <Button
               className="ml-auto mt-4 w-max justify-self-end"
-              disabled={isYourFriend ? isRemovingFriend : isAddingFriend}
-              isLoading={isYourFriend ? isRemovingFriend : isAddingFriend}
+              disabled={isFollowed ? isUnFollowing : isFollowAdding}
+              isLoading={isFollowed ? isUnFollowing : isFollowAdding}
               onClick={() => {
                 if (!id) return;
 
-                if (isYourFriend) {
-                  removeFriend({ userId: id as string });
+                if (isFollowed) {
+                  unFollow({ userId: id as string });
                   return;
                 }
-                addFriend({ userId: id as string });
+                follow({ userId: id as string });
               }}
             >
-              {isYourFriend ? "Remove from friends" : "Add to friends"}
+              {isFollowed ? "UnFollow" : "Follow"}
             </Button>
           </div>
         </div>

@@ -3,8 +3,8 @@ import { z } from "zod";
 
 import { router, protectedProcedure } from "../trpc";
 
-export const friendsRouter = router({
-  addUserToFriends: protectedProcedure
+export const followRouter = router({
+  follow: protectedProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -17,15 +17,15 @@ export const friendsRouter = router({
       if (userId === session.user.id) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "You cannot add yourself as a friend",
+          message: "You cannot follow yourself",
         });
       }
 
-      const friendExists = await prisma.friend.findUnique({
+      const friendExists = await prisma.follow.findUnique({
         where: {
-          userId_friendId: {
+          userId_followerId: {
             userId,
-            friendId: session.user.id,
+            followerId: session.user.id,
           },
         },
       });
@@ -33,20 +33,20 @@ export const friendsRouter = router({
       if (friendExists) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "You are already friends with this user",
+          message: "You are already follow this user",
         });
       }
 
-      const friend = await prisma.friend.create({
+      const friend = await prisma.follow.create({
         data: {
           userId,
-          friendId: session.user.id,
+          followerId: session.user.id,
         },
       });
 
       return friend;
     }),
-  removeUserFromFriends: protectedProcedure
+  unFollow: protectedProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -56,29 +56,31 @@ export const friendsRouter = router({
       const { userId } = input;
       const { prisma, session } = ctx;
 
-      const friend = await prisma.friend.delete({
+      const friend = await prisma.follow.delete({
         where: {
-          userId_friendId: {
+          userId_followerId: {
             userId,
-            friendId: session.user.id,
+            followerId: session.user.id,
           },
         },
       });
 
       return friend;
     }),
-  getFriends: protectedProcedure.input(z.object({})).query(async ({ ctx }) => {
-    const { prisma, session } = ctx;
+  getFollowers: protectedProcedure
+    .input(z.object({}))
+    .query(async ({ ctx }) => {
+      const { prisma, session } = ctx;
 
-    const friends = await prisma.friend.findMany({
-      where: {
-        friendId: session.user.id,
-      },
-      include: {
-        user: true,
-      },
-    });
+      const friends = await prisma.follow.findMany({
+        where: {
+          followerId: session.user.id,
+        },
+        include: {
+          user: true,
+        },
+      });
 
-    return friends;
-  }),
+      return friends;
+    }),
 });

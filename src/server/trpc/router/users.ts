@@ -38,7 +38,7 @@ export const usersRouter = router({
           id,
         },
         select: {
-          Friend: true,
+          Follow: true,
           name: true,
           email: true,
           role: true,

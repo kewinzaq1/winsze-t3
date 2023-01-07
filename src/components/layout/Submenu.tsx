@@ -12,7 +12,7 @@ export const Submenu = ({ currentPage }: { currentPage: string }) => {
   return (
     <div className="fixed bottom-0 right-0 left-0 mx-auto mt-24 flex w-max items-center justify-center gap-4 rounded-full bg-white px-4 py-4 shadow-md">
       <SubmenuButton active={currentPage === "feed"}>
-        <Link href="/" className="flex items-center">
+        <Link href="/feed" className="flex items-center">
           <FeedIcon className="mr-1 text-lg" /> Feed
         </Link>
       </SubmenuButton>

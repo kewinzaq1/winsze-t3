@@ -6,7 +6,7 @@ import { Input } from "src/components/common/Input";
 import { FormGroup } from "../common/FormGroup";
 import { Button } from "../common/Button";
 import { Label } from "../common/Label";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 export const Users = () => {
   const { data: users, isLoading } = trpc.users.getUsers.useQuery();

@@ -29,7 +29,10 @@ export const usersRouter = router({
     )
     .query(async ({ ctx, input }) => {
       if (!input.id) {
-        return null;
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User id is required",
+        });
       }
 
       const { id } = input;

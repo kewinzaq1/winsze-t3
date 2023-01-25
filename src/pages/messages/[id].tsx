@@ -1,14 +1,17 @@
 import { useRouter } from "next/router";
 import { MessagesLayout } from "src/components/messages/layout";
 import { trpc } from "src/utils/trpc";
-import Image from "next/image";
-import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { useSession } from "next-auth/react";
+import { Message } from "../../components/messages/Message";
+import { Input } from "src/components/common/Input";
+import { Button } from "src/components/common/Button";
+import { useRef } from "react";
 
 export default function Messages() {
   const router = useRouter();
   const { id } = router.query;
   const { data: session } = useSession();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const currentUser = session?.user;
 
@@ -18,6 +21,11 @@ export default function Messages() {
       enabled: !!id,
     }
   );
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(inputRef.current?.value);
+  };
 
   if (isLoading || !user || !currentUser) {
     return <div>is loading...</div>;
@@ -31,7 +39,7 @@ export default function Messages() {
           <span className="font-bold"> {user?.name}</span>
         </p>
       </header>
-      <main className="ml-auto flex min-h-screen w-3/4 flex-col gap-2 p-4 py-48 shadow-md">
+      <main className="ml-auto flex min-h-screen w-3/4 flex-col gap-2 p-4 pt-48 pb-20 shadow-md">
         <div className="flex flex-col gap-4">
           <div className="align-end flex flex-col items-end justify-end gap-2">
             <Message
@@ -112,42 +120,12 @@ export default function Messages() {
           </div>
         </div>
       </main>
-    </MessagesLayout>
-  );
-}
-
-function Message({
-  avatar,
-  name,
-  message,
-  variant,
-}: {
-  avatar?: string;
-  name: string;
-  message: string;
-  variant: "incoming" | "outgoing";
-}) {
-  return (
-    <div
-      className={`flex w-max flex-col gap-2 rounded-md p-4 shadow-sm ${
-        variant === "incoming" ? "bg-slate-100" : "bg-slate-600 text-white"
-      }`}
-    >
-      <div
-        className={`flex items-center gap-2 ${
-          variant === "outgoing" ? "text-white" : ""
-        }`}
-      >
-        <Image
-          src={avatar ?? avatarPlaceholder}
-          alt="avatar"
-          className="h-12 w-12 rounded-full"
-          width="48"
-          height="48"
-        />
-        <p className="font-semibold">{name}</p>
+      <div className="fixed bottom-0 right-0 w-3/4 bg-white p-4 shadow-md">
+        <form className="flex items-center gap-4" onSubmit={onSubmit}>
+          <Input placeholder="Type a message..." ref={inputRef} />
+          <Button type="submit">Send</Button>
+        </form>
       </div>
-      <p className="text-sm">{message}</p>
-    </div>
+    </MessagesLayout>
   );
 }

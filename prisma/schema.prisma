@@ -147,3 +147,40 @@ model Follow {
   @@unique([userId, followerId])
   @@index([followerId])
 }
+
+model Message {
+  id         String   @id @default(cuid())
+  content    String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @map("userId")
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([chatRoomId])
+}
+
+model ChatRoom {
+  id           String         @id @default(cuid())
+  owner        User           @relation(fields: [ownerId], references: [id])
+  ownerId      String         @map("ownerId")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Message      Message[]
+  ChatRoomUser ChatRoomUser[]
+
+  @@index([ownerId])
+}
+
+model ChatRoomUser {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId String
+
+  @@unique([userId, chatRoomId])
+  @@index([chatRoomId])
+}

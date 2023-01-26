@@ -26,6 +26,7 @@ export const chatRouter = router({
           owner: {
             select: {
               name: true,
+              email: true,
               image: true,
             },
           },
@@ -60,7 +61,7 @@ export const chatRouter = router({
       const room = await ctx.prisma.chatRoom.create({
         data: {
           id: input.id,
-          ownerId: ctx.session.user.id,
+          ownerId: input.id, // owner is the user who is being followed by the current user
           ChatRoomUser: {
             createMany: {
               data: [
@@ -79,6 +80,7 @@ export const chatRouter = router({
             select: {
               name: true,
               image: true,
+              email: true,
             },
           },
           ChatRoomUser: {
@@ -138,4 +140,9 @@ export const chatRouter = router({
       });
       return message;
     }),
+
+  deleteAllChatRoomUser: protectedProcedure.mutation(async ({ ctx }) => {
+    const deleted = await ctx.prisma.chatRoomUser.deleteMany();
+    return deleted;
+  }),
 });

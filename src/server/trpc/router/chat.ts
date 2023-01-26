@@ -17,15 +17,37 @@ export const chatRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      // first find room
+      // first find room if it exists
       const foundedRoom = await ctx.prisma.chatRoom.findUnique({
         where: {
           id: input.id,
         },
         include: {
+          owner: {
+            select: {
+              name: true,
+            },
+          },
           ChatRoomUser: {
             include: {
-              user: true,
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  image: true,
+                },
+              },
+            },
+          },
+          Message: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  image: true,
+                },
+              },
             },
           },
         },
@@ -52,9 +74,31 @@ export const chatRouter = router({
           },
         },
         include: {
+          owner: {
+            select: {
+              name: true,
+            },
+          },
           ChatRoomUser: {
             include: {
-              user: true,
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  image: true,
+                },
+              },
+            },
+          },
+          Message: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  image: true,
+                },
+              },
             },
           },
         },
@@ -78,14 +122,14 @@ export const chatRouter = router({
   sendMessage: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        chatRoomId: z.string(),
         content: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const message = await ctx.prisma.message.create({
         data: {
-          chatRoomId: input.id,
+          chatRoomId: input.chatRoomId,
           userId: ctx.session.user.id,
           content: input.content,
         },

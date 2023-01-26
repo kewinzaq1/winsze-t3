@@ -6,9 +6,8 @@ import { useSession } from "next-auth/react";
 import { Message } from "../../components/messages/Message";
 import { Input } from "src/components/common/Input";
 import { Button } from "src/components/common/Button";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import { useNotifier } from "src/components/notifier";
-import { data } from "cypress/types/jquery";
 
 export default function Messages() {
   const router = useRouter();

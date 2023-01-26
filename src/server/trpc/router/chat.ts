@@ -26,6 +26,7 @@ export const chatRouter = router({
           owner: {
             select: {
               name: true,
+              image: true,
             },
           },
           ChatRoomUser: {
@@ -77,6 +78,7 @@ export const chatRouter = router({
           owner: {
             select: {
               name: true,
+              image: true,
             },
           },
           ChatRoomUser: {

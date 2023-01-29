@@ -24,9 +24,9 @@ const SocketHandler = async (req: NextApiRequest, res: Response) => {
   });
 
   if (res.socket.server.io) {
-    console.log("Socket is already running");
+    console.info("Socket is already running");
   } else {
-    console.log("Socket is initializing");
+    console.info("Socket is initializing");
     const io = new Server(res.socket.server as any);
     res.socket.server.io = io;
     io.on("connection", (socket) => {
@@ -42,6 +42,12 @@ const SocketHandler = async (req: NextApiRequest, res: Response) => {
     });
   }
   res.end();
+};
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
 };
 
 export default SocketHandler;

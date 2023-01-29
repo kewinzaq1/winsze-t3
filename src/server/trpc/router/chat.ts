@@ -31,19 +31,31 @@ export const chatRouter = router({
       });
       return conversation;
     }),
-  getMessages: protectedProcedure
+  createConversation: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        followId: z.string(),
       })
     )
-    .query(async ({ ctx, input }) => {
-      const messages = await ctx.prisma.message.findMany({
-        where: {
-          chatRoomId: input.id,
+    .mutation(async ({ ctx, input }) => {
+      const { followId } = input;
+
+      const newConversation = await ctx.prisma.conversation.create({
+        data: {
+          Follow: {
+            connect: {
+              id: followId,
+            },
+          },
+          User: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
         },
       });
-      return messages;
+
+      return newConversation;
     }),
   sendMessage: protectedProcedure
     .input(

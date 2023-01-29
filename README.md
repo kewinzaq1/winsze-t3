@@ -37,6 +37,22 @@
   <td>React Hook Form</td>
   <td>Form validation</td>
   </tr>
+  <tr>
+  <td>React Query</td>
+  <td>Query caching</td>
+  </tr>
+  <tr>
+  <td>React Icons</td>
+  <td>Icons</td>
+  </tr>
+  <tr>
+  <td>Jotai</td>
+  <td>State management</td>
+  </tr>
+  <tr>
+  <td>React Hook Form</td>
+  <td>Form validation</td>
+  </tr>
 </table>
 
 ## Install

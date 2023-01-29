@@ -10,6 +10,7 @@ export const Follower = ({
 }: {
   user: RouterOutputs["follow"]["getFollowers"][number];
 }) => {
+  const utils = trpc.useContext();
   const router = useRouter();
   const { show } = useNotifier();
 
@@ -24,6 +25,9 @@ export const Follower = ({
           type: "error",
           closable: true,
         });
+      },
+      onSuccess() {
+        utils.invalidate();
       },
     });
 

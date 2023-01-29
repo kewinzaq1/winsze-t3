@@ -6,9 +6,9 @@ import { useSession } from "next-auth/react";
 import { Message } from "../../components/messages/Message";
 import { Input } from "src/components/common/Input";
 import { Button } from "src/components/common/Button";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useNotifier } from "src/components/notifier";
-import type { Conversation, Message as MessageType } from "@prisma/client";
+import type { Message as MessageType } from "@prisma/client";
 import { useAtom } from "jotai";
 import { atomSocket } from "src/utils/useInitWebSocket";
 

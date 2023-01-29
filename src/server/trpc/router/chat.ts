@@ -2,112 +2,34 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
 export const chatRouter = router({
-  getRooms: protectedProcedure.query(async ({ ctx }) => {
-    const rooms = await ctx.prisma.chatRoom.findMany({
-      where: {
-        ownerId: ctx.session.user.id,
-      },
-    });
-    return rooms;
-  }),
-  getRoom: protectedProcedure
+  getConversation: protectedProcedure
     .input(
       z.object({
         id: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
-      // first find room if it exists
-      const foundedRoom = await ctx.prisma.chatRoom.findUnique({
-        where: {
-          id: input.id,
-        },
+      const { id } = input;
+      const conversation = await ctx.prisma.conversation.findUnique({
+        where: { id: id },
         include: {
-          owner: {
-            select: {
-              name: true,
-              email: true,
-              image: true,
-            },
-          },
-          ChatRoomUser: {
-            include: {
-              user: {
-                select: {
-                  name: true,
-                  email: true,
-                  image: true,
-                },
-              },
-            },
-          },
           Message: {
+            orderBy: {
+              createdAt: "asc",
+            },
             include: {
-              user: {
-                select: {
-                  name: true,
-                  email: true,
-                  image: true,
-                },
-              },
+              user: true,
             },
           },
+          Follow: {
+            include: {
+              user: true,
+            },
+          },
+          User: true,
         },
       });
-      if (foundedRoom) {
-        return foundedRoom;
-      }
-      // if room is not found, create room
-      const room = await ctx.prisma.chatRoom.create({
-        data: {
-          id: input.id,
-          ownerId: input.id, // owner is the user who is being followed by the current user
-          ChatRoomUser: {
-            createMany: {
-              data: [
-                {
-                  userId: input.id,
-                },
-                {
-                  userId: ctx.session.user.id,
-                },
-              ],
-            },
-          },
-        },
-        include: {
-          owner: {
-            select: {
-              name: true,
-              image: true,
-              email: true,
-            },
-          },
-          ChatRoomUser: {
-            include: {
-              user: {
-                select: {
-                  name: true,
-                  email: true,
-                  image: true,
-                },
-              },
-            },
-          },
-          Message: {
-            include: {
-              user: {
-                select: {
-                  name: true,
-                  email: true,
-                  image: true,
-                },
-              },
-            },
-          },
-        },
-      });
-      return room;
+      return conversation;
     }),
   getMessages: protectedProcedure
     .input(

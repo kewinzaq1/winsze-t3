@@ -65,8 +65,7 @@ model User {
   Comment       Comment[]
   Follow        Follow[]
   Message       Message[]
-  ChatRoom      ChatRoom[]
-  ChatRoomUser  ChatRoomUser[]
+  Conversation  Conversation[]
 }
 
 model ResetToken {
@@ -139,48 +138,41 @@ model Comment {
 }
 
 model Follow {
-  id         String @id @default(cuid())
-  user       User   @relation(fields: [userId], references: [id])
-  userId     String
-  followerId String
+  id             String        @id @default(cuid())
+  user           User          @relation(fields: [userId], references: [id])
+  userId         String
+  followerId     String
+  conversationId String?       @unique
+  Conversation   Conversation?
 
   @@unique([userId, followerId])
-  @@index([followerId])
+  @@index([conversationId])
 }
 
+// model conversation between two users
+model Conversation {
+  id       String    @id @default(cuid())
+  userId   String
+  Message  Message[]
+  User     User      @relation(fields: [userId], references: [id])
+  Follow   Follow    @relation(fields: [followId], references: [id])
+  followId String
+
+  @@unique([followId])
+  @@index([userId])
+}
+
+// model message between two users
 model Message {
-  id         String   @id @default(cuid())
-  content    String
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String   @map("userId")
-  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
-  chatRoomId String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             String       @id @default(cuid())
+  content        String
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   @@index([userId])
-  @@index([chatRoomId])
-}
-
-model ChatRoom {
-  id           String         @id @default(cuid())
-  owner        User           @relation(fields: [ownerId], references: [id])
-  ownerId      String         @map("ownerId")
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Message      Message[]
-  ChatRoomUser ChatRoomUser[]
-
-  @@index([ownerId])
-}
-
-model ChatRoomUser {
-  id         String   @id @default(cuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
-  chatRoomId String
-
-  @@unique([userId, chatRoomId])
-  @@index([chatRoomId])
+  @@index([conversationId])
 }

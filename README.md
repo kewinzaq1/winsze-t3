@@ -49,10 +49,6 @@
   <td>Jotai</td>
   <td>State management</td>
   </tr>
-  <tr>
-  <td>React Hook Form</td>
-  <td>Form validation</td>
-  </tr>
 </table>
 
 ## Install

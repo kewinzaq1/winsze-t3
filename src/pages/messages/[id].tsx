@@ -8,8 +8,9 @@ import { Input } from "src/components/common/Input";
 import { Button } from "src/components/common/Button";
 import { useEffect, useRef } from "react";
 import { useNotifier } from "src/components/notifier";
-import avatarPlaceholder from "src/images/avatar_placeholder.png";
-import type { Message as MessageType } from "@prisma/client";
+import type { Conversation, Message as MessageType } from "@prisma/client";
+import { useAtom } from "jotai";
+import { atomSocket } from "src/utils/useInitWebSocket";
 
 export default function Messages() {
   const router = useRouter();
@@ -17,6 +18,9 @@ export default function Messages() {
   const { data: session } = useSession();
   const inputRef = useRef<HTMLInputElement>(null);
   const { show } = useNotifier();
+  const utils = trpc.useContext();
+
+  const [socket] = useAtom(atomSocket);
 
   const { data: conversation, isLoading } = trpc.chat.getConversation.useQuery(
     { id: id as string },
@@ -30,12 +34,22 @@ export default function Messages() {
           closable: true,
         });
       },
-      refetchInterval(data) {
-        if (data?.Message.length) {
-          return 1000;
+    }
+  );
+
+  socket?.on(
+    "receivedMessage",
+    async (data: RouterOutputs["chat"]["sendMessage"]) => {
+      await utils.chat.getConversation.cancel();
+      utils.chat.getConversation.setData({ id: id as string }, (oldData) => {
+        if (oldData?.Message.find((message) => message.id === data.id)) {
+          return oldData;
         }
-        return false;
-      },
+        return {
+          ...oldData,
+          Message: [...(oldData?.Message || []), data],
+        } as typeof oldData;
+      });
     }
   );
 
@@ -47,25 +61,15 @@ export default function Messages() {
     return message.userId === session?.user?.id;
   };
 
-  const { mutateAsync: sendMessage } = trpc.chat.sendMessage.useMutation({
-    onError(err) {
-      show({
-        message: "Error",
-        description: err.message,
-        type: "error",
-        closable: true,
-      });
-    },
-  });
-
   const currentUser = session?.user;
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await sendMessage({
-      conversationId: id as string,
-      content: inputRef.current?.value as string,
+    socket?.emit("sendMessage", {
+      conversationId: id,
+      content: inputRef.current?.value,
     });
+
     if (inputRef.current) {
       inputRef.current.value = "";
     }
@@ -88,7 +92,7 @@ export default function Messages() {
       </header>
       <main className="ml-auto flex min-h-screen w-3/4 flex-col gap-2 p-4 pt-48 pb-20 shadow-md">
         <div className="flex flex-col gap-4">
-          <div className="align-end flex flex-col items-end justify-end gap-2">
+          <div className="align-end flex flex-col items-end justify-end gap-2 pb-2">
             {conversation?.Message.map((message) => {
               if (isIncoming(message)) {
                 return (

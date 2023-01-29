@@ -31,6 +31,7 @@ export const chatRouter = router({
       });
       return conversation;
     }),
+
   createConversation: protectedProcedure
     .input(
       z.object({
@@ -57,26 +58,52 @@ export const chatRouter = router({
 
       return newConversation;
     }),
+
   sendMessage: protectedProcedure
     .input(
       z.object({
-        chatRoomId: z.string(),
+        conversationId: z.string(),
         content: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const message = await ctx.prisma.message.create({
+      console.log("sendMessage");
+      const { conversationId, content } = input;
+      const newMessage = await ctx.prisma.message.create({
         data: {
-          chatRoomId: input.chatRoomId,
+          content: content,
           userId: ctx.session.user.id,
-          content: input.content,
+          conversationId: conversationId,
         },
       });
-      return message;
+      return newMessage;
     }),
 
-  deleteAllChatRoomUser: protectedProcedure.mutation(async ({ ctx }) => {
-    const deleted = await ctx.prisma.chatRoomUser.deleteMany();
-    return deleted;
+  removeAllConversations: protectedProcedure.mutation(async ({ ctx }) => {
+    const conversations = await ctx.prisma.conversation.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+    const conversationIds = conversations.map((c) => c.id);
+    await ctx.prisma.message.deleteMany({
+      where: {
+        conversationId: {
+          in: conversationIds,
+        },
+      },
+    });
+    await ctx.prisma.conversation.deleteMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+    return true;
+  }),
+
+  testProcedure: protectedProcedure.query(async ({ ctx }) => {
+    console.log(ctx.session.user);
+    console.log("test");
+    return "test";
   }),
 });

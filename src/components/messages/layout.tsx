@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
 import { trpc } from "src/utils/trpc";
+import { useInitWebsocket } from "src/utils/useInitWebSocket";
 import { Follower } from "./Follower";
 import { FollowerSkeleton } from "./FollowerSkeleton";
 
 export const MessagesLayout = ({ children }: { children: ReactNode }) => {
+  useInitWebsocket();
   const { data: users, isLoading } = trpc.follow.getFollowers.useQuery({});
 
   const SKELETONS_ARR = new Array(8).fill(0);

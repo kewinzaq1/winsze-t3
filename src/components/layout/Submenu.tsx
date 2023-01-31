@@ -32,7 +32,7 @@ export const Submenu = ({ currentPage }: { currentPage: string }) => {
         </Link>
       </SubmenuButton>
       <SubmenuButton active={currentPage === "message"}>
-        <Link href="/message" className="flex items-center">
+        <Link href="/messages" className="flex items-center">
           <MessageIcon className="mr-1 text-lg" /> Message
         </Link>
       </SubmenuButton>

@@ -41,7 +41,7 @@ export const Follower = ({
   };
 
   return (
-    <li>
+    <li className="transition-all hover:shadow-md hover:outline-1 hover:outline-slate-50">
       <div onClick={pushToUserConversation} className="flex flex-col gap-1">
         <div
           className={`flex items-center gap-2 rounded-md bg-slate-50 p-4 shadow-sm ${

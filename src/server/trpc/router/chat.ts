@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
@@ -25,6 +26,7 @@ export const chatRouter = router({
 
     return conversations;
   }),
+
   getConversation: protectedProcedure
     .input(
       z.object({
@@ -113,39 +115,21 @@ export const chatRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log("sendMessage");
       const { conversationId, content } = input;
+
       const newMessage = await ctx.prisma.message.create({
         data: {
           content: content,
           userId: ctx.session.user.id,
           conversationId: conversationId,
         },
-      });
-      return newMessage;
-    }),
-
-  removeAllConversations: protectedProcedure.mutation(async ({ ctx }) => {
-    const conversations = await ctx.prisma.conversation.findMany({
-      where: {
-        userId: ctx.session.user.id,
-      },
-    });
-    const conversationIds = conversations.map((c) => c.id);
-    await ctx.prisma.message.deleteMany({
-      where: {
-        conversationId: {
-          in: conversationIds,
+        include: {
+          user: true,
         },
-      },
-    });
-    await ctx.prisma.conversation.deleteMany({
-      where: {
-        userId: ctx.session.user.id,
-      },
-    });
-    return true;
-  }),
+      });
+
+      ctx.socket.emit("receivedMessage", newMessage);
+    }),
 
   testProcedure: protectedProcedure.query(async ({ ctx }) => {
     console.log(ctx.session.user);

@@ -37,37 +37,42 @@ export default function Messages() {
     }
   );
 
+  const { mutate } = trpc.chat.sendMessage.useMutation();
+
   socket?.on(
     "receivedMessage",
     async (data: RouterOutputs["chat"]["sendMessage"]) => {
+      console.log("receivedMessage", data);
+
       await utils.chat.getConversation.cancel();
       utils.chat.getConversation.setData({ id: id as string }, (oldData) => {
-        if (oldData?.Message.find((message) => message.id === data.id)) {
+        if (oldData?.messages?.find((message) => message.id === data.id)) {
           return oldData;
         }
         return {
           ...oldData,
-          Message: [...(oldData?.Message || []), data],
+          messages: [...(oldData?.messages || []), data],
         } as typeof oldData;
       });
     }
   );
 
-  const isIncoming = (message: MessageType) => {
-    return message.userId !== session?.user?.id;
+  const isIncoming = (id: string) => {
+    return id !== session?.user?.id;
   };
 
-  const isOutgoing = (message: MessageType) => {
-    return message.userId === session?.user?.id;
+  const isOutgoing = (id: string) => {
+    return id === session?.user?.id;
   };
 
   const currentUser = session?.user;
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket?.emit("sendMessage", {
-      conversationId: id,
-      content: inputRef.current?.value,
+
+    mutate({
+      conversationId: id as string,
+      content: inputRef.current?.value as string,
     });
 
     if (inputRef.current) {
@@ -84,8 +89,8 @@ export default function Messages() {
             <NameSkeleton />
           ) : (
             <span className="ml-1 font-bold">
-              {conversation?.Follow.user?.name ||
-                conversation?.Follow.user?.email?.split("@")[0]}
+              {conversation?.user?.name ||
+                conversation?.user?.email?.split("@")[0]}
             </span>
           )}
         </p>
@@ -93,31 +98,24 @@ export default function Messages() {
       <main className="ml-auto flex min-h-screen w-3/4 flex-col gap-2 p-4 pt-48 pb-20 shadow-md">
         <div className="flex flex-col gap-4">
           <div className="align-end flex flex-col items-end justify-end gap-2 pb-2">
-            {conversation?.Message.map((message) => {
-              if (isIncoming(message)) {
+            {conversation?.messages?.map((message) => {
+              if (isIncoming(message.user.id)) {
                 return (
                   <Message
                     key={message.id}
                     avatar={message.user?.image as string}
-                    name={
-                      (message.user?.name ||
-                        message.user.email?.split("@")[0]) as string
-                    }
+                    name={JSON.stringify(message.user.email)}
                     message={message.content}
                     variant="incoming"
                   />
                 );
               }
-              if (isOutgoing(message)) {
+              if (isOutgoing(message.user.id)) {
                 return (
                   <Message
                     key={message.id}
                     avatar={currentUser?.image as string}
-                    name={
-                      (currentUser?.name as string) ||
-                      currentUser?.email?.split("@")[0] ||
-                      ""
-                    }
+                    name={JSON.stringify(currentUser?.email)}
                     message={message.content}
                     variant="outgoing"
                   />

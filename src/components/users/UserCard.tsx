@@ -8,6 +8,8 @@ import { Button } from "../common/Button";
 import { useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
+import { useRouter } from "next/router";
+import { SiGooglemessages } from "react-icons/si";
 
 export const UserCard = ({
   user,
@@ -16,6 +18,14 @@ export const UserCard = ({
 }) => {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const { mutateAsync: createConversation } =
+    trpc.chat.createConversation.useMutation({
+      onSuccess: (data) => {
+        router.push(`/messages/${data.id}`);
+      },
+    });
 
   const { mutate: follow, isLoading: isFollowing } =
     trpc.follow.follow.useMutation({
@@ -94,6 +104,15 @@ export const UserCard = ({
     }
   }, [isFollowing, isUnFollowing, isFollowed, follow, unFollow, user.id]);
 
+  const handleConversation = useCallback(async () => {
+    const foundedConversation = user.Conversation[0];
+    if (foundedConversation)
+      return router.push(`/messages/${foundedConversation.id}`);
+
+    const conversation = await createConversation({ followId: user.id });
+    router.push(`/messages/${conversation.id}`);
+  }, [createConversation, router, user.Conversation, user.id]);
+
   return (
     <div
       className="flex gap-4 rounded-md border-2 border-transparent border-b-slate-400 border-opacity-10 bg-white p-4
@@ -123,6 +142,16 @@ export const UserCard = ({
         onClick={handleFollow}
       >
         {isFollowed ? "unFollow" : "Follow"}
+      </Button>
+
+      <Button
+        className="rounded-full"
+        variant="secondary"
+        onClick={handleConversation}
+        title="Start a conversation"
+        aria-label="Start a conversation"
+      >
+        <SiGooglemessages />
       </Button>
     </div>
   );

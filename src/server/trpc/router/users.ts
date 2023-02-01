@@ -74,6 +74,15 @@ export const usersRouter = router({
             },
           },
           Comment: true,
+          Conversation: {
+            where: {
+              participants: {
+                some: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -96,10 +105,25 @@ export const usersRouter = router({
         createdAt: true,
         image: true,
         id: true,
-      },
-      where: {
-        id: {
-          not: ctx.session.user.id,
+        Conversation: {
+          select: {
+            id: true,
+            participants: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+          where: {
+            participants: {
+              some: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
         },
       },
     });

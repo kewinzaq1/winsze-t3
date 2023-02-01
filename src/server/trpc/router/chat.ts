@@ -2,6 +2,29 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
 export const chatRouter = router({
+  getAllConversations: protectedProcedure.query(async ({ ctx }) => {
+    const conversations = await ctx.prisma.conversation.findMany({
+      where: {
+        participants: {
+          some: {
+            id: ctx.session.user.id,
+          },
+        },
+      },
+      include: {
+        participants: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    return conversations;
+  }),
   getConversation: protectedProcedure
     .input(
       z.object({

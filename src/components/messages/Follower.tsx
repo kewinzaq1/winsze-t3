@@ -1,55 +1,33 @@
 import type { RouterOutputs } from "src/utils/trpc";
-import { trpc } from "src/utils/trpc";
 import Image from "next/image";
 import avatarPlaceholder from "src/images/avatar_placeholder.png";
 import { useRouter } from "next/router";
-import { useNotifier } from "../notifier";
+import Link from "next/link";
 
 export const Follower = ({
   user,
+  conversationId,
 }: {
-  user: RouterOutputs["follow"]["getFollowers"][number];
+  user: RouterOutputs["chat"]["getAllConversations"][number]["participants"][number];
+  conversationId: string;
 }) => {
-  const utils = trpc.useContext();
   const router = useRouter();
-  const { show } = useNotifier();
 
   const { id } = router.query;
 
-  const { mutateAsync: createConversation } =
-    trpc.chat.createConversation.useMutation({
-      onError(err) {
-        show({
-          message: "Error",
-          description: err.message,
-          type: "error",
-          closable: true,
-        });
-      },
-      onSuccess() {
-        utils.invalidate();
-      },
-    });
-
-  const pushToUserConversation = async () => {
-    if (user.Conversation?.id) {
-      await router.push(`/messages/${user.Conversation?.id}`);
-      return;
-    }
-    const conversation = await createConversation({ followId: user.id });
-    router.push(`/messages/${conversation.id}`);
-  };
-
   return (
     <li className="transition-all hover:shadow-md hover:outline-1 hover:outline-slate-50">
-      <div onClick={pushToUserConversation} className="flex flex-col gap-1">
+      <Link
+        href={`/messages/${conversationId}`}
+        className="flex flex-col gap-1"
+      >
         <div
           className={`flex items-center gap-2 rounded-md bg-slate-50 p-4 shadow-sm ${
-            id === user.conversationId ? "!bg-slate-200" : ""
+            id === conversationId ? "!bg-slate-200" : ""
           }`}
         >
           <Image
-            src={user.user.image ?? avatarPlaceholder}
+            src={user.image ?? avatarPlaceholder}
             alt="avatar"
             className="h-12 w-12 rounded-full"
             width="48"
@@ -57,12 +35,12 @@ export const Follower = ({
           />
           <div className="flex flex-col gap-1 truncate">
             <p className="font-semibold">
-              {user.user.name || user.user.email?.split("@")[0]}
+              {user.name || user.email?.split("@")[0]}
             </p>
-            <p>{user.user.email}</p>
+            <p>{user.email}</p>
           </div>
         </div>
-      </div>
+      </Link>
     </li>
   );
 };

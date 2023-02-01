@@ -20,7 +20,7 @@ export const UserCard = ({
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { mutateAsync: createConversation } =
+  const { mutateAsync: createConversation, isLoading } =
     trpc.chat.createConversation.useMutation({
       onSuccess: (data) => {
         router.push(`/messages/${data.id}`);
@@ -150,6 +150,7 @@ export const UserCard = ({
         onClick={handleConversation}
         title="Start a conversation"
         aria-label="Start a conversation"
+        isLoading={isLoading}
       >
         <SiGooglemessages />
       </Button>

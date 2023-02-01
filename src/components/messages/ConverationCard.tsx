@@ -22,8 +22,8 @@ export const ConversationCard = ({
         className="flex flex-col gap-1"
       >
         <div
-          className={`flex items-center gap-2 rounded-md bg-slate-50 p-4 shadow-sm ${
-            id === conversationId ? "!bg-slate-200" : ""
+          className={`flex items-center gap-2 rounded-md bg-slate-200 p-4 shadow-sm ${
+            id === conversationId ? "!bg-slate-50" : ""
           }`}
         >
           <Image

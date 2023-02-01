@@ -43,15 +43,15 @@ export const chatRouter = router({
 
       const newConversation = await ctx.prisma.conversation.create({
         data: {
-          Follow: {
-            connect: {
-              id: followId,
-            },
-          },
-          User: {
-            connect: {
-              id: ctx.session.user.id,
-            },
+          participants: {
+            connect: [
+              {
+                id: ctx.session.user.id,
+              },
+              {
+                id: followId,
+              },
+            ],
           },
         },
       });

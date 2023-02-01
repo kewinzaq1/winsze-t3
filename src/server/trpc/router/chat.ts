@@ -32,27 +32,50 @@ export const chatRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
+      // find conversation that is between the current user and the user with the id
       const { id } = input;
-      const conversation = await ctx.prisma.conversation.findUnique({
-        where: { id: id },
+      const conversation = await ctx.prisma.conversation.findFirst({
+        where: {
+          id: id,
+          AND: [
+            {
+              participants: {
+                some: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          ],
+        },
         include: {
-          Message: {
-            orderBy: {
-              createdAt: "asc",
+          participants: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
             },
+          },
+          messages: {
             include: {
               user: true,
             },
           },
-          Follow: {
-            include: {
-              user: true,
-            },
-          },
-          User: true,
         },
       });
-      return conversation;
+
+      if (!conversation) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Conversation not found",
+        });
+      }
+
+      const user = conversation?.participants.find((participant) => {
+        return participant.id !== ctx.session.user.id;
+      });
+
+      return { ...conversation, user };
     }),
 
   createConversation: protectedProcedure

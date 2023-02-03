@@ -129,6 +129,7 @@ export const chatRouter = router({
       });
 
       ctx.socket.emit("receivedMessage", newMessage);
+      return newMessage;
     }),
 
   testProcedure: protectedProcedure.query(async ({ ctx }) => {

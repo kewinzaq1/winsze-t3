@@ -1,8 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Server } from "socket.io";
-import { prisma } from "src/server/db/client";
-import { getServerAuthSession } from "src/server/common/get-server-auth-session";
-import { appRouter } from "src/server/trpc/router/_app";
 
 interface Response extends Omit<NextApiResponse, "socket"> {
   socket: {

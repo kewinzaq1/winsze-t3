@@ -8,7 +8,6 @@ import { Input } from "src/components/common/Input";
 import { Button } from "src/components/common/Button";
 import { useRef } from "react";
 import { useNotifier } from "src/components/notifier";
-import type { Message as MessageType } from "@prisma/client";
 import { useAtom } from "jotai";
 import { atomSocket } from "src/utils/useInitWebSocket";
 
@@ -61,12 +60,6 @@ export default function Messages() {
     return id !== session?.user?.id;
   };
 
-  const isOutgoing = (id: string) => {
-    return id === session?.user?.id;
-  };
-
-  const currentUser = session?.user;
-
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -98,30 +91,17 @@ export default function Messages() {
       <main className="ml-auto flex min-h-screen w-3/4 flex-col gap-2 p-4 pt-48 pb-20 shadow-md">
         <div className="flex flex-col gap-4">
           <div className="align-end flex flex-col items-end justify-end gap-2 pb-2">
-            {conversation?.messages?.map((message) => {
-              if (isIncoming(message.user.id)) {
-                return (
-                  <Message
-                    key={message.id}
-                    avatar={message.user?.image as string}
-                    name={JSON.stringify(message.user.email)}
-                    message={message.content}
-                    variant="incoming"
-                  />
-                );
-              }
-              if (isOutgoing(message.user.id)) {
-                return (
-                  <Message
-                    key={message.id}
-                    avatar={currentUser?.image as string}
-                    name={JSON.stringify(currentUser?.email)}
-                    message={message.content}
-                    variant="outgoing"
-                  />
-                );
-              }
-            })}
+            {conversation?.messages?.map((message) => (
+              <Message
+                key={message.id}
+                avatar={message.user?.image as string}
+                name={`${
+                  message.user.name || message.user.email?.split("@")[0]
+                }`}
+                message={message.content}
+                variant={isIncoming(message.user.id) ? "incoming" : "outgoing"}
+              />
+            ))}
           </div>
         </div>
       </main>

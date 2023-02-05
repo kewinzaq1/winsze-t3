@@ -48,14 +48,14 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  role          String       @default("USER")
+  role          String         @default("USER")
   password      String? // some users may not have a password (email provider)
-  email         String?      @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
-  createdAt     DateTime     @default(now())
+  createdAt     DateTime       @default(now())
   accounts      Account[]
   sessions      Session[]
   ResetToken    ResetToken[]
@@ -63,6 +63,8 @@ model User {
   Like          Like[]
   Report        Report[]
   Comment       Comment[]
+  Message       Message[]
+  Conversation  Conversation[]
   Follow        Follow[]
 }
 
@@ -142,5 +144,26 @@ model Follow {
   followerId String
 
   @@unique([userId, followerId])
-  @@index([followerId])
+}
+
+model Conversation {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  messages     Message[]
+  participants User[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+
+  @@index([conversationId])
+  @@index([userId])
 }

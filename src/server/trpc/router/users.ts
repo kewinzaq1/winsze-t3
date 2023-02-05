@@ -29,7 +29,10 @@ export const usersRouter = router({
     )
     .query(async ({ ctx, input }) => {
       if (!input.id) {
-        return null;
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User id is required",
+        });
       }
 
       const { id } = input;
@@ -71,6 +74,15 @@ export const usersRouter = router({
             },
           },
           Comment: true,
+          Conversation: {
+            where: {
+              participants: {
+                some: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -93,14 +105,29 @@ export const usersRouter = router({
         createdAt: true,
         image: true,
         id: true,
-      },
-      where: {
-        id: {
-          not: ctx.session.user.id,
+        Conversation: {
+          select: {
+            id: true,
+            participants: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+          where: {
+            participants: {
+              some: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
         },
       },
     });
 
-    return users;
+    return users.filter((user) => user.id !== ctx.session.user.id);
   }),
 });

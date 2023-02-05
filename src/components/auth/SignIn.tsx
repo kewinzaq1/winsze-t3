@@ -42,7 +42,10 @@ export const SignIn = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
-    const response = await signIn("credentials", { ...data, redirect: false });
+    const response = await signIn("credentials", {
+      ...data,
+      callbackUrl: `${window.location.origin}/feed`,
+    });
     setIsLoading(false);
     if (response?.error) {
       show({
@@ -51,7 +54,6 @@ export const SignIn = () => {
         type: "error",
         placement: "bottomRight",
       });
-      router.push("/feed");
     }
   });
 
@@ -59,6 +61,7 @@ export const SignIn = () => {
     <main className="flex h-screen w-screen flex-col items-center justify-center p-4 lg:flex-row">
       <AuthLeftPanel />
       <Image
+        priority
         src={background}
         alt="group of people who are working together"
         className="absolute -z-10 h-screen w-screen object-cover opacity-30"

@@ -1,12 +1,15 @@
 import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
+import type { Server } from "socket.io";
+import type { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 import { getServerAuthSession } from "../common/get-server-auth-session";
 import { prisma } from "../db/client";
 
 type CreateContextOptions = {
   session: Session | null;
+  socket: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 };
 
 /** Use this helper for:
@@ -18,6 +21,7 @@ export const createContextInner = async (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma,
+    socket: opts.socket,
   };
 };
 
@@ -33,6 +37,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
 
   return await createContextInner({
     session,
+    socket: (res as any).socket.server.io,
   });
 };
 

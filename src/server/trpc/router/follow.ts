@@ -78,7 +78,6 @@ export const followRouter = router({
         },
         include: {
           user: true,
-          Conversation: true,
         },
       });
 

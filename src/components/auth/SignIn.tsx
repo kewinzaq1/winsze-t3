@@ -42,7 +42,10 @@ export const SignIn = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
-    const response = await signIn("credentials", { ...data, redirect: false });
+    const response = await signIn("credentials", {
+      ...data,
+      callbackUrl: `${window.location.origin}/feed`,
+    });
     setIsLoading(false);
     if (response?.error) {
       show({
@@ -51,7 +54,6 @@ export const SignIn = () => {
         type: "error",
         placement: "bottomRight",
       });
-      router.push("/feed");
     }
   });
 

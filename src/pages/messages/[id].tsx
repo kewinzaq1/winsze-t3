@@ -36,13 +36,12 @@ export default function Messages() {
     }
   );
 
-  const { mutate } = trpc.chat.sendMessage.useMutation();
+  const { mutateAsync: sendMessage, isLoading: isSending } =
+    trpc.chat.sendMessage.useMutation();
 
   socket?.on(
     "receivedMessage",
     async (data: RouterOutputs["chat"]["sendMessage"]) => {
-      console.log("receivedMessage", data);
-
       await utils.chat.getConversation.cancel();
       utils.chat.getConversation.setData({ id: id as string }, (oldData) => {
         if (oldData?.messages?.find((message) => message.id === data.id)) {
@@ -63,7 +62,7 @@ export default function Messages() {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    mutate({
+    await sendMessage({
       conversationId: id as string,
       content: inputRef.current?.value as string,
     });
@@ -108,7 +107,9 @@ export default function Messages() {
       <div className="fixed bottom-0 right-0 w-3/4 bg-white p-4 shadow-md">
         <form className="flex items-center gap-4" onSubmit={onSubmit}>
           <Input placeholder="Type a message..." ref={inputRef} />
-          <Button type="submit">Send</Button>
+          <Button type="submit" isLoading={isSending}>
+            Send
+          </Button>
         </form>
       </div>
     </MessagesLayout>

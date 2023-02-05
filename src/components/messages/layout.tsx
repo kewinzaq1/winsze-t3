@@ -2,7 +2,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { useIsMobile } from "src/hooks/useIsMobile";
-import type { RouterOutputs } from "src/utils/trpc";
 import { trpc } from "src/utils/trpc";
 import { useInitWebsocket } from "src/utils/useInitWebSocket";
 import { ConversationCard } from "./ConverationCard";

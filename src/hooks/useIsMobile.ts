@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
 
-  const handleResize = () => {
+  const handleResize = useCallback(() => {
     setIsMobile(window.innerWidth <= 768);
-  };
+  }, []);
 
   useEffect(() => {
     handleResize();
@@ -13,7 +13,7 @@ export const useIsMobile = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [handleResize]);
 
   return isMobile;
 };

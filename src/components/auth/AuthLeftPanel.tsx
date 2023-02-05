@@ -8,9 +8,7 @@ export function AuthLeftPanel() {
       <Image
         src={background}
         alt="background"
-        layout="fill"
-        objectFit="cover"
-        className="z-1 rounded-md"
+        className="z-1 cover absolute inset-0 aspect-square h-full w-screen rounded-md bg-cover"
         placeholder="blur"
       />
       <div className="glass relative z-50 flex flex-col">

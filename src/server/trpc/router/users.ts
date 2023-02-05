@@ -117,6 +117,13 @@ export const usersRouter = router({
               },
             },
           },
+          where: {
+            participants: {
+              some: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
         },
       },
     });

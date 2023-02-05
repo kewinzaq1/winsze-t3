@@ -61,6 +61,7 @@ export const SignIn = () => {
     <main className="flex h-screen w-screen flex-col items-center justify-center p-4 lg:flex-row">
       <AuthLeftPanel />
       <Image
+        priority
         src={background}
         alt="group of people who are working together"
         className="absolute -z-10 h-screen w-screen object-cover opacity-30"

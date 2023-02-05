@@ -117,17 +117,10 @@ export const usersRouter = router({
               },
             },
           },
-          where: {
-            participants: {
-              some: {
-                id: ctx.session.user.id,
-              },
-            },
-          },
         },
       },
     });
 
-    return users;
+    return users.filter((user) => user.id !== ctx.session.user.id);
   }),
 });

@@ -74,7 +74,7 @@ export default function Messages() {
 
   return (
     <MessagesLayout>
-      <header className="align-center fixed right-0 flex w-3/4 items-center justify-center bg-white p-4 pt-24 shadow-md">
+      <header className="align-center fixed right-0 flex w-full items-center justify-center bg-white p-4 pt-24 shadow-md md:w-3/4">
         <p className="mr-4 flex items-center text-lg">
           Messages with
           {isLoading ? (
@@ -87,7 +87,7 @@ export default function Messages() {
           )}
         </p>
       </header>
-      <main className="ml-auto flex min-h-screen w-3/4 flex-col gap-2 p-4 pt-48 pb-20 shadow-md">
+      <main className="ml-auto flex min-h-screen w-full flex-col gap-2 p-4 pt-48 pb-20 shadow-md md:w-3/4">
         <div className="flex flex-col gap-4">
           <div className="align-end flex flex-col items-end justify-end gap-2 pb-2">
             {conversation?.messages?.map((message) => (
@@ -104,7 +104,7 @@ export default function Messages() {
           </div>
         </div>
       </main>
-      <div className="fixed bottom-0 right-0 w-3/4 bg-white p-4 shadow-md">
+      <div className="fixed bottom-0 right-0 w-full bg-white p-4 shadow-md md:w-3/4">
         <form className="flex items-center gap-4" onSubmit={onSubmit}>
           <Input placeholder="Type a message..." ref={inputRef} />
           <Button type="submit" isLoading={isSending}>
